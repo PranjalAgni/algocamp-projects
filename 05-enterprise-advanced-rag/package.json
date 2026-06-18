@@ -1,0 +1,24 @@
+{
+  "name": "enterprise-advanced-rag",
+  "version": "1.0.0",
+  "description": "Learning project demonstrating advanced RAG techniques vs naive baseline",
+  "type": "module",
+  "scripts": {
+    "demo": "tsx src/demo.ts",
+    "test": "vitest run"
+  },
+  "keywords": ["rag", "retrieval", "embeddings", "nlp"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  },
+  "dependencies": {
+    "@xenova/transformers": "^2.17.2",
+    "dotenv": "^16.4.5",
+    "openai": "^4.73.0"
+  }
+}

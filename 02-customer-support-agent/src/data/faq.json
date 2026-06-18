@@ -1,0 +1,77 @@
+[
+  {
+    "question": "What is your refund policy?",
+    "answer": "We offer a 30-day money-back guarantee on all plans. If you're not satisfied, contact support for a full refund within 30 days of purchase.",
+    "tags": ["refund", "policy", "money-back", "guarantee"]
+  },
+  {
+    "question": "How long does shipping take?",
+    "answer": "Digital products are delivered instantly. For physical items (if applicable), standard shipping takes 5-7 business days. Express shipping (2-3 days) is available for an additional fee.",
+    "tags": ["shipping", "delivery", "time", "express"]
+  },
+  {
+    "question": "Can I upgrade my plan?",
+    "answer": "Yes! You can upgrade your plan at any time from your account dashboard. You'll be charged a prorated amount for the upgrade.",
+    "tags": ["upgrade", "plan", "change", "prorate"]
+  },
+  {
+    "question": "How do I cancel my subscription?",
+    "answer": "You can cancel your subscription anytime from your account settings. Go to Settings > Billing > Cancel Subscription. You'll retain access until the end of your billing period.",
+    "tags": ["cancel", "subscription", "billing", "stop"]
+  },
+  {
+    "question": "What payment methods do you accept?",
+    "answer": "We accept all major credit cards (Visa, MasterCard, Amex), PayPal, and bank transfers for enterprise customers.",
+    "tags": ["payment", "credit card", "paypal", "billing"]
+  },
+  {
+    "question": "Is there a free trial?",
+    "answer": "Yes! We offer a 14-day free trial for all plans. No credit card required. You can start your trial from our pricing page.",
+    "tags": ["trial", "free", "demo", "test"]
+  },
+  {
+    "question": "How do I contact support?",
+    "answer": "You can reach our support team via email at support@cloudstore.com, through live chat on our website, or by creating a support ticket in your dashboard.",
+    "tags": ["support", "contact", "help", "email", "chat"]
+  },
+  {
+    "question": "What are your business hours?",
+    "answer": "Our support team is available Monday-Friday, 9 AM - 6 PM EST. Enterprise customers have 24/7 priority support.",
+    "tags": ["hours", "availability", "time", "support"]
+  },
+  {
+    "question": "Can I get a custom domain?",
+    "answer": "Yes! Custom domains are included with Pro and Enterprise plans. You can connect your domain from Settings > Domains.",
+    "tags": ["domain", "custom", "url", "website"]
+  },
+  {
+    "question": "Is my data secure?",
+    "answer": "Absolutely. We use bank-level 256-bit SSL encryption for all data. Our servers are SOC 2 Type II certified and we perform regular security audits.",
+    "tags": ["security", "encryption", "ssl", "safe", "data"]
+  },
+  {
+    "question": "Can I export my data?",
+    "answer": "Yes, you can export all your data at any time from Settings > Data Export. We support CSV, JSON, and XML formats.",
+    "tags": ["export", "data", "download", "backup"]
+  },
+  {
+    "question": "Do you offer educational discounts?",
+    "answer": "Yes! Students and educators get 50% off all plans. Verify your status through our education portal to claim your discount.",
+    "tags": ["education", "student", "discount", "school"]
+  },
+  {
+    "question": "What happens if I exceed my plan limits?",
+    "answer": "If you approach your plan limits, we'll send you a notification. You can either upgrade your plan or we'll temporarily throttle access until the next billing cycle.",
+    "tags": ["limits", "quota", "overage", "exceed"]
+  },
+  {
+    "question": "Can I use CloudStore for commercial purposes?",
+    "answer": "Yes! All our plans support commercial use. Enterprise plans include additional features like priority support and custom SLAs.",
+    "tags": ["commercial", "business", "enterprise", "use"]
+  },
+  {
+    "question": "How do I reset my password?",
+    "answer": "Click 'Forgot Password' on the login page. We'll send a reset link to your registered email address. The link expires in 24 hours.",
+    "tags": ["password", "reset", "forgot", "login"]
+  }
+]

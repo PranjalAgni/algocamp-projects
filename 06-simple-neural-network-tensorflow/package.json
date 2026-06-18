@@ -1,0 +1,22 @@
+{
+  "name": "simple-neural-network-tensorflow",
+  "version": "1.0.0",
+  "description": "Learning project: simple feed-forward neural network with TensorFlow.js",
+  "type": "module",
+  "scripts": {
+    "demo": "tsx src/demo.ts",
+    "test": "vitest run"
+  },
+  "keywords": ["neural-network", "tensorflow", "deep-learning", "machine-learning"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs-node": "^4.22.0"
+  }
+}

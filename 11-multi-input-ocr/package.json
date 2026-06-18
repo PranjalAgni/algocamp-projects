@@ -1,0 +1,22 @@
+{
+  "name": "multi-input-ocr",
+  "version": "1.0.0",
+  "description": "Learning project: multi-input neural network for OCR with image + auxiliary features",
+  "type": "module",
+  "scripts": {
+    "demo": "tsx src/demo.ts",
+    "test": "vitest run"
+  },
+  "keywords": ["multi-input", "neural-network", "tensorflow", "ocr", "deep-learning"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs-node": "^4.22.0"
+  }
+}

@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+*.log
+.DS_Store
+
+# Saved model artifacts
+models/
+*.h5
+*.pb
+model.json
+*.bin

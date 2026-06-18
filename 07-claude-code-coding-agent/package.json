@@ -1,0 +1,29 @@
+{
+  "name": "coding-agent",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A minimal coding agent that uses tools to complete programming tasks",
+  "scripts": {
+    "demo": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "agent",
+    "llm",
+    "tools",
+    "coding"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}

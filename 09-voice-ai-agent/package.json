@@ -1,0 +1,23 @@
+{
+  "name": "voice-ai-agent",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Learning project: STT → LLM → TTS voice assistant pipeline with swappable interfaces",
+  "scripts": {
+    "demo": "tsx src/demo.ts",
+    "test": "vitest run"
+  },
+  "keywords": ["voice", "ai", "agent", "stt", "tts", "llm"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "openai": "^4.77.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

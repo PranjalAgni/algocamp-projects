@@ -1,0 +1,17 @@
+diff --git a/lib/user-handler.js b/lib/user-handler.js
+index aaa111..bbb222 100644
+--- a/lib/user-handler.js
++++ b/lib/user-handler.js
+@@ -5,8 +5,10 @@ function updateUser(userId, data) {
+     throw new Error('Invalid user ID');
+   }
+
+-  const result = db.update('users', userId, data);
+-  return result;
++  const timestamp = Date.now();
++  const result = db.update('users', userId, data);
++
++  if (result != null) {
++    return result;
++  }
+ }

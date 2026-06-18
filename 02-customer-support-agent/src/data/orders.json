@@ -1,0 +1,74 @@
+[
+  {
+    "orderId": "ORD-001",
+    "customerName": "Alice Johnson",
+    "status": "shipped",
+    "items": ["CloudStore Pro Plan - 1 year", "Premium Support"],
+    "total": 599.99,
+    "orderDate": "2026-06-10",
+    "trackingNumber": "TRACK-123456"
+  },
+  {
+    "orderId": "ORD-002",
+    "customerName": "Bob Smith",
+    "status": "processing",
+    "items": ["CloudStore Basic Plan - 1 month"],
+    "total": 29.99,
+    "orderDate": "2026-06-15",
+    "trackingNumber": null
+  },
+  {
+    "orderId": "ORD-003",
+    "customerName": "Carol White",
+    "status": "delivered",
+    "items": ["CloudStore Enterprise Plan - 1 year", "API Access"],
+    "total": 1999.99,
+    "orderDate": "2026-05-20",
+    "trackingNumber": "TRACK-789012"
+  },
+  {
+    "orderId": "ORD-004",
+    "customerName": "David Brown",
+    "status": "cancelled",
+    "items": ["CloudStore Pro Plan - 1 month"],
+    "total": 59.99,
+    "orderDate": "2026-06-01",
+    "trackingNumber": null
+  },
+  {
+    "orderId": "ORD-005",
+    "customerName": "Eve Davis",
+    "status": "shipped",
+    "items": ["CloudStore Basic Plan - 1 year", "Custom Domain"],
+    "total": 299.99,
+    "orderDate": "2026-06-12",
+    "trackingNumber": "TRACK-345678"
+  },
+  {
+    "orderId": "ORD-006",
+    "customerName": "Frank Miller",
+    "status": "pending",
+    "items": ["CloudStore Pro Plan - 1 month"],
+    "total": 59.99,
+    "orderDate": "2026-06-17",
+    "trackingNumber": null
+  },
+  {
+    "orderId": "ORD-007",
+    "customerName": "Grace Lee",
+    "status": "delivered",
+    "items": ["CloudStore Basic Plan - 6 months"],
+    "total": 149.99,
+    "orderDate": "2026-04-15",
+    "trackingNumber": "TRACK-901234"
+  },
+  {
+    "orderId": "ORD-008",
+    "customerName": "Henry Wilson",
+    "status": "shipped",
+    "items": ["CloudStore Enterprise Plan - 1 month", "Premium Support", "API Access"],
+    "total": 249.99,
+    "orderDate": "2026-06-14",
+    "trackingNumber": "TRACK-567890"
+  }
+]

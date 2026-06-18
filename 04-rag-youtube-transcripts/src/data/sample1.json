@@ -1,0 +1,76 @@
+{
+  "videoId": "rag-intro-101",
+  "title": "Introduction to RAG",
+  "transcript": [
+    {
+      "text": "Hello everyone, welcome to this introduction to Retrieval-Augmented Generation, or RAG for short.",
+      "start": 0.0,
+      "duration": 5.2
+    },
+    {
+      "text": "RAG is a technique that combines information retrieval with language model generation to produce more accurate and grounded answers.",
+      "start": 5.2,
+      "duration": 7.8
+    },
+    {
+      "text": "The key insight behind RAG is that large language models, while powerful, can sometimes hallucinate or make up information.",
+      "start": 13.0,
+      "duration": 6.5
+    },
+    {
+      "text": "By first retrieving relevant documents from a knowledge base, we can provide the model with factual context to ground its responses.",
+      "start": 19.5,
+      "duration": 7.2
+    },
+    {
+      "text": "Let's break down the RAG pipeline into its core components. First, we have the ingestion phase.",
+      "start": 26.7,
+      "duration": 5.8
+    },
+    {
+      "text": "During ingestion, we load our documents and split them into smaller chunks. This chunking is important because we want pieces small enough to be relevant but large enough to contain meaningful information.",
+      "start": 32.5,
+      "duration": 11.3
+    },
+    {
+      "text": "Next, we convert each chunk into a dense vector representation called an embedding. These embeddings capture the semantic meaning of the text.",
+      "start": 43.8,
+      "duration": 8.7
+    },
+    {
+      "text": "The embeddings are stored in a vector database, which allows us to efficiently search for similar chunks using cosine similarity or other distance metrics.",
+      "start": 52.5,
+      "duration": 8.9
+    },
+    {
+      "text": "When a user asks a question, we embed their query using the same embedding model, then search the vector database for the most relevant chunks.",
+      "start": 61.4,
+      "duration": 8.2
+    },
+    {
+      "text": "These retrieved chunks are then passed to a language model as context, along with the user's question. The model generates an answer based on this retrieved information.",
+      "start": 69.6,
+      "duration": 9.8
+    },
+    {
+      "text": "One of the best practices in RAG is to include citations in your answers, showing which chunks or documents the information came from.",
+      "start": 79.4,
+      "duration": 7.6
+    },
+    {
+      "text": "This transparency helps users verify the information and builds trust in the system.",
+      "start": 87.0,
+      "duration": 4.8
+    },
+    {
+      "text": "RAG is particularly useful for question answering over private documents, chatbots that need up-to-date information, and scenarios where factual accuracy is critical.",
+      "start": 91.8,
+      "duration": 9.4
+    },
+    {
+      "text": "Thank you for watching this introduction to RAG. In future videos, we'll dive deeper into chunking strategies, embedding models, and advanced retrieval techniques.",
+      "start": 101.2,
+      "duration": 9.1
+    }
+  ]
+}

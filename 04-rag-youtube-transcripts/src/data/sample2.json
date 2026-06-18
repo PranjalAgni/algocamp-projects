@@ -1,0 +1,71 @@
+{
+  "videoId": "embeddings-explained",
+  "title": "Understanding Embeddings",
+  "transcript": [
+    {
+      "text": "Today we're going to talk about embeddings, which are fundamental to modern natural language processing and retrieval systems.",
+      "start": 0.0,
+      "duration": 6.8
+    },
+    {
+      "text": "An embedding is a way to represent text as a vector of numbers. Each word, sentence, or document gets mapped to a point in a high-dimensional space.",
+      "start": 6.8,
+      "duration": 9.2
+    },
+    {
+      "text": "The key property of embeddings is that semantically similar texts end up close to each other in this vector space.",
+      "start": 16.0,
+      "duration": 6.7
+    },
+    {
+      "text": "For example, the embeddings for 'cat' and 'kitten' would be very close, while 'cat' and 'car' would be far apart.",
+      "start": 22.7,
+      "duration": 6.5
+    },
+    {
+      "text": "Modern embedding models are typically based on transformer neural networks, which were introduced in the famous 'Attention is All You Need' paper.",
+      "start": 29.2,
+      "duration": 8.3
+    },
+    {
+      "text": "Popular embedding models include BERT, Sentence-BERT, and more recently, models like all-MiniLM which are optimized for speed and efficiency.",
+      "start": 37.5,
+      "duration": 8.9
+    },
+    {
+      "text": "To measure similarity between embeddings, we typically use cosine similarity, which calculates the angle between two vectors.",
+      "start": 46.4,
+      "duration": 7.3
+    },
+    {
+      "text": "A cosine similarity of 1 means the vectors are identical, 0 means they're orthogonal, and -1 means they point in opposite directions.",
+      "start": 53.7,
+      "duration": 7.8
+    },
+    {
+      "text": "In RAG systems, we use embeddings to convert both our document chunks and user queries into vectors, allowing us to find relevant information through semantic search.",
+      "start": 61.5,
+      "duration": 9.6
+    },
+    {
+      "text": "One advantage of embedding-based search over traditional keyword search is that it can find relevant documents even when they don't contain the exact query terms.",
+      "start": 71.1,
+      "duration": 8.7
+    },
+    {
+      "text": "For instance, searching for 'president of USA' would correctly retrieve documents about the 'American head of state' even though the words don't match exactly.",
+      "start": 79.8,
+      "duration": 8.9
+    },
+    {
+      "text": "When building a RAG system, choosing the right embedding model is important. You need to balance between model size, speed, and quality.",
+      "start": 88.7,
+      "duration": 8.1
+    },
+    {
+      "text": "Thanks for watching! Next time we'll explore vector databases and how to efficiently store and search millions of embeddings.",
+      "start": 96.8,
+      "duration": 7.4
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "ai-trading-agent",
+  "version": "1.0.0",
+  "description": "Learning project: simulated trading agent with backtesting (NOT real trading)",
+  "type": "module",
+  "scripts": {
+    "demo": "tsx src/demo.ts",
+    "test": "vitest run"
+  },
+  "keywords": ["trading", "backtesting", "technical-indicators", "learning"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "openai": "^4.73.0",
+    "seedrandom": "^3.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/seedrandom": "^3.0.8",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}

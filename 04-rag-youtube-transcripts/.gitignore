@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+*.log
+.DS_Store
+
+# Model cache from @xenova/transformers
+.cache/
+models/

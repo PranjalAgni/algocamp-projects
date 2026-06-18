@@ -1,0 +1,62 @@
+{
+  "pto-policy.md": {
+    "title": "PTO Policy",
+    "department": "HR",
+    "date": "2024-01-15",
+    "type": "policy"
+  },
+  "remote-work-policy.md": {
+    "title": "Remote Work Policy",
+    "department": "HR",
+    "date": "2024-03-10",
+    "type": "policy"
+  },
+  "benefits-overview.md": {
+    "title": "Benefits Overview",
+    "department": "HR",
+    "date": "2024-01-01",
+    "type": "handbook"
+  },
+  "code-of-conduct.md": {
+    "title": "Code of Conduct",
+    "department": "HR",
+    "date": "2023-12-01",
+    "type": "policy"
+  },
+  "expense-reimbursement.md": {
+    "title": "Expense Reimbursement Policy",
+    "department": "Finance",
+    "date": "2024-02-20",
+    "type": "policy"
+  },
+  "security-guidelines.md": {
+    "title": "Security Guidelines",
+    "department": "Engineering",
+    "date": "2024-04-01",
+    "type": "handbook"
+  },
+  "onboarding-guide.md": {
+    "title": "Onboarding Guide",
+    "department": "HR",
+    "date": "2024-01-10",
+    "type": "guide"
+  },
+  "travel-policy.md": {
+    "title": "Travel Policy",
+    "department": "Finance",
+    "date": "2024-03-15",
+    "type": "policy"
+  },
+  "performance-review-process.md": {
+    "title": "Performance Review Process",
+    "department": "HR",
+    "date": "2024-05-01",
+    "type": "guide"
+  },
+  "engineering-handbook.md": {
+    "title": "Engineering Handbook",
+    "department": "Engineering",
+    "date": "2024-04-15",
+    "type": "handbook"
+  }
+}

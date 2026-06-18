@@ -1,0 +1,22 @@
+{
+  "name": "mnist-autoencoder",
+  "version": "1.0.0",
+  "description": "Learning project: autoencoder for MNIST-like digit images with TensorFlow.js",
+  "type": "module",
+  "scripts": {
+    "demo": "tsx src/demo.ts",
+    "test": "vitest run"
+  },
+  "keywords": ["autoencoder", "tensorflow", "deep-learning", "unsupervised-learning", "mnist"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs-node": "^4.22.0"
+  }
+}
