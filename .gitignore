@@ -1,0 +1,22 @@
+node_modules/
+.env
+.env.local
+dist/
+build/
+*.log
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# ML artifacts / model caches
+*.model
+saved_models/
+models/
+.cache/
+.transformers-cache/
+
+# OS
+.DS_Store
