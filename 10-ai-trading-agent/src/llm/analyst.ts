@@ -31,6 +31,8 @@ interface MarketData {
   fastSMA?: number;
   slowSMA?: number;
   rsi?: number;
+  fastPeriod?: number;
+  slowPeriod?: number;
 }
 
 let mode: 'LIVE' | 'MOCK' | null = null;
@@ -71,22 +73,32 @@ export async function getMarketCommentary(data: MarketData): Promise<string> {
 }
 
 /**
+ * Build the LLM prompt from market data.
+ *
+ * Exported so tests can assert the SMA period labels match the periods the
+ * strategy actually used - feeding the model "Fast SMA (20)" when the demo ran
+ * a 10-period SMA would be a silent factual error the model can't detect.
+ */
+export function buildLivePrompt(data: MarketData): string {
+  const { recentPrices, currentPrice, fastSMA, slowSMA, rsi, fastPeriod, slowPeriod } = data;
+
+  return `You are a market analyst reviewing trading data. Provide a brief (2-3 sentences) qualitative assessment of current market conditions.
+
+Current Price: $${currentPrice.toFixed(2)}
+Recent Prices (last 10 days): ${recentPrices.slice(-10).map(p => `$${p.toFixed(2)}`).join(', ')}
+${fastSMA ? `Fast SMA (${fastPeriod ?? '?'}): $${fastSMA.toFixed(2)}` : ''}
+${slowSMA ? `Slow SMA (${slowPeriod ?? '?'}): $${slowSMA.toFixed(2)}` : ''}
+${rsi ? `RSI (14): ${rsi.toFixed(2)}` : ''}
+
+Provide a brief market outlook based on this data.`;
+}
+
+/**
  * Get commentary from OpenAI API
  */
 async function getLiveCommentary(data: MarketData): Promise<string> {
   try {
-    const { recentPrices, currentPrice, fastSMA, slowSMA, rsi } = data;
-
-    // Build prompt with market data
-    const prompt = `You are a market analyst reviewing trading data. Provide a brief (2-3 sentences) qualitative assessment of current market conditions.
-
-Current Price: $${currentPrice.toFixed(2)}
-Recent Prices (last 10 days): ${recentPrices.slice(-10).map(p => `$${p.toFixed(2)}`).join(', ')}
-${fastSMA ? `Fast SMA (20): $${fastSMA.toFixed(2)}` : ''}
-${slowSMA ? `Slow SMA (50): $${slowSMA.toFixed(2)}` : ''}
-${rsi ? `RSI (14): ${rsi.toFixed(2)}` : ''}
-
-Provide a brief market outlook based on this data.`;
+    const prompt = buildLivePrompt(data);
 
     const response = await openai!.chat.completions.create({
       model: 'gpt-4o-mini',
