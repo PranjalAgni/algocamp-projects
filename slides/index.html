@@ -645,9 +645,9 @@ def is_safe_path(path, workspace):
 
       <section>
         <div class="concept-h"><span class="pid">08</span><h3>Deterministic linting vs. LLM judgment</h3></div>
-        <p class="lede">A <strong>linter</strong> applies fixed rules — same input, same output, instant, free. An <strong>LLM</strong> reasons about <em>intent</em>: unclear names, missing edge cases, risky logic.</p>
+        <p class="lede">A <strong>linter</strong> applies fixed rules — same input, same output, instant, free. Production linters (ESLint) parse code into a syntax tree first; <em>this</em> project keeps it simple and matches <strong>regex</strong> against the raw diff lines. An <strong>LLM</strong>, by contrast, reasons about <em>intent</em>: unclear names, missing edge cases, risky logic.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Spellcheck (linter) catches "teh" every time. An editor (LLM) tells you the argument doesn't make sense.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Detecting <em>all</em> bugs statically is provably impossible (Rice's theorem) — so deterministic tools trade completeness for reliability.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Regex has no lexer, so it can't tell code from a string or comment: this project's <code>==</code> rule fires inside <code>"a == b"</code> and even on valid Python. That blindness is exactly why real linters build an AST.</p></div>
       </section>
 
       <section>
