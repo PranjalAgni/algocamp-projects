@@ -113,8 +113,17 @@ function drawDigit(digit: number): number[][] {
 }
 
 /**
- * Compute auxiliary features from the image
- * These provide hints that correlate with (but don't determine) the digit
+ * Compute the 5-dimensional auxiliary feature vector.
+ *
+ * Features 1-4 are genuinely derived from the image pixels (aspect ratio,
+ * fill density, symmetry, horizontal-line count). Feature 5 is NOT: it is a
+ * per-label lookup with a little noise, standing in for a signal that in a
+ * real system would come from edge/contour analysis of the image.
+ *
+ * Be honest about the consequence: because feature 5's five values are well
+ * separated (0.8/0.1/0.5/0.9/0.2) relative to the +/-0.1 noise, the auxiliary
+ * vector nearly determines the label on its own. That is why an aux-only model
+ * already scores ~99% on this synthetic data - see the ablation note in README.
  */
 function computeAuxFeatures(image: number[][], label: number): number[] {
   const size = image.length;
@@ -167,8 +176,9 @@ function computeAuxFeatures(image: number[][], label: number): number[] {
   }
   const horizontalLineScore = horizontalLines / size;
 
-  // Feature 5: Curve presence (simple heuristic based on label)
-  // In real world, this could be edge detection or contour analysis
+  // Feature 5: "Curve presence" - a per-label lookup plus +/-0.1 noise.
+  // In a real system this would be edge detection or contour analysis of the
+  // image; here it is a stand-in that mostly hands the label to the model.
   const curveScore = [0.8, 0.1, 0.5, 0.9, 0.2][label] + (Math.random() - 0.5) * 0.2;
 
   return [
