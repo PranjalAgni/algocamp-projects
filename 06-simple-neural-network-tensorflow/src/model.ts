@@ -29,8 +29,16 @@ import * as tf from '@tensorflow/tfjs-node';
  * Softmax: Converts logits to probability distribution summing to 1
  * - Essential for multi-class classification
  * - Output[i] = exp(logit[i]) / sum(exp(logit))
+ *
+ * The kernel initializers are seeded so that weight initialization is
+ * reproducible. Without this the dataset would be seeded but the starting
+ * weights would not, so every run (and every test) would train from a
+ * different random point - occasionally from a bad one that gets stuck. A
+ * fixed seed makes both the demo output and the training tests deterministic.
+ *
+ * @param seed Random seed for weight initialization
  */
-export function createModel(): tf.Sequential {
+export function createModel(seed: number = 42): tf.Sequential {
   const model = tf.sequential();
 
   // First hidden layer: 8 neurons with ReLU activation
@@ -40,6 +48,7 @@ export function createModel(): tf.Sequential {
       units: 8,
       activation: 'relu',
       inputShape: [2],
+      kernelInitializer: tf.initializers.glorotNormal({ seed }),
     })
   );
 
@@ -49,6 +58,7 @@ export function createModel(): tf.Sequential {
     tf.layers.dense({
       units: 4,
       activation: 'relu',
+      kernelInitializer: tf.initializers.glorotNormal({ seed: seed + 1 }),
     })
   );
 
@@ -58,6 +68,7 @@ export function createModel(): tf.Sequential {
     tf.layers.dense({
       units: 2,
       activation: 'softmax',
+      kernelInitializer: tf.initializers.glorotNormal({ seed: seed + 2 }),
     })
   );
 
