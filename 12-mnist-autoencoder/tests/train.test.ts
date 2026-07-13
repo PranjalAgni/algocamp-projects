@@ -76,7 +76,7 @@ describe('Autoencoder Training', () => {
     const autoencoder = buildAutoencoder();
     compileAutoencoder(autoencoder);
 
-    const testInput = tf.randomUniform([5, 784], 0, 1);
+    const testInput = tf.randomUniform<tf.Rank.R2>([5, 784], 0, 1);
     const reconstructed = reconstructImages(autoencoder, testInput);
 
     expect(reconstructed.shape).toEqual([5, 784]);

@@ -237,7 +237,9 @@ export function datasetToTensors(dataset: DataSample[]): {
 
   // Convert labels to one-hot encoded 2D tensor: [batch, numClasses]
   const labels = tf.tensor1d(dataset.map(s => s.label), 'int32');
-  const labelsOneHot = tf.oneHot(labels, 5);
+  // oneHot of a 1D tensor is always 2D ([batch, numClasses]); tf types it as
+  // the broad Tensor<Rank>, so narrow it to match the declared return type.
+  const labelsOneHot = tf.oneHot(labels, 5) as tf.Tensor2D;
   labels.dispose();
 
   return { images, auxFeatures, labels: labelsOneHot };

@@ -11,24 +11,26 @@
  * so "dog" and "puppy" will have similar embeddings.
  */
 
-import { pipeline, env } from '@xenova/transformers';
+import { pipeline, env, type FeatureExtractionPipeline } from '@xenova/transformers';
 import type { Embedder } from './hash.js';
 
 // Disable local model checks to avoid unnecessary warnings
 env.allowLocalModels = false;
 
-// Cache the pipeline to avoid reloading
-let pipelineCache: Awaited<ReturnType<typeof pipeline>> | null = null;
+// Cache the pipeline to avoid reloading. Typed as the concrete
+// FeatureExtractionPipeline (not the broad union pipeline() infers) so the
+// call options and the Tensor output below type-check.
+let pipelineCache: FeatureExtractionPipeline | null = null;
 
 export async function createXenovaEmbedder(): Promise<Embedder> {
   try {
     // Initialize the feature-extraction pipeline with all-MiniLM-L6-v2
     if (!pipelineCache) {
       console.log('Loading Xenova model (first run may download ~25MB)...');
-      pipelineCache = await pipeline(
+      pipelineCache = (await pipeline(
         'feature-extraction',
         'Xenova/all-MiniLM-L6-v2'
-      );
+      )) as FeatureExtractionPipeline;
     }
 
     return {
