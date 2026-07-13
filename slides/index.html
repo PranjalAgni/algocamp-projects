@@ -81,7 +81,16 @@
     .reveal .controls { color: var(--accent); }
 
     .disclaimer { border:1px solid #6b4a17; background:#241b0c; color:#f6c453; border-radius:12px; padding:0.6em 0.9em; font-size:0.7em; }
-  </style>
+
+    /* Code slide */
+    .reveal .code-h { display:flex; align-items:baseline; gap:0.5em; margin-bottom: 0.35em; }
+    .reveal .code-h .pid { color: var(--accent); font-size:0.55em; font-weight:700; letter-spacing:0.08em; }
+    .reveal .code-h .file { margin-left:auto; color: var(--muted); font-size:0.5em; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .reveal pre { width: 100%; box-shadow: none; margin: 0.2em 0; font-size: 0.42em; line-height: 1.4; border:1px solid var(--line); border-radius: 12px; }
+    .reveal pre code { padding: 0.9em 1.1em; border-radius: 12px; max-height: 460px; background: #0b0d12; }
+    .code-cap { color: var(--muted); font-size: 0.62em; margin-top: 0.4em; }
+    .code-cap b { color: var(--accent); font-weight: 700; }
+</style>
 </head>
 <body>
 <div class="reveal">
@@ -92,7 +101,7 @@
       <div class="title-wrap">
         <div class="kicker">A Learning Hub</div>
         <h1>The Concepts Behind<br/>12 AI Builds</h1>
-        <p class="muted">From LLM APIs &amp; agents to embeddings, RAG, and neural nets —<br/>the <em>ideas</em>, explained simply. No code. Just understanding.</p>
+        <p class="muted">From LLM APIs &amp; agents to embeddings, RAG, and neural nets —<br/>the <em>ideas</em> explained simply, each grounded in <em>real code</em> from the build.</p>
         <p class="small muted" style="margin-top:1.2em;">Use <strong>→</strong> to move between projects &nbsp;·&nbsp; <strong>↓</strong> to walk through a project's concepts &nbsp;·&nbsp; <strong>ESC</strong> for overview</p>
       </div>
     </section>
@@ -115,7 +124,7 @@
         <div class="cell"><b>11 · Multi-Input OCR</b><span>fusing modalities</span></div>
         <div class="cell"><b>12 · Autoencoder</b><span>compress to understand</span></div>
       </div>
-      <p class="small muted" style="margin-top:0.8em;">Each section: a few core concepts, each with a plain-English idea, an analogy, and an "aha".</p>
+      <p class="small muted" style="margin-top:0.8em;">Each section: a few core concepts — a plain-English idea, an analogy, an "aha" — then the <em>real code</em> that makes it concrete.</p>
     </section>
 
     <!-- ============================================================= -->
@@ -171,6 +180,25 @@
         <div class="box analogy"><span class="label">Analogy</span><p>Schema = a form with a pen that only writes inside the boxes. Provider interface = a universal remote for any TV brand.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>Abstraction isn't just tidy — it's freedom from lock-in. Swap models with a config change when one is slow or pricey.</p></div>
       </section>
+
+      <section data-background-color="#0b0d12">
+        <div class="code-h"><span class="pid">01</span><h3>The idea, in code</h3><span class="file">calling the chat API</span></div>
+        <pre><code data-trim data-noescape class="language-python">
+response = client.chat.completions.create(
+    model="gpt-4",              # which brain to use
+    messages=[
+        {"role": "system", "content": "You are a helpful tutor."},
+        {"role": "user",   "content": "Explain photosynthesis simply."}
+    ],
+    temperature=0.7,            # 0 = focused, 1+ = creative
+    max_tokens=150,             # cap the reply length
+    stream=False                # True = tokens arrive one-by-one (feels faster)
+)
+
+print(response.choices[0].message.content)
+        </code></pre>
+        <p class="code-cap">You pass an array of <b>messages</b> with roles (system / user / assistant) plus <b>parameters</b> that shape the reply — then read back the next response.</p>
+      </section>
     </section>
 
     <!-- ============================================================= -->
@@ -211,6 +239,29 @@
         <p class="lede">Grounding = answer from <strong>retrieved real data</strong>, not from memory. Good agents also have <strong>guardrails</strong>: when out of depth, hand off to a human via a tool like <em>createTicket</em>.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>A self-driving car that hands control back in a snowstorm. Autonomy is great; knowing your limits is the real skill.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>Escalation is <em>designed in</em>, not a failure. The agent recognizing its boundary and routing to a human is correct behavior.</p></div>
+      </section>
+
+      <section data-background-color="#0b0d12">
+        <div class="code-h"><span class="pid">02</span><h3>The idea, in code</h3><span class="file">routing a request</span></div>
+        <pre><code data-trim data-noescape class="language-python">
+def handle_customer_request(user_message):
+    # 1. Figure out what the user actually wants
+    intent = classify_intent(user_message)
+
+    # 2. Route to the handler that matches the intent
+    if intent == "order_status":
+        response = check_order_status(user_message)
+    elif intent == "faq":
+        response = answer_faq(user_message)
+    elif intent == "human_handoff":
+        response = escalate_to_human(user_message)   # knows its limits
+    else:
+        response = "I'm not sure how to help with that."
+
+    # 3. Hand the response back to the user
+    return response
+        </code></pre>
+        <p class="code-cap">A real agent <b>routes</b> each request to the right action based on detected intent — then acts and responds, instead of just generating text.</p>
       </section>
     </section>
 
@@ -260,6 +311,24 @@
         <div class="box analogy"><span class="label">Analogy</span><p>Owning a calculator (local) vs. calling a math hotline (API). One works on a plane; the other always has the latest tricks.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>The trade-off isn't only cost vs. quality — it's also <strong>privacy and latency</strong>, which often decide it.</p></div>
       </section>
+
+      <section data-background-color="#0b0d12">
+        <div class="code-h"><span class="pid">03</span><h3>The idea, in code</h3><span class="file">text → vectors → closeness</span></div>
+        <pre><code data-trim data-noescape class="language-python">
+# embed() turns text into a vector. (Real ones are ~1536 dims; toy values here.)
+vectors = {"dog":        [0.80, 0.90, 0.10],
+           "puppy":      [0.75, 0.85, 0.15],
+           "skyscraper": [0.10, 0.20, 0.90]}
+
+def cosine_similarity(a, b):
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+# Similar meanings land near each other in vector space
+print(cosine_similarity(vectors["dog"], vectors["puppy"]))       # ~0.99  close!
+print(cosine_similarity(vectors["dog"], vectors["skyscraper"]))  # ~0.45  far
+        </code></pre>
+        <p class="code-cap">Text becomes numbers (an <b>embedding</b>), so "meaning" turns into <b>distance</b> — close vectors mean similar ideas, with zero shared keywords.</p>
+      </section>
     </section>
 
     <!-- ============================================================= -->
@@ -307,6 +376,27 @@
         <p class="lede"><strong>RAG</strong> injects fresh knowledge at query time (easy to update). <strong>Fine-tuning</strong> bakes <em>behavior/style</em> into the weights. Start with RAG; fine-tune for how to answer, not what.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>RAG = a reference manual you consult on the job. Fine-tuning = sending someone to trade school.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>They're complementary: fine-tune the <em>voice</em>, use RAG for the <em>facts</em>.</p></div>
+      </section>
+
+      <section data-background-color="#0b0d12">
+        <div class="code-h"><span class="pid">04</span><h3>The idea, in code</h3><span class="file">the RAG pipeline</span></div>
+        <pre><code data-trim data-noescape class="language-python">
+# 1. Index your documents (done once, ahead of time)
+chunks = split_document(long_doc)     # break into bite-size pieces
+index  = embed_and_store(chunks)      # vectors → searchable store
+
+# 2. At query time, retrieve the most relevant chunks
+question = "What is photosynthesis?"
+top_chunks = retrieve(question, index, k=3)   # 3 closest pieces
+
+# 3. Generate an answer GROUNDED in what we retrieved
+prompt = f"""Answer using ONLY this context:
+{top_chunks}
+
+Question: {question}"""
+answer = llm(prompt)                  # answers from docs, not memory
+        </code></pre>
+        <p class="code-cap"><b>Retrieval-Augmented Generation</b> fetches real chunks first, then asks the model to answer <em>only</em> from them — grounding it in sources instead of memory.</p>
       </section>
     </section>
 
@@ -356,6 +446,27 @@
         <div class="box analogy"><span class="label">Analogy</span><p>Netflix search with filters: "space adventure" + Sci-Fi + PG-13 + year≥2020 cuts the noise instantly.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>HyDE works even if the fake answer hallucinates — the embedding still lands in the right neighborhood of <em>real</em> docs.</p></div>
       </section>
+
+      <section data-background-color="#0b0d12">
+        <div class="code-h"><span class="pid">05</span><h3>The idea, in code</h3><span class="file">fusing two searches</span></div>
+        <pre><code data-trim data-noescape class="language-python">
+# Run BOTH searches — they're good at different things
+keyword_results  = bm25_search(query)     # ["doc3", "doc1", "doc5"]
+semantic_results = vector_search(query)    # ["doc1", "doc2", "doc3"]
+
+# Reciprocal Rank Fusion: merge by POSITION, not raw scores
+k = 60
+scores = {}
+for ranked_list in (keyword_results, semantic_results):
+    for rank, doc in enumerate(ranked_list, start=1):
+        scores[doc] = scores.get(doc, 0) + 1 / (k + rank)
+
+# Docs that BOTH methods rank highly rise to the top
+final = sorted(scores, key=scores.get, reverse=True)
+# → ["doc1", "doc3", ...]   doc1 was near the top of both lists
+        </code></pre>
+        <p class="code-cap"><b>Reciprocal Rank Fusion</b> adds <code>1/(k+rank)</code> from each list — rewarding consensus, with no fragile mixing of mismatched score scales.</p>
+      </section>
     </section>
 
     <!-- ============================================================= -->
@@ -404,6 +515,27 @@
         <div class="box analogy"><span class="label">Analogy</span><p>Flashcards: an epoch is one run through the deck; batches are 10 cards at a time; learning rate is how hard you change tactics.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>More epochs aren't always better — past a point the model <em>overfits</em>. Stop when loss converges.</p></div>
       </section>
+
+      <section data-background-color="#0b0d12">
+        <div class="code-h"><span class="pid">06</span><h3>The idea, in code</h3><span class="file">learning by gradient descent</span></div>
+        <pre><code data-trim data-noescape class="language-python">
+# A neuron = weighted sum of inputs, squashed by an activation
+def neuron(x, w, b):
+    return 1 / (1 + np.exp(-(np.dot(w, x) + b)))   # sigmoid
+
+w, b, lr = np.array([0.1, -0.2]), 0.0, 0.1         # start random
+x, y_true = np.array([2.0, 3.0]), 1.0
+
+# Training loop: predict → measure error → nudge weights downhill
+for epoch in range(1000):
+    y_pred = neuron(x, w, b)
+    loss   = (y_pred - y_true) ** 2                # "how wrong"
+    grad   = 2 * (y_pred - y_true) * y_pred * (1 - y_pred)
+    w -= lr * grad * x                             # step toward less loss
+    b -= lr * grad
+        </code></pre>
+        <p class="code-cap">Learning isn't solved like algebra — the network <b>searches</b>: predict, measure loss, nudge every weight a little downhill, repeat.</p>
+      </section>
     </section>
 
     <!-- ============================================================= -->
@@ -444,6 +576,28 @@
         <p class="lede">Risky actions (delete, push) pause for <strong>human approval</strong>. And since context windows are finite, long tasks need pruning: summarize done work, offload progress to files.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>A self-driving car that asks you to take the wheel in tricky spots. And taking notes instead of holding everything in your head.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>The best agents don't fight the context limit — they "think on paper," using files as external memory.</p></div>
+      </section>
+
+      <section data-background-color="#0b0d12">
+        <div class="code-h"><span class="pid">07</span><h3>The idea, in code</h3><span class="file">the agent loop + sandbox</span></div>
+        <pre><code data-trim data-noescape class="language-python">
+while not task_done:
+    # OBSERVE: read files, last test run, error messages
+    context = {"files": read_files(), "last_result": observe()}
+    action  = model.decide(context)        # pick: read / edit / run_tests
+
+    if action.type == "edit":
+        if not is_safe_path(action.path, workspace="/project"):
+            raise SecurityError("Path escapes the workspace!")
+        write_file(action.path, action.content)
+    elif action.type == "run_tests":
+        context["last_result"] = run_sandboxed(action.command)  # feed back
+
+def is_safe_path(path, workspace):
+    resolved = os.path.realpath(path)      # trust the RESOLVED path,
+    return resolved.startswith(os.path.realpath(workspace))  # not the raw string
+        </code></pre>
+        <p class="code-cap">The agent grounds itself by <b>reading real failures</b> and looping — while a sandbox check on the <em>resolved</em> path keeps it from escaping the workspace.</p>
       </section>
     </section>
 
@@ -486,6 +640,28 @@
         <div class="box analogy"><span class="label">Analogy</span><p>Airport metal detectors: too sensitive flags every belt buckle; too lax misses real threats. Layers + a human screener handle it.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>Too many false positives cause <em>alert fatigue</em> — people ignore <em>all</em> warnings, including the real ones. Trust is the metric.</p></div>
       </section>
+
+      <section data-background-color="#0b0d12">
+        <div class="code-h"><span class="pid">08</span><h3>The idea, in code</h3><span class="file">lint + LLM, structured</span></div>
+        <pre><code data-trim data-noescape class="language-python">
+# Layer 1 — deterministic linter: fast, fixed rules, same result every time
+def lint(code):
+    findings = []
+    if re.search(r"console\.log", code):
+        findings.append({"line": 5, "severity": "warning",
+                         "message": "Remove console.log"})
+    return findings
+
+# Layer 2 — LLM: judges intent, naming, risky logic a regex can't see.
+# Forced to return the SAME schema {line, severity, message}.
+def llm_review(code):
+    return ask_llm(f"Review this code. Reply as JSON findings:\n{code}")
+
+# Merge both into one structured list → feeds CI & dashboards
+findings = lint(code) + llm_review(code)
+        </code></pre>
+        <p class="code-cap">Cheap <b>rules</b> catch the obvious; the <b>LLM</b> catches the subtle. Forcing both into one schema (not prose) lets the results gate CI together.</p>
+      </section>
     </section>
 
     <!-- ============================================================= -->
@@ -519,6 +695,27 @@
         <p class="lede">Humans expect a reply within ~1 second. Three stages stacked easily hit 3–5s. <strong>VAD</strong> (voice activity detection) must also decide when you've actually <em>stopped</em> talking vs. just paused.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>A phone call with a 5-second gap before every reply feels like the line dropped. Silence reads as failure.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>The fix is <strong>streaming/overlap</strong>, not faster servers — start each stage before the previous fully finishes.</p></div>
+      </section>
+
+      <section data-background-color="#0b0d12">
+        <div class="code-h"><span class="pid">09</span><h3>The idea, in code</h3><span class="file">STT → LLM → TTS</span></div>
+        <pre><code data-trim data-noescape class="language-python">
+class VoiceAgent:
+    def __init__(self, stt, llm, tts):
+        self.stt = stt   # ears   — swap Whisper, a mock, ...
+        self.llm = llm   # brain  — swap Claude, GPT, local ...
+        self.tts = tts   # mouth  — swap ElevenLabs, a mock ...
+
+    def respond(self, audio_in):
+        text      = self.stt.transcribe(audio_in)   # audio → text
+        reply     = self.llm.respond(text)          # text  → text
+        audio_out = self.tts.speak(reply)           # text  → audio
+        return audio_out
+        # latency stacks across stages → stream/overlap in production
+
+agent = VoiceAgent(stt=Whisper(), llm=Claude(), tts=ElevenLabs())
+        </code></pre>
+        <p class="code-cap">Voice = <b>three swappable stages</b>: ears → brain → mouth. Each is just an interface, so you can mock one to test offline with no API keys.</p>
       </section>
     </section>
 
@@ -559,6 +756,26 @@
         <p class="lede"><strong>Backtesting</strong> simulates a strategy on historical data. Beware <strong>overfitting</strong> (fitting noise), <strong>look-ahead bias</strong> (using future data), and <strong>survivorship bias</strong> (only testing winners).</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Memorizing last year's exam answers — perfect retest, fail on new questions. Or interviewing only lottery winners about "strategy."</p></div>
         <div class="box aha"><span class="label">Aha</span><p>Backtesting is "predicting the past." A flawless backtest is often answering the <em>wrong question</em> — past performance ≠ future returns.</p></div>
+      </section>
+
+      <section data-background-color="#0b0d12">
+        <div class="code-h"><span class="pid">10</span><h3>The idea, in code</h3><span class="file">the crossover signal</span></div>
+        <pre><code data-trim data-noescape class="language-python">
+def sma(prices, n):
+    return sum(prices[-n:]) / n          # average of the last n prices
+
+def signal(prices):
+    # Compare a FAST (10-day) vs SLOW (50-day) average, now vs the prior bar
+    fast,      slow      = sma(prices, 10),     sma(prices, 50)
+    prev_fast, prev_slow = sma(prices[:-1], 10), sma(prices[:-1], 50)
+
+    if prev_fast <= prev_slow and fast > slow:
+        return "BUY"     # golden cross: fast just crossed ABOVE slow
+    elif prev_fast >= prev_slow and fast < slow:
+        return "SELL"    # death cross:  fast just crossed BELOW slow
+    return "HOLD"        # no crossover — moving averages LAG the trend
+        </code></pre>
+        <p class="code-cap">A strategy is just <b>fixed reactive rules</b> on smoothed prices. The crossover <em>confirms</em> a trend already underway — it doesn't predict. <span class="muted">(Educational only.)</span></p>
       </section>
     </section>
 
@@ -601,6 +818,28 @@
         <div class="box analogy"><span class="label">Analogy</span><p>A single-file trail (Sequential) vs. a trail network that splits and merges (Functional).</p></div>
         <div class="box aha"><span class="label">Aha</span><p>Multi-input isn't exotic — it's everywhere: medical AI (scan + history + labs), self-driving (camera + LiDAR + GPS).</p></div>
       </section>
+
+      <section data-background-color="#0b0d12">
+        <div class="code-h"><span class="pid">11</span><h3>The idea, in code</h3><span class="file">two branches, one head</span></div>
+        <pre><code data-trim data-noescape class="language-python">
+# Branch 1 — the IMAGE speaks "pixels" (a CNN reads it)
+image_input  = Input(shape=(64, 64, 3))
+x            = Conv2D(32, (3, 3), activation="relu")(image_input)
+image_branch = Dense(64, activation="relu")(Flatten()(x))
+
+# Branch 2 — the EXTRA features speak "numbers"
+aux_input  = Input(shape=(5,))
+aux_branch = Dense(32, activation="relu")(aux_input)
+
+# Let each branch learn first, THEN fuse the representations
+merged = concatenate([image_branch, aux_branch])
+output = Dense(10, activation="softmax")(merged)
+
+# Functional API: a model with TWO inputs — Sequential can't do this
+model = Model(inputs=[image_input, aux_input], outputs=output)
+        </code></pre>
+        <p class="code-cap"><b>Two branches, one head.</b> Each input is processed in its own "language" before being <b>concatenated</b> — which needs the functional API, not a single stack.</p>
+      </section>
     </section>
 
     <!-- ============================================================= -->
@@ -641,6 +880,25 @@
         <p class="lede">Unlike linear <strong>PCA</strong>, autoencoders learn <em>non-linear</em> compression — better for curvy data like images. Real uses: <strong>denoising</strong>, <strong>anomaly detection</strong>, and data-specific compression.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>PCA folds a map along straight creases; an autoencoder crumples it smartly to follow the terrain's curves.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>They're <em>specialists</em>: a digit autoencoder fails on cat photos — and that failure is exactly what powers anomaly detection.</p></div>
+      </section>
+
+      <section data-background-color="#0b0d12">
+        <div class="code-h"><span class="pid">12</span><h3>The idea, in code</h3><span class="file">compress, then reconstruct</span></div>
+        <pre><code data-trim data-noescape class="language-python">
+# ENCODER: squeeze 784 pixels → 32 numbers (the bottleneck)
+input_img = Input(shape=(784,))
+encoded   = Dense(128, activation="relu")(input_img)
+encoded   = Dense(32,  activation="relu")(encoded)   # keep only what matters
+
+# DECODER: expand 32 numbers back → 784 pixels
+decoded = Dense(128, activation="relu")(encoded)
+decoded = Dense(784, activation="sigmoid")(decoded)
+
+autoencoder = Model(input_img, decoded)
+autoencoder.compile(optimizer="adam", loss="mse")
+autoencoder.fit(X_train, X_train, epochs=50)   # the target IS the input!
+        </code></pre>
+        <p class="code-cap"><b>784 → 32 → 784.</b> Trained to copy its input through a narrow squeeze — too wide and it memorizes, too narrow and it can't rebuild. Input is its own label (<b>self-supervised</b>).</p>
       </section>
     </section>
 
