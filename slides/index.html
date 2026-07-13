@@ -733,9 +733,9 @@ class VoiceAgent:
         self.tts = tts   # mouth  — swap ElevenLabs, a mock ...
 
     def respond(self, audio_in):
-        text      = self.stt.transcribe(audio_in)   # audio → text
-        reply     = self.llm.respond(text)          # text  → text
-        audio_out = self.tts.speak(reply)           # text  → audio
+        text      = self.stt.transcribe(audio_in)    # audio → text
+        reply     = self.llm.generate(text)          # text  → text
+        audio_out = self.tts.synthesize(reply)       # text  → audio
         return audio_out
         # latency stacks across stages → stream/overlap in production
 
