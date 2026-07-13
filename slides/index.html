@@ -765,9 +765,9 @@ def sma(prices, n):
     return sum(prices[-n:]) / n          # average of the last n prices
 
 def signal(prices):
-    # Compare a FAST (10-day) vs SLOW (50-day) average, now vs the prior bar
-    fast,      slow      = sma(prices, 10),     sma(prices, 50)
-    prev_fast, prev_slow = sma(prices[:-1], 10), sma(prices[:-1], 50)
+    # Compare a FAST (10-day) vs SLOW (30-day) average, now vs the prior bar
+    fast,      slow      = sma(prices, 10),     sma(prices, 30)
+    prev_fast, prev_slow = sma(prices[:-1], 10), sma(prices[:-1], 30)
 
     if prev_fast <= prev_slow and fast > slow:
         return "BUY"     # golden cross: fast just crossed ABOVE slow
