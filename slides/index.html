@@ -198,6 +198,9 @@ response = client.chat.completions.create(
 print(response.choices[0].message.content)
         </code></pre>
         <p class="code-cap">You pass an array of <b>messages</b> with roles (system / user / assistant) plus <b>parameters</b> that shape the reply — then read back the next response.</p>
+        <aside class="notes">
+          Two traps worth calling out live. First, tool calling never runs your function — the model only returns a JSON <em>request</em>; your code executes it and hands the result back. Second, "JSON mode" guarantees the reply is valid JSON, not that it matches your schema, so you still validate. Project 01's offline demo prints a MOCK banner and fakes these calls; only with a real key does it exercise an actual model.
+        </aside>
       </section>
     </section>
 
@@ -262,6 +265,9 @@ def handle_customer_request(user_message):
     return response
         </code></pre>
         <p class="code-cap">A real agent <b>routes</b> each request to the right action based on detected intent — then acts and responds, instead of just generating text.</p>
+        <aside class="notes">
+          Honest caveat if you run project 02 offline: its keyword mock planner returns "done" after the first pass, so mock mode only ever runs one iteration — it shows the loop's <em>shape</em>, not real multi-step reasoning. The genuine reason → act → observe loop only fires in live mode. This slide's routing snippet is deliberately simplified; the real payoff is the <code>while</code> loop with an iteration cap so a confused agent can't spin forever.
+        </aside>
       </section>
     </section>
 
@@ -328,6 +334,9 @@ print(cosine_similarity(vectors["dog"], vectors["puppy"]))       # ~0.99  close!
 print(cosine_similarity(vectors["dog"], vectors["skyscraper"]))  # ~0.45  far
         </code></pre>
         <p class="code-cap">Text becomes numbers (an <b>embedding</b>), so "meaning" turns into <b>distance</b> — close vectors mean similar ideas, with zero shared keywords.</p>
+        <aside class="notes">
+          Project 03 runs a real local model (Xenova all-MiniLM-L6-v2, 384-dim) offline, so the semantics are genuine — the query "coding in a language named after a snake" ranks the Python line first with zero shared words. Two gotchas: the hash-fallback mode has no semantic meaning (identical strings score 1.0, everything else ~0), and vectors from different embedders (384-dim vs OpenAI's 1536-dim) can't be compared — <code>cosineSimilarity</code> throws on a dimension mismatch, so swapping models means re-embedding the corpus.
+        </aside>
       </section>
     </section>
 
@@ -397,6 +406,9 @@ Question: {question}"""
 answer = llm(prompt)                  # answers from docs, not memory
         </code></pre>
         <p class="code-cap"><b>Retrieval-Augmented Generation</b> fetches real chunks first, then asks the model to answer <em>only</em> from them — grounding it in sources instead of memory.</p>
+        <aside class="notes">
+          Key takeaway to stress: retrieval quality is the ceiling on answer quality — a perfect LLM can't fix bad chunks. Note for anyone running project 04: its demo hard-codes the 128-dim hash embedder and defaults to a MOCK generator that just stitches the first two sentences of each retrieved chunk plus a citation, so out of the box it demonstrates the pipeline <em>shape</em> with the weakest fallback at both ends. Real semantic RAG needs a one-line edit to drop the hash embedder and a live key.
+        </aside>
       </section>
     </section>
 
@@ -466,6 +478,9 @@ final = sorted(scores, key=scores.get, reverse=True)
 # → ["doc1", "doc3", ...]   doc1 was near the top of both lists
         </code></pre>
         <p class="code-cap"><b>Reciprocal Rank Fusion</b> adds <code>1/(k+rank)</code> from each list — rewarding consensus, with no fragile mixing of mismatched score scales.</p>
+        <aside class="notes">
+          The <code>k=60</code> here matches the project's real value (hybrid-retrieval.ts, "typically 60"). Honest framing for the demo: on project 05's small, well-separated 10-doc corpus the naive retriever already ranks the right doc first, so the advanced stack shows no dramatic win — these techniques earn their keep on harder corpora. Also note the reranker's recency bonus only fires for docs under 365 days old, but every corpus doc is dated 2024 or earlier, so as of today that branch is dead code — a real lesson about wall-clock-tied scoring silently decaying as data ages.
+        </aside>
       </section>
     </section>
 
@@ -535,6 +550,9 @@ for epoch in range(1000):
     b -= lr * grad
         </code></pre>
         <p class="code-cap">Learning isn't solved like algebra — the network <b>searches</b>: predict, measure loss, nudge every weight a little downhill, repeat.</p>
+        <aside class="notes">
+          Live-demo warning worth internalizing: "seeded" is not the same as "reproducible." Project 06 seeds both the dataset and the weight initialization, yet tfjs's per-epoch mini-batch shuffle is a separate unseeded randomness source, so final loss still lands in two clusters (~0.05 at 100% accuracy, or ~0.22 at ~90%) across runs. That's why the project quotes ranges rather than one hard-coded number — any pasted exact loss curve that never reproduces is a slop tell.
+        </aside>
       </section>
     </section>
 
@@ -598,6 +616,9 @@ def is_safe_path(path, workspace):
     return resolved.startswith(os.path.realpath(workspace))  # not the raw string
         </code></pre>
         <p class="code-cap">The agent grounds itself by <b>reading real failures</b> and looping — while a sandbox check on the <em>resolved</em> path keeps it from escaping the workspace.</p>
+        <aside class="notes">
+          This <code>is_safe_path</code> is the corrected version. The real project 07 originally shipped two exploitable bugs in its advertised "safety features": a <code>startsWith</code> path jail with no trailing separator let a sibling dir like <code>/tmp/sandbox-evil</code> escape a <code>/tmp/sandbox</code> jail, and a first-token command whitelist was bypassed because the full string was later handed to a shell (<code>node x.js; whoami</code>). Both are fixed now with regression tests. The deeper lesson: even after fixing those, <code>node -e</code> runs arbitrary JS, so a string whitelist is a speed bump, not OS-level isolation.
+        </aside>
       </section>
     </section>
 
@@ -661,6 +682,9 @@ def llm_review(code):
 findings = lint(code) + llm_review(code)
         </code></pre>
         <p class="code-cap">Cheap <b>rules</b> catch the obvious; the <b>LLM</b> catches the subtle. Forcing both into one schema (not prose) lets the results gate CI together.</p>
+        <aside class="notes">
+          Point out the two opposite failure modes honestly. Project 08's regex linter has no lexer, so it false-positives on <code>==</code> inside strings/comments and flags JS-only patterns on valid Python — the inherent ceiling of regex vs AST linting. And its offline "LLM review" is filename-pattern-matched canned text keyed to the two sample diffs (auth.ts / user-handler.js); any other diff yields zero Source:llm comments, so the mock shows the pipeline, not analysis. The <code>source</code> tag on each comment is the honest signal of which trust it deserves.
+        </aside>
       </section>
     </section>
 
@@ -716,6 +740,9 @@ class VoiceAgent:
 agent = VoiceAgent(stt=Whisper(), llm=Claude(), tts=ElevenLabs())
         </code></pre>
         <p class="code-cap">Voice = <b>three swappable stages</b>: ears → brain → mouth. Each is just an interface, so you can mock one to test offline with no API keys.</p>
+        <aside class="notes">
+          The swappable-interface seam is the real lesson: an implementation-blind VoiceAgent chains three one-method interfaces. In project 09's mock, STT is just <code>readFile</code>, the LLM is five keyword rules, and TTS is a 440Hz sine tone — so the mock verifies the <em>wiring</em> and live verifies the <em>intelligence</em>. Worth flagging that a file's extension is a contract about its bytes: OpenAI TTS defaults to MP3, so naming the output <code>.wav</code> without setting the wav format produces a subtly broken file — a bug that was fixed in this project.
+        </aside>
       </section>
     </section>
 
@@ -776,6 +803,9 @@ def signal(prices):
     return "HOLD"        # no crossover — moving averages LAG the trend
         </code></pre>
         <p class="code-cap">A strategy is just <b>fixed reactive rules</b> on smoothed prices. The crossover <em>confirms</em> a trend already underway — it doesn't predict. <span class="muted">(Educational only.)</span></p>
+        <aside class="notes">
+          These 10/30 periods match what project 10's demo actually runs (FAST_PERIOD=10, SLOW_PERIOD=30) — the original code once fed the LLM prompt mislabeled 20/50 periods, a bug now fixed. Foreground the headline result honestly: the strategy underperforms buy-and-hold (+20.95% vs +42.91%), and that's the intended lesson, not a defect — a trend-follower sits in cash during the early flat stretch and loses to passive holding in a steady uptrend. The whole point of separation: the LLM commentary is a passenger that never touches the deterministic trading path.
+        </aside>
       </section>
     </section>
 
@@ -839,6 +869,9 @@ output = Dense(10, activation="softmax")(merged)
 model = Model(inputs=[image_input, aux_input], outputs=output)
         </code></pre>
         <p class="code-cap"><b>Two branches, one head.</b> Each input is processed in its own "language" before being <b>concatenated</b> — which needs the functional API, not a single stack.</p>
+        <aside class="notes">
+          The architecture lesson (inputs-as-array + concatenate in the functional API) is real, but be honest about the demo's headline 100% accuracy: a per-branch ablation shows image-only also hits 100% and aux-only ~99%, so each input already solves this toy task alone and the second branch buys nothing here. That's the actual teachable point — a headline accuracy is meaningless without baselines. On real data (medical scan + labs, camera + LiDAR) the fusion genuinely matters; this toy dataset just makes the pattern visible.
+        </aside>
       </section>
     </section>
 
@@ -899,6 +932,9 @@ autoencoder.compile(optimizer="adam", loss="mse")
 autoencoder.fit(X_train, X_train, epochs=50)   # the target IS the input!
         </code></pre>
         <p class="code-cap"><b>784 → 32 → 784.</b> Trained to copy its input through a narrow squeeze — too wide and it memorizes, too narrow and it can't rebuild. Input is its own label (<b>self-supervised</b>).</p>
+        <aside class="notes">
+          A subtle wiring bug worth mentioning: project 12 originally displayed the latent vector from a <em>standalone untrained</em> encoder while training a separate autoencoder with independent weights — so its "what the model learned" visualization was actually random noise. The fix shares the encoder/decoder layer instances at construction and keeps a handle on the sub-model. Lesson: green tests and a running demo can still hide a wiring error — the demo was measuring a different network than the one it trained. Loss is given as a range because weight init here is unseeded.
+        </aside>
       </section>
     </section>
 
