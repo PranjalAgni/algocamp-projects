@@ -2,8 +2,7 @@
  * OpenAI embedder (optional, requires API key).
  *
  * Uses text-embedding-3-small:
- * - 1536-dimensional embeddings
- * - State-of-the-art quality
+ * - 1536-dimensional embeddings (vs 384 for the local Xenova model)
  * - Requires OPENAI_API_KEY environment variable
  * - Network + API costs required
  *

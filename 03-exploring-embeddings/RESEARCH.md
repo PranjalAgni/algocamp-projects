@@ -45,7 +45,7 @@ At the sentence level, this can demonstrate semantic composition.
 - **Network unavailable**: Falls back to hash-based deterministic embedder (for tests/offline).
 
 ### Optional: OpenAI text-embedding-3-small
-- **Pros**: State-of-the-art quality, 1536 dimensions.
+- **Pros**: 1536 dimensions (4x the local model), no local model download.
 - **Cons**: Requires API key, network, costs money.
 - **Use case**: If `OPENAI_API_KEY` is present, allow live comparison.
 
