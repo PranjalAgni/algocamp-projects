@@ -245,28 +245,28 @@ print(response.choices[0].message.content)
       </section>
 
       <section data-background-color="#0b0d12">
-        <div class="code-h"><span class="pid">02</span><h3>The idea, in code</h3><span class="file">routing a request</span></div>
+        <div class="code-h"><span class="pid">02</span><h3>The idea, in code</h3><span class="file">the agent loop</span></div>
         <pre><code data-trim data-noescape class="language-python">
-def handle_customer_request(user_message):
-    # 1. Figure out what the user actually wants
-    intent = classify_intent(user_message)
+MAX_ITERATIONS = 5                    # cap so a confused agent can't spin forever
 
-    # 2. Route to the handler that matches the intent
-    if intent == "order_status":
-        response = check_order_status(user_message)
-    elif intent == "faq":
-        response = answer_faq(user_message)
-    elif intent == "human_handoff":
-        response = escalate_to_human(user_message)   # knows its limits
-    else:
-        response = "I'm not sure how to help with that."
+def run_agent(query):
+    history = []
+    for _ in range(MAX_ITERATIONS):
+        # REASON: planner picks which tool(s) to call, or signals "done"
+        step = planner(query, history)
+        if step.done or not step.tool_calls:
+            break
 
-    # 3. Hand the response back to the user
-    return response
+        # ACT + OBSERVE: run each tool, feed the real result back into history
+        for call in step.tool_calls:
+            step.results.append(execute_tool(call))   # lookupOrder / searchFAQ / ...
+        history.append(step)
+
+    return generate_answer(query, history)   # final reply from what we gathered
         </code></pre>
-        <p class="code-cap">A real agent <b>routes</b> each request to the right action based on detected intent — then acts and responds, instead of just generating text.</p>
+        <p class="code-cap">The agent <b>loops</b>: reason → act → observe, until the planner says "done" or it hits the <b>iteration cap</b> — not a one-shot if/else router.</p>
         <aside class="notes">
-          Honest caveat if you run project 02 offline: its keyword mock planner returns "done" after the first pass, so mock mode only ever runs one iteration — it shows the loop's <em>shape</em>, not real multi-step reasoning. The genuine reason → act → observe loop only fires in live mode. This slide's routing snippet is deliberately simplified; the real payoff is the <code>while</code> loop with an iteration cap so a confused agent can't spin forever.
+          This mirrors project 02's real <code>runAgent</code> in <code>agent.ts</code>: a <code>for</code> loop over <code>MAX_ITERATIONS = 5</code>, the planner returns tool calls, the executor runs them and appends results to history, and it stops when the planner sets <code>shouldContinue = false</code>. Honest caveat if you run it offline: the keyword mock planner returns "done" after the first pass (it early-returns once <code>previousIterations.length &gt; 0</code>), so mock mode only ever runs one iteration — it shows the loop's <em>shape</em>, not real multi-step reasoning. The genuine reason → act → observe loop only fires in live mode.
         </aside>
       </section>
     </section>
