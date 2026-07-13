@@ -50,7 +50,9 @@ It must succeed **without any API key**. Therefore:
 ## Feedback loop (mandatory)
 Implement → install deps → run demo → run tests → if anything fails, debug and fix →
 repeat until the demo and tests pass offline. Do not report success unless you actually
-ran it and saw it pass. Paste the final passing output into the README.
+ran it and saw it pass. In the README, show a short, honest slice of real output to
+illustrate the idea - not a pasted full test-run dump with timestamps (that reads as slop
+and goes stale the moment the code changes).
 
 ## Keep it small
 v1 should be a focused, correct core. Note stretch goals in PLAN.md instead of building them.
