@@ -46,11 +46,11 @@ Following project standards, using TypeScript for consistency with other project
 ### ML Framework: TensorFlow.js (`@tensorflow/tfjs-node`)
 
 **Why TensorFlow.js?**
-- ✅ Confirmed working on arm64 macOS (sibling project 06-simple-neural-network-tensorflow runs successfully)
-- ✅ Node bindings (`@tensorflow/tfjs-node`) provide CPU performance via native TensorFlow
-- ✅ Sequential API is perfect for autoencoder architecture
-- ✅ No API keys or network required for training
-- ✅ Built-in optimizers (Adam) and loss functions (MSE, binary crossentropy)
+- Confirmed working on arm64 macOS (sibling project 06-simple-neural-network-tensorflow runs successfully)
+- Node bindings (`@tensorflow/tfjs-node`) provide CPU performance via native TensorFlow
+- Sequential API is perfect for autoencoder architecture
+- No API keys or network required for training
+- Built-in optimizers (Adam) and loss functions (MSE, binary crossentropy)
 
 **Alternatives Considered:**
 - Python + TensorFlow/Keras: More common for deep learning, but adds Python venv complexity. TensorFlow.js is sufficient for this learning project.
@@ -62,10 +62,10 @@ Following project standards, using TypeScript for consistency with other project
 **Decision**: Generate synthetic 28×28 digit-like images programmatically for **guaranteed offline operation**.
 
 **Why Synthetic?**
-- ✅ **100% Offline**: No network required, no download failures
-- ✅ **Deterministic**: Same data every run, reproducible results
-- ✅ **Sufficient for Learning**: Goal is to understand autoencoder concepts, not SOTA reconstruction
-- ✅ **Fast**: Generate on-demand, no large files to bundle
+- **100% Offline**: No network required, no download failures
+- **Deterministic**: Same data every run, reproducible results
+- **Sufficient for Learning**: Goal is to understand autoencoder concepts, not SOTA reconstruction
+- **Fast**: Generate on-demand, no large files to bundle
 
 **What We'll Generate:**
 - Simple geometric shapes representing digits 0, 1, 2
@@ -98,8 +98,8 @@ Following project standards, using TypeScript for consistency with other project
 
 ## Success Criteria
 
-- ✅ Model trains and reconstruction loss decreases over epochs
-- ✅ Reconstructed images visually resemble inputs (via ASCII visualization)
-- ✅ Latent space is demonstrably smaller (32 dims vs 784 dims)
-- ✅ All tests pass (shape validation, loss decrease)
-- ✅ Runs offline in under 1 minute
+- Model trains and reconstruction loss decreases over epochs
+- Reconstructed images visually resemble inputs (via ASCII visualization)
+- Latent space is demonstrably smaller (32 dims vs 784 dims)
+- All tests pass (shape validation, loss decrease)
+- Runs offline in under 1 minute

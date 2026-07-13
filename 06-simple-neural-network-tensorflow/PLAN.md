@@ -13,7 +13,7 @@ Build a runnable feed-forward neural network that trains on a synthetic dataset 
 ## File Structure
 ```
 06-simple-neural-network-tensorflow/
-├── RESEARCH.md          (✓ exists)
+├── RESEARCH.md          (exists)
 ├── PLAN.md              (this file)
 ├── README.md
 ├── package.json

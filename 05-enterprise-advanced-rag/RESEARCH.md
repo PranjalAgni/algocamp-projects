@@ -81,10 +81,10 @@ Pre-filter or post-filter by:
 - LangChain retrieval docs: https://python.langchain.com/docs/concepts/retrieval/
 
 ## Success Metrics for This Project
-✅ Naive retrieval returns semantically close but not best docs
-✅ Query expansion improves recall
-✅ Hybrid retrieval catches both keyword + semantic matches
-✅ Reranking moves most relevant doc to #1
-✅ Metadata filtering correctly excludes non-matching docs
-✅ Tests pass offline
-✅ Demo runs without API key (mock mode)
+- Naive retrieval returns semantically close but not best docs
+- Query expansion improves recall
+- Hybrid retrieval catches both keyword + semantic matches
+- Reranking moves most relevant doc to #1
+- Metadata filtering correctly excludes non-matching docs
+- Tests pass offline
+- Demo runs without API key (mock mode)

@@ -63,10 +63,10 @@ Since this is a **learning project** focused on the multi-input concept (not pro
 ## Dataset Strategy: Synthetic Generated Digits
 
 For a **learning project**, we want:
-- ✅ Zero downloads (fully offline)
-- ✅ Fast generation (sub-second)
-- ✅ Clear signal (not too noisy)
-- ✅ Demonstrates the multi-input concept
+- Zero downloads (fully offline)
+- Fast generation (sub-second)
+- Clear signal (not too noisy)
+- Demonstrates the multi-input concept
 
 ### Approach: Programmatically Draw Simple Digit-Like Shapes
 

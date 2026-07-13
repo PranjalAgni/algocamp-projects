@@ -27,7 +27,7 @@ Force the model to respond with valid JSON matching a schema, useful for data ex
 
 ### Official `openai` npm SDK (CHOSEN)
 - **Pros**: Official, well-maintained, TypeScript support, streaming helpers
-- **Cons**: None significant
+- **Cons**: Tied to one provider's request/response shape, so the project wraps it behind an `LLMClient` interface to keep the rest of the code provider-agnostic
 - **Version**: Latest (v4.x)
 
 ### Alternatives

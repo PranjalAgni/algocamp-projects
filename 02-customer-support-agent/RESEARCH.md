@@ -49,17 +49,17 @@ Rather than letting the LLM hallucinate, we ground answers in real data:
 ### Mock Mode (no API key)
 For the learning goal, we need a fully functional offline mode:
 
-**Option 1: Random/canned responses** ❌
+**Option 1: Random/canned responses** (rejected)
 - Too simplistic, doesn't demonstrate agent loop
 
-**Option 2: Keyword/regex-based planner** ✅ CHOSEN
+**Option 2: Keyword/regex-based planner** (CHOSEN)
 - Parse user query for keywords (order number, "refund", "bug", etc.)
 - Deterministically select appropriate tools
 - Execute tools and format response with results
 - Still runs the full agent loop (tool selection → execution → response)
 - Demonstrates the architecture without requiring an API
 
-**Option 3: Local LLM (e.g., Llama via Ollama)** ❌
+**Option 3: Local LLM (e.g., Llama via Ollama)** (rejected)
 - Requires additional installation
 - Slower, less reliable on learning machines
 - Overkill for a learning project

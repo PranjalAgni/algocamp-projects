@@ -29,8 +29,8 @@ A TypeScript library + CLI demo that teaches the 5 core OpenAI API patterns:
 ├── vitest.config.ts
 ├── .env.example
 ├── .gitignore
-├── RESEARCH.md               ✓ (done)
-├── PLAN.md                   ✓ (this file)
+├── RESEARCH.md               (done)
+├── PLAN.md                   (this file)
 └── README.md                 (write after implementation passes)
 ```
 

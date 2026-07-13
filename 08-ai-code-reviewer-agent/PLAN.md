@@ -329,11 +329,11 @@ Not implementing in v1, but noted for learning:
 
 ## Success Criteria
 
-✅ `npm install` succeeds  
-✅ `npm run demo` runs and prints review report (offline, no keys)  
-✅ `npm test` passes all tests  
-✅ README.md shows a short, honest slice of real output (not a full pasted dump)  
-✅ Both linter and LLM-mock return findings for sample diffs  
-✅ Pretty output is readable and color-coded  
-✅ JSON output is valid and matches schema  
-✅ Works on macOS arm64 with Node v22  
+- `npm install` succeeds
+- `npm run demo` runs and prints review report (offline, no keys)
+- `npm test` passes all tests
+- README.md shows a short, honest slice of real output (not a full pasted dump)
+- Both linter and LLM-mock return findings for sample diffs
+- Pretty output is readable and color-coded
+- JSON output is valid and matches schema
+- Works on macOS arm64 with Node v22

@@ -184,10 +184,10 @@ Created hello.js and executed it successfully
 
 ## Test Pass Criteria
 All tests must pass with `npm test`:
-- ✓ Sandbox path jailing blocks escapes
-- ✓ Tools execute correctly in sandbox
-- ✓ Mock agent completes canned task
-- ✓ All tests clean up temp directories
+- Sandbox path jailing blocks escapes
+- Tools execute correctly in sandbox
+- Mock agent completes canned task
+- All tests clean up temp directories
 
 ## Stretch Ideas (NOT v1)
 - Web UI: show agent thinking in real-time

@@ -88,10 +88,10 @@ npm test             # Run all tests
 
 ## Success Criteria
 
-- ✅ Model trains in < 30 seconds
-- ✅ Test accuracy significantly above random (20% baseline for 5 classes) — target 60-80%
-- ✅ Tests pass offline (no downloads)
-- ✅ Code clearly demonstrates the multi-input pattern with comments
+- Model trains in < 30 seconds
+- Test accuracy significantly above random (20% baseline for 5 classes) — target 60-80%
+- Tests pass offline (no downloads)
+- Code clearly demonstrates the multi-input pattern with comments
 
 ## Stretch Ideas (NOT v1)
 
