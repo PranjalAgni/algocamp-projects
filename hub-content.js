@@ -239,7 +239,7 @@ const HUB = [
      explain:"It's an LLM that reads/writes files and runs commands to complete dev tasks, reasoning and troubleshooting as it goes — driven by a natural-language goal like 'fix this bug'.",
      analogy:"A capable junior intern with a keyboard: give a clear task, they work in their workspace and report back — but they need boundaries.",
      aha:"The 'coding' is tool <em>orchestration</em>, not innate programming skill — the model learned to call readFile/writeFile/runCommand from examples.",
-     src:"anthropic.com/news/claude-3-5-sonnet"},
+     src:"anthropic.com/research/building-effective-agents"},
     {eyebrow:"The loop", title:"Think → act → observe → repeat (ReAct)",
      explain:"The agent doesn't pre-plan everything; each action's real result decides the next step, so a failed command becomes useful information rather than a dead end.",
      analogy:"A chef tasting the soup while cooking: taste, think 'needs salt', adjust, taste again. Without tasting, you cook blind.",
@@ -262,7 +262,7 @@ const HUB = [
      explain:"Agents must read command/test output to course-correct; risky actions (delete 50 files) go through human approval; and a finite context window means selectively reading only the files needed.",
      analogy:"Two-factor auth for destructive actions; and a desk too small to spread out every document — so you keep only the current task's papers in front of you.",
      aha:"More context isn't better — dumping the whole repo in <em>distracts</em> the model. Good agents read selectively, like a dev who doesn't read the entire codebase to fix one bug.",
-     src:"anthropic.com/news/claude-3-5-sonnet"}
+     src:"code.claude.com/docs/en/best-practices"}
   ]
 },
 /* ───────────────────────── 08 ───────────────────────── */
