@@ -743,7 +743,7 @@ agent = VoiceAgent(stt=Whisper(), llm=Claude(), tts=ElevenLabs())
         </code></pre>
         <p class="code-cap">Voice = <b>three swappable stages</b>: ears → brain → mouth. Each is just an interface, so you can mock one to test offline with no API keys.</p>
         <aside class="notes">
-          The swappable-interface seam is the real lesson: an implementation-blind VoiceAgent chains three one-method interfaces. In project 09's mock, STT is just <code>readFile</code>, the LLM is five keyword rules, and TTS is a 440Hz sine tone — so the mock verifies the <em>wiring</em> and live verifies the <em>intelligence</em>. Worth flagging that a file's extension is a contract about its bytes: OpenAI TTS defaults to MP3, so naming the output <code>.wav</code> without setting the wav format produces a subtly broken file — a bug that was fixed in this project.
+          The swappable-interface seam is the real lesson: an implementation-blind VoiceAgent chains three one-method interfaces. In project 09's mock, STT is just <code>readFile</code>, the LLM is four keyword rules (with an echo fallback), and TTS is a 440Hz sine tone — so the mock verifies the <em>wiring</em> and live verifies the <em>intelligence</em>. Worth flagging that a file's extension is a contract about its bytes: OpenAI TTS defaults to MP3, so naming the output <code>.wav</code> without setting the wav format produces a subtly broken file — a bug that was fixed in this project.
         </aside>
       </section>
     </section>

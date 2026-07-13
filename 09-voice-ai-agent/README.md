@@ -57,7 +57,7 @@ entirely and returns the contents of `fixtures/input-transcript.txt`. So "transc
 mode is `readFile`. That's deliberate (it lets the pipeline run with zero audio processing), but it
 means the offline demo never exercises any STT logic - only the interface.
 
-**2. Mock LLM is five keyword rules, not a model.** `MockLLM.generate` lowercases the prompt and
+**2. Mock LLM is four keyword rules, not a model.** `MockLLM.generate` lowercases the prompt and
 branches on `weather` / `time` / `hello` / `help`, falling back to echoing the input. The bundled
 fixture asks about weather, so the demo always prints the canned weather line. Ask it anything the
 keywords don't cover and it just repeats you back - the same "mock proves the pipeline shape, not
@@ -119,7 +119,8 @@ output/                  generated audio (gitignored)
 
 - Add a fourth stage without touching `VoiceAgent`: write a class implementing a new interface (say,
   a translation step between STT and LLM) and see how far the swappable-interface design carries you.
-- Swap `MockLLM` for `MockLLM` piped through project 02's agent loop, or for a local model, and note
-  that the pipeline code doesn't change - only the constructor wiring in `demo.ts` does.
+- Swap the keyword-rule `MockLLM` for a smarter brain: a new `LLM` class that pipes the prompt through
+  project 02's agent loop, or a local model. Note that the pipeline code doesn't change - only the
+  constructor wiring in `demo.ts` does.
 - Go live with your own voice: record a `.wav`, set `AUDIO_INPUT_PATH`, and hear the full
   Whisper → GPT → TTS round trip. Compare the sine-tone `.wav` from mock mode to the real speech.
