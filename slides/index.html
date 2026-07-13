@@ -612,8 +612,10 @@ while not task_done:
         context["last_result"] = run_sandboxed(action.command)  # feed back
 
 def is_safe_path(path, workspace):
-    resolved = os.path.realpath(path)      # trust the RESOLVED path,
-    return resolved.startswith(os.path.realpath(workspace))  # not the raw string
+    root     = os.path.realpath(workspace)
+    resolved = os.path.realpath(path)      # trust the RESOLVED path, not the raw string
+    # Bare prefix isn't enough: "/project-evil".startswith("/project") is True.
+    return resolved == root or resolved.startswith(root + os.sep)  # sibling can't escape
         </code></pre>
         <p class="code-cap">The agent grounds itself by <b>reading real failures</b> and looping — while a sandbox check on the <em>resolved</em> path keeps it from escaping the workspace.</p>
         <aside class="notes">
