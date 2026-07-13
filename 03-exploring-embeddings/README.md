@@ -1,223 +1,93 @@
-# Exploring Embeddings
+# 03 · Exploring Embeddings
 
-A learning project to build intuition for text embeddings, semantic search, and vector similarity.
+Project 02's FAQ lookup matched on keywords, so "how do I get my money back" missed an
+entry titled "refund policy". This project fixes that. An **embedding** turns a piece of
+text into a vector of numbers positioned so that texts with similar *meaning* land close
+together - and once text is a vector, "find similar" becomes plain geometry. That's the
+foundation every RAG project after this one is built on.
 
-## What This Project Does
-
-1. **Generates embeddings** from text using transformer-based models
-2. **Computes cosine similarity** between vectors
-3. **Performs semantic search** over a corpus (finds similar sentences)
-4. **Visualizes similarity matrices** showing how all texts relate to each other
-
-## Key Features
-
-- **Offline-first**: Uses `@xenova/transformers` (all-MiniLM-L6-v2) for local embeddings
-- **No API key required**: Works completely offline after first model download (~25MB)
-- **Deterministic fallback**: Hash-based embedder ensures tests pass without network
-- **Optional OpenAI support**: Can use `text-embedding-3-small` if API key is present
-
-## Installation
+## Run it
 
 ```bash
 npm install
+npm run demo     # semantic search over a 12-sentence corpus, plus a similarity matrix
+npm test         # vitest suite (18 tests, deterministic hash embedder, offline)
 ```
 
-## Usage
+The first `npm run demo` downloads the ~25MB `all-MiniLM-L6-v2` model and caches it under
+`~/.cache/huggingface/`; every run after that is offline. The demo prints which embedder it
+picked on its first line - see the modes below.
 
-### Run the Demo
+## The idea worth taking away
 
-```bash
-npm run demo
+Every embedder here satisfies the same one-method interface:
+
+```ts
+interface Embedder {
+  embed(texts: string[]): Promise<number[][]>;  // one vector per input text
+  mode: string;
+}
 ```
 
-This will:
-- Auto-select the best available embedder (Xenova → OpenAI → Hash fallback)
-- Run semantic search queries on a sample corpus
-- Display a similarity matrix showing relationships between sentences
+Give it text, get back vectors. The whole project is then two functions over those vectors:
 
-### Run Tests
+- `cosineSimilarity(a, b)` - one number in `[-1, 1]` for how aligned two vectors are.
+  `1.0` means same direction (same meaning), `0.0` means unrelated.
+- `semanticSearch(embedder, query, corpus, k)` - embed the query and every document,
+  score each with cosine similarity, return the top `k`. That's the entire retrieval step
+  of a search engine, in about ten lines (`src/similarity.ts`).
 
-```bash
-npm test
-```
+Cosine, not Euclidean distance, because it compares *direction* and ignores magnitude - so
+a long document and a short one about the same topic still score as similar.
 
-Tests use the hash-based fallback embedder for deterministic, offline execution.
+## The three modes
 
-### Watch Mode (for development)
+The factory (`src/embedder.ts`) tries embedders in order and prints a banner for the one it
+lands on:
 
-```bash
-npm run test:watch
-```
+| Banner | Embedder | Semantic meaning? |
+|--------|----------|-------------------|
+| `[MODE: LOCAL-MODEL]` | Xenova `all-MiniLM-L6-v2`, 384-dim, runs locally | Yes - the real thing |
+| `[MODE: LIVE]` | OpenAI `text-embedding-3-small`, 1536-dim, needs a key | Yes |
+| `[MODE: HASH-FALLBACK]` | SHA-256 of the text, 384-dim, always works | **No** |
 
-## Mode Detection
+Only `OPENAI_API_KEY` (copy `.env.example` to `.env`) unlocks live mode; everything else is
+automatic.
 
-The project automatically detects and uses the best available embedder:
+## Two gotchas learners trip on
 
-- **`[MODE: LOCAL-MODEL]`** — Using Xenova/all-MiniLM-L6-v2 (best quality, offline)
-- **`[MODE: LIVE]`** — Using OpenAI text-embedding-3-small (requires API key)
-- **`[MODE: HASH-FALLBACK]`** — Using deterministic hash (no semantic meaning, for tests)
+**The hash fallback has no meaning.** It exists so the test suite is deterministic and runs
+with no network and no model. It hashes the text into a unit vector, so identical strings
+score `1.0` and everything else scores near `0` - but "dog" and "puppy" are as unrelated as
+"dog" and "taxes". If the demo falls back to `HASH-FALLBACK` (model download failed), the
+search results are noise. That's expected; it's testing plumbing, not meaning. Real
+retrieval needs `LOCAL-MODEL` or `LIVE`.
 
-## Environment Variables
+**Vectors from different models can't be compared.** Xenova returns 384 numbers, OpenAI
+returns 1536. `cosineSimilarity` throws on a dimension mismatch, and even when dimensions
+happen to match, two different models place text in different coordinate systems. A corpus
+must be embedded and queried with the *same* embedder - a real bug people hit when they swap
+models but forget to re-embed their stored vectors.
 
-Create a `.env` file (see `.env.example`):
-
-```bash
-# Optional: Only needed if you want to compare with OpenAI embeddings
-OPENAI_API_KEY=your-key-here
-```
-
-If no API key is set, the project uses the local Xenova model (recommended for learning).
-
-## Example Output
-
-```
-═══════════════════════════════════════════════════════════════
-                    SEMANTIC SEARCH DEMO
-═══════════════════════════════════════════════════════════════
-
-Loading Xenova model (first run may download ~25MB)...
-
-[MODE: LOCAL-MODEL] Using Xenova/all-MiniLM-L6-v2
-
-
-Query: "travel destinations and tourism"
-
-Top 3 Results:
-─────────────────────────────────────────────────────────────
-1. [0.55] I love traveling to exotic destinations and exploring new cultures.
-2. [0.52] The best vacation spots are usually near beaches or mountains.
-3. [0.33] Summer vacations are a great time to relax and unwind.
-
-
-Query: "machine learning and AI"
-
-Top 3 Results:
-─────────────────────────────────────────────────────────────
-1. [0.50] Artificial intelligence is transforming many industries.
-2. [0.50] Neural networks can learn complex patterns from examples.
-3. [0.44] Machine learning models require large amounts of training data.
-
-
-Query: "programming and software development"
-
-Top 3 Results:
-─────────────────────────────────────────────────────────────
-1. [0.50] Software engineers use version control systems like Git.
-2. [0.41] Python is a popular programming language for data science.
-3. [0.31] Artificial intelligence is transforming many industries.
-
-
-═══════════════════════════════════════════════════════════════
-                  SIMILARITY MATRIX DEMO
-═══════════════════════════════════════════════════════════════
-
-Computing pairwise similarities for 5 sentences...
-
-Sentences:
-S1: I love traveling to exotic destinations and exploring new cu...
-S2: The best vacation spots are usually near beaches or mountain...
-S3: Machine learning models require large amounts of training da...
-S4: Neural networks can learn complex patterns from examples.
-S5: Paris is known as the city of lights and love.
-
-Similarity Matrix (range: 0.00 to 1.00):
-─────────────────────────────────────────────────────────────
-        S1   S2   S3   S4   S5 
-S1    1.00  0.44  0.02  0.02  0.18
-S2    0.44  1.00  0.01  -0.02  0.17
-S3    0.02  0.01  1.00  0.40  0.01
-S4    0.02  -0.02  0.40  1.00  0.08
-S5    0.18  0.17  0.01  0.08  1.00
-
-Interpretation:
-  • 1.00 = identical (diagonal)
-  • 0.70-0.99 = very similar
-  • 0.40-0.69 = somewhat similar
-  • 0.00-0.39 = dissimilar
-
-═══════════════════════════════════════════════════════════════
-Demo complete! Try modifying CORPUS or QUERIES in src/demo.ts
-═══════════════════════════════════════════════════════════════
-```
-
-## Project Structure
+## Files
 
 ```
-03-exploring-embeddings/
-├── RESEARCH.md         # Background on embeddings and approaches
-├── PLAN.md            # Implementation plan and design decisions
-├── README.md          # This file
-├── package.json       # Dependencies and scripts
-├── tsconfig.json      # TypeScript configuration
-├── .env.example       # Environment variable template
-├── .gitignore         # Git ignore rules
-├── src/
-│   ├── embedder.ts    # Embedder factory (auto-selection logic)
-│   ├── xenova.ts      # Xenova/transformers local embedder
-│   ├── openai.ts      # OpenAI embedder (optional)
-│   ├── hash.ts        # Hash-based fallback embedder
-│   ├── similarity.ts  # Cosine similarity and semantic search
-│   └── demo.ts        # Demo script
-└── tests/
-    └── embeddings.test.ts  # Tests (using hash embedder)
+src/
+  hash.ts         # Embedder interface + deterministic hash fallback
+  xenova.ts       # local transformer model (all-MiniLM-L6-v2)
+  openai.ts       # live embedder (text-embedding-3-small)
+  embedder.ts     # factory: picks local → live → hash and prints the banner
+  similarity.ts   # cosineSimilarity, semanticSearch, similarityMatrix
+  demo.ts         # runs search + matrix over a sample corpus
+tests/
+  embeddings.test.ts
 ```
 
-## Key Concepts Demonstrated
+## Where to go next
 
-### 1. Text Embeddings
-
-Embeddings convert text into dense numerical vectors that capture semantic meaning. Similar texts have similar vectors.
-
-### 2. Cosine Similarity
-
-Measures the angle between two vectors:
-- `1.0` = identical direction (very similar)
-- `0.0` = orthogonal (unrelated)
-- `-1.0` = opposite direction
-
-Formula: `cosine(A, B) = (A · B) / (||A|| * ||B||)`
-
-### 3. Semantic Search
-
-Given a query and a corpus:
-1. Embed the query and all documents
-2. Compute cosine similarity for each document
-3. Return top-k most similar documents
-
-This enables "find similar" functionality even when exact words don't match.
-
-### 4. Similarity Matrix
-
-A pairwise comparison showing how all items in a set relate to each other. Useful for clustering, visualization, and understanding relationships.
-
-## Test Results
-
-```
- ✓ tests/embeddings.test.ts (18 tests) 21ms
-
- Test Files  1 passed (1)
-      Tests  18 passed (18)
-   Start at  23:09:35
-   Duration  744ms (transform 145ms, setup 0ms, collect 155ms, tests 21ms, environment 0ms, prepare 221ms)
-```
-
-All tests pass offline using the deterministic hash embedder.
-
-## Learning Notes
-
-- **First run**: Downloads the ~25MB Xenova model and caches it in `~/.cache/huggingface/`
-- **Subsequent runs**: Uses cached model, works completely offline
-- **Network unavailable**: Falls back to hash embedder (no semantic meaning, but allows testing)
-- **API key present**: Can optionally use OpenAI for comparison
-
-## Future Enhancements (v2)
-
-- Vector arithmetic demo: "Paris - France + Italy ≈ Rome"
-- Clustering with k-means
-- t-SNE/UMAP visualization
-- Persistent embedding cache
-- Quality benchmarks comparing different models
-
-## License
-
-MIT
+- Run the demo, then change a query in `src/demo.ts` to something that shares no words with
+  any sentence (e.g. "coding in a language named after a snake") and watch it still find the
+  Python line. That miss-turned-hit is the whole point of embeddings over keyword search.
+- Project 04 takes this exact retrieval step and puts it in front of an LLM: chunk a
+  document, embed the chunks, retrieve the ones closest to a question, and let the model
+  answer from them. That's RAG.
