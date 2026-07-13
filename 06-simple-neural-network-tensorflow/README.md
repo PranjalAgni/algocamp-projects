@@ -99,4 +99,3 @@ steps and stretch ideas.
 - We built and trained a net by hand here. Project 07 goes the other direction - using a large
   pretrained model (Claude) as a coding agent - so you've now seen both ends: the machinery
   underneath, and the high-level tools built on top of it.
-```

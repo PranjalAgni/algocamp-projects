@@ -105,4 +105,3 @@ reranking, self-query metadata extraction, an NDCG/MRR evaluation harness).
 - We've now built retrieval from vectors (03) to a pipeline (04) to a tuned stack (05). Project 06
   steps down a layer to how the models underneath are trained, starting with a neural network from
   scratch.
-```

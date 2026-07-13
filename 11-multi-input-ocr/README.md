@@ -114,4 +114,3 @@ tests/
   stop being identical, and the image branch has to generalise instead of memorise.
 - Project 12 stays in TensorFlow.js but changes the goal from classification to reconstruction: an
   autoencoder that compresses MNIST digits and rebuilds them, with no labels at all.
-```
