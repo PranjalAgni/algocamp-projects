@@ -410,9 +410,9 @@ const HUB = [
   n:12, title:"MNIST Autoencoder", tag:"Encoder → bottleneck → decoder; latent space",
   concepts:[
     {eyebrow:"Dataset", title:"MNIST: the 'Hello World' of vision",
-     explain:"70,000 handwritten digits (0–9), 28×28 grayscale. Simple enough to train in seconds, real enough to teach genuine concepts — the standard first computer-vision project.",
+     explain:"Real MNIST is 70,000 handwritten digits (0–9), 28×28 grayscale — the standard first computer-vision project. To stay fully offline this project doesn't download it: <code>data.ts</code> <em>draws</em> 400 synthetic 28×28 digits of just three classes (0, 1, 2) with seeded randomness, a stand-in that keeps the same shape without a dependency.",
      analogy:"Learning to cook with scrambled eggs: simple, forgiving, teaches fundamentals fast — you just wouldn't serve it at a Michelin restaurant.",
-     aha:"MNIST is easy because it's tiny (784 pixels), not because digits are trivial — it lets you focus on the algorithm, not hours of training."},
+     aha:"MNIST is easy because it's tiny (784 pixels), not because digits are trivial — it lets you focus on the algorithm, not hours of training. And a synthetic stand-in is a fair swap here: the autoencoder lesson is about the squeeze, not about recognising real handwriting."},
     {eyebrow:"Core idea", title:"An autoencoder learns to copy itself",
      explain:"It compresses an input to a tiny form, then reconstructs the original — trained simply to make output match input. No labels, no categories.",
      analogy:"Summarise a 500-page book in 10 sentences, then rewrite the whole book from only that summary — the squeeze forces you to keep what matters.",

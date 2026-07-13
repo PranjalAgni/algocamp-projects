@@ -894,6 +894,9 @@ model = Model(inputs=[image_input, aux_input], outputs=output)
         <p class="lede"><strong>MNIST</strong> = 70,000 handwritten digits, the "hello world" of vision. An <strong>autoencoder</strong> learns to compress its input and reconstruct it — its job is simply to copy itself through a narrow squeeze.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Summarize a 10-page story into one paragraph, then rewrite the full story from just that summary.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>It's not really "unsupervised" — it's <strong>self-supervised</strong>: the input <em>is</em> its own label.</p></div>
+        <aside class="notes">
+          Honesty note on the data: to run fully offline this project does <em>not</em> download real MNIST. Its data.ts draws 400 synthetic 28×28 digits of only three classes (0, 1, 2) with seeded randomness — a same-shaped stand-in, not the real 70,000-image 0–9 set. Say "MNIST-like" when demoing it. The autoencoder lesson (the bottleneck squeeze) is identical either way, which is why the swap is fair rather than a shortcut worth hiding.
+        </aside>
       </section>
 
       <section>
