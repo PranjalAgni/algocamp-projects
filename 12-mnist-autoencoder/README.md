@@ -1,234 +1,56 @@
-# MNIST Autoencoder
+# 12 - MNIST Autoencoder
 
-A learning project demonstrating how autoencoders compress and reconstruct images through unsupervised learning using TensorFlow.js.
+An autoencoder is a network that learns to copy its input to its output - but through a bottleneck too small to fit the input. To reconstruct a 784-pixel image after squeezing it down to 32 numbers, the network has no choice but to learn which structure in the data is worth keeping. That forced compression, learned without any labels, is the whole idea.
 
-## What is This?
+This is the last project in the series and the second unsupervised one (project 03 taught embeddings). Everything runs offline on synthetic digits - no MNIST download, no API key.
 
-An **autoencoder** is a neural network that learns to compress data into a smaller representation (latent space) and then reconstruct it. This project trains an autoencoder on synthetic MNIST-like digit images, teaching:
+## The one idea
 
-- **Encoder-Decoder Architecture**: Symmetric compression and decompression networks
-- **Dimensionality Reduction**: Compressing 784 dimensions → 32 dimensions
-- **Reconstruction Loss**: Self-supervised learning without labels
-- **Latent Space**: Understanding learned feature representations
-- **Unsupervised Learning**: Training without explicit labels
-
-## Architecture
+Supervised learning needs a target that is different from the input (an image and its label). An autoencoder makes the input its own target:
 
 ```
-Input (784) → Encoder → Latent (32) → Decoder → Output (784)
-
-Encoder:  784 → 128 (ReLU) → 64 (ReLU) → 32 (linear)
-Decoder:  32 → 64 (ReLU) → 128 (ReLU) → 784 (sigmoid)
-
-Loss: Binary Cross-Entropy (reconstruction error)
-Optimizer: Adam (learning rate 0.001)
+image (784) -> encoder -> latent (32) -> decoder -> reconstruction (784)
+                          ^^^^^^^^^^^^
+                          the bottleneck
+loss = how different is the reconstruction from the original image?
 ```
 
-**Key Insight**: The 32-dimensional bottleneck forces the network to learn compressed, meaningful representations of 784-dimensional images.
+If the latent layer were 784-wide, the network could learn the identity function and "reconstruct" perfectly by memorising. The 32-wide bottleneck makes that impossible: 752 dimensions of information have to be thrown away and then guessed back. The only way to keep reconstruction error low is to throw away the *redundant* dimensions and keep the *informative* ones. Those 32 numbers are the learned representation.
 
-## Technology Stack
+No labels appear anywhere in training. The digit classes (0, 1, 2) are used only to *generate* varied images and to caption the demo output - the model never sees them.
 
-- **Language**: TypeScript (ES2022 modules)
-- **ML Framework**: TensorFlow.js (`@tensorflow/tfjs-node` v4.22.0)
-- **Runtime**: Node.js with `tsx`
-- **Testing**: Vitest
-- **Data**: Synthetic digit images (0, 1, 2) generated programmatically
-
-**Why TensorFlow.js?**
-- Confirmed working on arm64 macOS
-- No API keys or network required
-- Sequential API perfect for autoencoder architecture
-- Good for learning practical deep learning concepts
-
-## Installation
+## Run it
 
 ```bash
 npm install
+npm run demo    # generate data, train 15 epochs, show reconstructions + a latent vector
+npm test        # vitest, offline
 ```
 
-## Usage
+The demo prints each digit as ASCII art (` .:-=+*#%@█` mapped over pixel intensity) with the original on the left and the reconstruction on the right, so you can see the network learning shape before it learns sharpness.
 
-### Run the Demo
+## What the demo actually shows
 
-Train the autoencoder and see reconstructions:
+- **Reconstruction loss falls steeply, then flattens.** Binary cross-entropy starts near 0.67 and lands around 0.20 after 15 epochs (~70% reduction); test loss tracks it (~0.22), which is the point - similar train and test error means the network learned the digit *structure*, not the training pixels.
+- **Reconstructions are blurry, and that is correct.** The output layer is sigmoid, and 32 dimensions cannot carry the exact noise pattern of every image. You get the smooth "average" shape of each digit - a filled ring for 0, a bar for 1 - with the per-image speckle averaged away. Blur is the compression showing through, not a bug.
+- **The latent vector is 32 real numbers.** The demo encodes one test image and prints the vector plus its min/mean/max. There is nothing human-readable in it; it is just the coordinates the encoder chose. The teachable fact is only that 784 numbers went in and 32 came out with enough retained to rebuild the image.
 
-```bash
-npm run demo
-```
+Exact numbers drift run to run: the dataset is seeded (`generateDataset(..., seed=42)`) but tfjs weight initialisation and the per-epoch batch shuffle are not, so treat the values above as ballpark, not fixed. (Project 06 in this series has the same property and a longer note on why "seeded" does not mean "reproducible".)
 
-### Run Tests
+## The gotcha this project was built to teach
 
-```bash
-npm test
-```
+A real bug lived in the demo and is worth understanding, because it is the kind of mistake that produces convincing-but-meaningless output.
 
-## Demo Output
+The demo used to build a standalone encoder with `buildEncoder()`, then separately build and train the autoencoder. Those are **independent networks with independent weights**. Training updated the autoencoder; the standalone encoder kept its random initial weights. The "latent space encoding" the demo proudly displayed was therefore computed by an *untrained* encoder - random projections of the image, presented as "what the model learned."
 
-```
-╔════════════════════════════════════════╗
-║   MNIST Autoencoder Demonstration     ║
-╚════════════════════════════════════════╝
+The fix is a one-liner in principle and a real lesson in practice: the encoder you visualise must be the *same layer objects* that got trained. `buildAutoencoderWithEncoder()` now composes the autoencoder from a shared encoder/decoder and hands both back, so training the autoencoder trains the encoder in place. The regression test in `tests/train.test.ts` encodes one image before and after training and asserts the latent vector moved - if the demo ever reads an untrained encoder again, that test fails.
 
-=== Step 1: Generating Synthetic Digit Data ===
+(The old code also shipped an `extractEncoder()` helper meant to slice the encoder out of a trained autoencoder. It never worked - reusing a layer in a `Sequential` model gives its output multiple inbound nodes, and tfjs throws `Layer latent has multiple inbound nodes`. It was dead code and has been removed; sharing the layer instances up front is the approach that actually works.)
 
-Generated 300 training images
-Generated 102 test images
-Image size: 28×28 pixels
-Digits: 0, 1, 2 (balanced distribution)
+Lesson theme: a model that runs and prints plausible numbers is not the same as a model that is wired correctly. Verify that the thing you are *measuring* is the thing you *trained*.
 
-=== Step 2: Building Autoencoder ===
+## Where this fits
 
-Architecture:
-  Encoder: 784 → 128 → 64 → 32 (compression)
-  Decoder: 32 → 64 → 128 → 784 (reconstruction)
-  Loss: Binary Cross-Entropy
-  Optimizer: Adam (lr=0.001)
+This closes the loop opened in project 06 (a supervised classifier on tfjs) and project 03 (embeddings as learned vectors). An autoencoder's latent space is an embedding you trained yourself, with no labels - the same "data becomes a vector where geometry is meaning" idea from project 03, arrived at through reconstruction instead of a pretrained model.
 
-=== Training Autoencoder ===
-
-Epochs: 15
-Batch size: 32
-Validation split: 10%
-
-Epoch  1/15 - loss: 0.667197 - mse: 0.234745 - val_loss: 0.550645
-Epoch  2/15 - loss: 0.463509 - mse: 0.139620 - val_loss: 0.251364
-Epoch  3/15 - loss: 0.358869 - mse: 0.102128 - val_loss: 0.265598
-Epoch  4/15 - loss: 0.331348 - mse: 0.098762 - val_loss: 0.251591
-Epoch  5/15 - loss: 0.313655 - mse: 0.091160 - val_loss: 0.243115
-Epoch  6/15 - loss: 0.299139 - mse: 0.086343 - val_loss: 0.237590
-Epoch  7/15 - loss: 0.284817 - mse: 0.081900 - val_loss: 0.231816
-Epoch  8/15 - loss: 0.267257 - mse: 0.076493 - val_loss: 0.220877
-Epoch  9/15 - loss: 0.253378 - mse: 0.072540 - val_loss: 0.216774
-Epoch 10/15 - loss: 0.244300 - mse: 0.069975 - val_loss: 0.213630
-Epoch 11/15 - loss: 0.237395 - mse: 0.067705 - val_loss: 0.207919
-Epoch 12/15 - loss: 0.229193 - mse: 0.064699 - val_loss: 0.203057
-Epoch 13/15 - loss: 0.219512 - mse: 0.061459 - val_loss: 0.197623
-Epoch 14/15 - loss: 0.211973 - mse: 0.059149 - val_loss: 0.192225
-Epoch 15/15 - loss: 0.205319 - mse: 0.056878 - val_loss: 0.189101
-
-=== Training Complete ===
-
-Total epochs: 15
-Initial loss: 0.667197
-Final loss:   0.205319
-Improvement:  69.2% reduction
-
-=== Evaluating on Test Data ===
-
-Test Loss (Binary Cross-Entropy): 0.229967
-Test MSE: 0.061775
-```
-
-### Example Reconstruction
-
-```
-=== Digit 0 (Test Image 1) ===
-
-Original:                        Reconstructed:
-                              |                              
-        %      @              |                              
-     %                        |                              
-                              |                              
-                              |                              
-                #             |                              
-                █             |   .   . ..-:=*+-:.:.....     
-             ███████          |       .:-+==#%%*-=+=---.     
-            █████████     %   |   .   .=-++#%%@#*+*#+-=:     
-          %███████████        |       =+=++##%#*--***=:-.    
-          █████   █████       |       :=:==+***-..:++=-..    
-    %  %  ████     ████       |     ..-:-:--=-.   .-+--:. .  
-         ████       ████      |      :-=::-:-:     -=:-: .   
-         ███ %       ███      |      -=-::::-.    .--:-:.:  .
-         ███         ███      |     .:=:::.:::.    :-::::. . 
-         ███         ███      |    ..:-:-:.-:..    :-::-:.   
-        ████         ████     |    ..:===:.:::     :::--.:.  
-         ███         ███      |     ..---:..::.   ..:--:...  
-         ███         ███      |     .:===---=++:.::-=+=-.. . 
-         ███         ███ #    |     ..=+=*++***-:.:-===-. .  
- #       ████       ████      |   .  .=+**+*###+--=+++=-..   
-          ████     ████@      |       :-==**#%#+--=+=+=.     
-     #    █████   █████       |       .=-=+*#%#=-:-+=::.  .  
-           ███████████        |         :.-=+**=---::... .   
-            █████████         |       . . .-++=:::::..       
-             █████.█          |    ..    .   :: .....        
-                █        #    |             ..   .           
-
-Reconstruction Error (MSE): 0.124096
-```
-
-### Latent Space Encoding
-
-```
-=== Latent Space Encoding (Digit 0) ===
-
-Dimensions: 32 (compressed from 784)
-First 16 values: [0.088, 0.123, -0.460, 0.366, 0.196, -0.159, -0.021, 0.544, ...]
-
-Statistics:
-  Mean: 0.054
-  Min:  -0.460
-  Max:  0.664
-
-Key Insight:
-  The autoencoder compressed a 784-dimensional image
-  into just 32 dimensions while preserving enough
-  information to reconstruct it!
-```
-
-## Project Structure
-
-```
-12-mnist-autoencoder/
-├── src/
-│   ├── data.ts          # Synthetic digit image generation
-│   ├── model.ts         # Autoencoder architecture (encoder + decoder)
-│   ├── train.ts         # Training loop with history tracking
-│   ├── visualize.ts     # ASCII art image rendering
-│   └── demo.ts          # Main demo: train + reconstruct + visualize
-├── tests/
-│   ├── data.test.ts     # Data generation tests
-│   ├── model.test.ts    # Architecture shape tests
-│   └── train.test.ts    # Training smoke tests
-├── RESEARCH.md          # Background on autoencoders + stack decision
-├── PLAN.md              # Implementation plan
-├── README.md            # This file
-├── package.json         # Dependencies + scripts
-├── tsconfig.json        # TypeScript config
-└── vitest.config.ts     # Test config
-```
-
-## Key Learning Outcomes
-
-1. **Unsupervised Learning**: No labels needed—the network learns by reconstructing inputs
-2. **Dimensionality Reduction**: 784 → 32 dimensions (96% compression!)
-3. **Encoder-Decoder Pattern**: Symmetric compression and reconstruction
-4. **Reconstruction Loss**: Measures how well output matches input
-5. **Latent Space**: Compressed representation that captures essential features
-6. **Bottleneck Effect**: Forces network to learn meaningful, not just memorize
-
-## Data Strategy
-
-This project uses **synthetically generated digit images** rather than downloading real MNIST data:
-
-- **Offline-first**: No network required, runs anywhere
-- **Deterministic**: Same seed produces same data
-- **Educational**: Sufficient for learning autoencoder concepts
-- **Fast**: Generated on-demand in milliseconds
-
-Digits generated:
-- **0**: Circle/ellipse shapes
-- **1**: Vertical lines
-- **2**: Two horizontal bars
-
-## Stretch Ideas (Not Implemented)
-
-- Compare different bottleneck sizes (16, 32, 64, 128)
-- Convolutional autoencoder (better for images)
-- Variational autoencoder (VAE) for generation
-- Anomaly detection (high reconstruction error on unseen digits)
-- t-SNE visualization of latent space clustering
-- Save/load trained model weights
-
-## License
-
-MIT
+Natural next steps, if you want to keep going: shrink the bottleneck (16, 8, 4) and watch reconstructions degrade to find where the digits stop being separable; add Gaussian noise to the input but keep the clean image as the target to build a denoising autoencoder; or flag unseen shapes by their high reconstruction error (anomaly detection).

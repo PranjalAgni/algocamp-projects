@@ -155,36 +155,3 @@ export function reconstructImages(
   // Forward pass through the entire autoencoder
   return model.predict(images) as tf.Tensor2D;
 }
-
-/**
- * Extract the encoder portion of a trained autoencoder.
- *
- * This allows us to use just the encoder for:
- * - Dimensionality reduction
- * - Feature extraction
- * - Latent space visualization
- *
- * @param autoencoder Full autoencoder model
- * @param latentLayerName Name of the latent layer (default: 'latent')
- * @returns Encoder model (input → latent space)
- */
-export function extractEncoder(
-  autoencoder: tf.Sequential,
-  latentLayerName: string = 'latent'
-): tf.LayersModel {
-  // Find the latent layer
-  const latentLayer = autoencoder.getLayer(latentLayerName);
-
-  if (!latentLayer) {
-    throw new Error(`Layer '${latentLayerName}' not found in autoencoder`);
-  }
-
-  // Create a new model: input → latent layer output
-  const encoder = tf.model({
-    inputs: autoencoder.input,
-    outputs: latentLayer.output,
-    name: 'extracted_encoder',
-  });
-
-  return encoder;
-}

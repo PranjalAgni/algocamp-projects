@@ -5,13 +5,16 @@
 import { describe, it, expect } from 'vitest';
 import * as tf from '@tensorflow/tfjs-node';
 import { generateDataset } from '../src/data.js';
-import { buildAutoencoder, compileAutoencoder } from '../src/model.js';
+import {
+  buildAutoencoder,
+  buildAutoencoderWithEncoder,
+  compileAutoencoder,
+} from '../src/model.js';
 import {
   trainAutoencoder,
   evaluateAutoencoder,
   reconstructImages,
 } from '../src/train.js';
-import { buildEncoder } from '../src/model.js';
 
 describe('Autoencoder Training', () => {
   it('should train and reduce loss over epochs', async () => {
@@ -82,20 +85,35 @@ describe('Autoencoder Training', () => {
     reconstructed.dispose();
   });
 
-  it('should use encoder separately for latent encoding', async () => {
-    // Build separate encoder model
-    const encoder = buildEncoder();
-    compileAutoencoder(encoder);
+  it('should expose an encoder whose latent output reflects training', async () => {
+    // Regression test for a real bug: the demo built a standalone encoder with
+    // buildEncoder() but trained a *separate* autoencoder, so the "latent
+    // encoding" it displayed came from random, untrained weights.
+    // buildAutoencoderWithEncoder shares layer instances, so training the
+    // autoencoder must change what the encoder produces for the same image.
+    const { autoencoder, encoder } = buildAutoencoderWithEncoder();
+    compileAutoencoder(autoencoder, 0.01);
 
-    // Test encoder output
-    const testInput = tf.randomUniform([3, 784], 0, 1);
-    const latent = encoder.predict(testInput) as tf.Tensor2D;
+    const dataset = generateDataset(60, 20, 28, 42);
+    const trainTensor = tf.tensor2d(Array.from(dataset.trainImages), [60, 784]);
+    const probe = trainTensor.slice([0, 0], [1, 784]);
 
-    expect(latent.shape).toEqual([3, 32]); // Latent dimension is 32
+    const latentBefore = Array.from(await (encoder.predict(probe) as tf.Tensor2D).data());
+    expect(latentBefore.length).toBe(32); // Latent dimension is 32
 
-    testInput.dispose();
-    latent.dispose();
-  });
+    await trainAutoencoder(autoencoder, trainTensor, 3, 16, 0.0);
+
+    const latentAfter = Array.from(await (encoder.predict(probe) as tf.Tensor2D).data());
+
+    // If the encoder shared weights with the trained autoencoder, its output
+    // for the same input must have moved. Identical vectors would mean we are
+    // reading an untrained encoder - the exact bug this guards against.
+    const l1 = latentBefore.reduce((s, v, i) => s + Math.abs(v - latentAfter[i]), 0);
+    expect(l1).toBeGreaterThan(0.01);
+
+    trainTensor.dispose();
+    probe.dispose();
+  }, 30000);
 
   it('should have history with correct number of epochs', async () => {
     const dataset = generateDataset(30, 10, 28, 42);
