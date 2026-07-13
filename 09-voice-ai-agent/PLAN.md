@@ -74,7 +74,7 @@ Generate a minimal valid WAV file:
 
 ### 5. Live Implementations (Optional, if keys present)
 - **WhisperSTT**: Upload audio to OpenAI Whisper API
-- **OpenAILLM**: Call GPT-3.5-turbo or GPT-4o-mini
+- **OpenAILLM**: Call gpt-4o-mini (default; pass another id to swap)
 - **OpenAITTS**: Call OpenAI TTS with `alloy` voice
 
 ### 6. Orchestrator (`src/agent.ts`)

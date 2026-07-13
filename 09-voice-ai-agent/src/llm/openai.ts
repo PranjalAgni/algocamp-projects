@@ -4,14 +4,14 @@ import { LLM } from '../interfaces.js';
 /**
  * OpenAI GPT Language Model Implementation
  *
- * Uses OpenAI's GPT models (gpt-3.5-turbo or gpt-4o-mini) as the brain.
+ * Uses OpenAI's gpt-4o-mini as the brain by default (pass a different id to swap).
  * Requires OPENAI_API_KEY to be set.
  */
 export class OpenAILLM implements LLM {
   private client: OpenAI;
   private model: string;
 
-  constructor(apiKey: string, model: string = 'gpt-3.5-turbo') {
+  constructor(apiKey: string, model: string = 'gpt-4o-mini') {
     this.client = new OpenAI({ apiKey });
     this.model = model;
   }

@@ -92,7 +92,7 @@ Two things that bite people going live, both now handled in code:
   WAV, and the file would be subtly broken. A small lesson: an audio file's extension is a promise
   about its bytes, and it's on you to keep it.
 
-`OpenAILLM` uses `gpt-3.5-turbo` with a short "concise spoken responses" system prompt;
+`OpenAILLM` uses `gpt-4o-mini` with a short "concise spoken responses" system prompt;
 `OpenAITTS` uses the `alloy` voice on `tts-1`.
 
 ## Files
