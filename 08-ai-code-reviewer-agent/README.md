@@ -1,224 +1,135 @@
-# AI Code Reviewer Agent
+# 08 · AI Code Reviewer
 
-An automated code reviewer that analyzes git diffs and provides structured feedback, similar to tools like CodeRabbit. Combines deterministic static analysis (linter rules) with optional LLM-based contextual review.
+Project 07 pointed an agent at a diff to *write* code. This one points a reviewer at a diff to
+*judge* it - roughly what CodeRabbit or a GitHub review bot does. The interesting design choice
+here isn't the AI part. It's that the review comes from two sources stacked on top of each other:
+a deterministic linter that always runs, and an LLM pass that runs only when it can. Understanding
+why you'd want both - and where each one lies to you - is the whole point.
 
-## Learning Objectives
-
-This project teaches:
-- **Diff parsing**: Understanding git's unified diff format
-- **Static analysis**: Pattern matching for common code smells
-- **LLM integration**: Structured prompting for code review with fallback modes
-- **Mock patterns**: Building offline-capable tools with API fallbacks
-- **Output formatting**: Creating readable terminal reports
-
-## Features
-
-- **Dual Review Sources**:
-  - Deterministic linter rules (regex-based, no API needed)
-  - LLM-based contextual review (OpenAI/Anthropic with mock fallback)
-- **Offline-Ready**: Works 100% offline with bundled sample diffs in MOCK mode
-- **Multiple Output Formats**: Pretty terminal output or JSON
-- **Structured Feedback**: File, line number, severity, message, and suggestions
-- **Extensible Rules**: Easy to add new linter patterns
-
-## Installation
+## Run it
 
 ```bash
 npm install
+npm run demo              # review samples/sample1-auth.diff
+npm run demo -- sample2   # review the second sample
+npm run demo -- --json    # same review, JSON instead of the pretty report
+npm test                  # vitest suite (25 tests, deterministic, offline)
 ```
 
-## Usage
+No API key needed. Without one the LLM pass runs in a mock mode described honestly below; with one
+it calls a real model (see [Live mode](#live-mode)).
 
-### Run Demo (Default: sample1)
+## The one idea
+
+A good reviewer combines two kinds of judgement, and they have opposite failure modes:
+
+- **Deterministic checks** (`src/linter.ts`) are regex rules over the added lines: hardcoded
+  secrets, `==` instead of `===`, stray `console.log`, `TODO`, `.then()` without `await`. They
+  never cost a token, never vary run to run, and never get tired. But they only see text - they
+  have no idea what the code *means*.
+- **Contextual review** (`src/llm-reviewer.ts`) is where a model reads the diff and reasons about
+  logic, edge cases, and intent. It catches the things a regex can't, at the price of latency,
+  money, and non-determinism.
+
+Every finding carries a `source: 'linter' | 'llm'` tag, and the two lists are merged in
+`src/index.ts`. That tag is the honest bit of the whole design: it tells you *which kind of trust*
+a comment deserves. A `linter` finding is reproducible and cheap but literal; an `llm` finding is
+insightful but might be confidently wrong. Layering them means the cheap-and-certain layer covers
+the common cases so the expensive-and-fuzzy layer can spend its attention on the rest.
+
+## The pipeline
+
+```
+diff text
+  │  parser.ts   → { files: [{ path, hunks: [{ lines: [...] }] }] }   (unified-diff → structured)
+  │  linter.ts   → deterministic ReviewComments   (source: 'linter')
+  │  llm-reviewer.ts → contextual ReviewComments   (source: 'llm')
+  ▼  formatter.ts → pretty terminal report or JSON
+```
+
+The parser is worth reading on its own (`src/parser.ts`): it walks the unified diff line by line,
+tracking two independent line counters (old file, new file) so that every added line gets its real
+line number in the new file. That number is what lets a comment point at `Line 8` instead of "somewhere
+in this hunk". Only added lines are linted - you don't want to flag a `console.log` someone is
+*deleting*.
+
+## The honest part
+
+Two things the pretty output does not make obvious, both verified by running the tool:
+
+**1. In mock mode the "LLM" isn't reviewing anything - it's matching filenames.** `reviewWithMock`
+only produces comments for paths containing `auth.ts` or `user-handler.js`, and the comments are
+pre-written to fit exactly what's in those two sample diffs. Run the tool on any other file and the
+`llm` source vanishes entirely:
 
 ```bash
-npm run demo
+$ npm run demo -- --file your-own.diff
+# every comment says "Source: linter" - not one "Source: llm"
 ```
 
-### Review Specific Sample
+So the `Source: llm` lines you see in the sample output are staged. They exist to show what a real
+model's contribution *would look like* alongside the linter, not to demonstrate any analysis. Only
+[live mode](#live-mode) produces genuine LLM findings on arbitrary input. This is the same pattern
+as the earlier projects: the mock proves the *shape* of the pipeline, not the intelligence in it.
 
-```bash
-npm run demo -- sample2
+**2. The linter reads text, not code - so it has no idea what a string or a comment is.** The rules
+are raw regexes with no lexer, which means they fire inside places that aren't code at all:
+
+```
+const note = "we used to write a == b";   // flagged: loose equality  (it's in a string)
+// TODO: don't use == here                 // flagged twice: TODO *and* loose equality
+log("check the console.log docs");         // flagged: console statement (it's in a string)
+if x == 5:                                 # flagged as JS loose-equality (it's valid Python)
 ```
 
-### Review Custom Diff File
+Every one of those is a false positive, and they're not bugs to fix so much as the *inherent ceiling*
+of regex linting: without parsing the language you cannot tell code from a string that looks like
+code. Real linters (ESLint, Ruff) build an AST first for exactly this reason. The lesson to take to
+the next project: **a check is only as trustworthy as the structure it understands.** This one
+understands lines of text, so it's honest about roughly that much.
 
-```bash
-npm run demo -- --file path/to/your.diff
-```
-
-### JSON Output
-
-```bash
-npm run demo -- --json
-```
-
-### Run Tests
-
-```bash
-npm test
-```
-
-## Switching from MOCK to LIVE Mode
-
-The tool automatically detects available API keys and selects the appropriate mode:
-
-1. **OpenAI (GPT-4)**: Set `OPENAI_API_KEY` in `.env`
-2. **Anthropic (Claude)**: Set `ANTHROPIC_API_KEY` in `.env`
-3. **Mock Mode**: No keys (default) — uses deterministic responses
-
-Create a `.env` file (see `.env.example`):
+## Live mode
 
 ```bash
 cp .env.example .env
-# Edit .env and add your API key
+# add ONE of:
+#   OPENAI_API_KEY=sk-...       → uses gpt-4o-mini
+#   ANTHROPIC_API_KEY=sk-ant-... → uses claude-3-haiku
+npm run demo
 ```
 
-## Example Output
+`detectProvider()` picks OpenAI if its key is set, else Anthropic, else mock - so with a key present
+the `llm` comments become real, per-diff analysis instead of the canned matches. Both providers get
+the same prompt (`llm-reviewer.ts`): review the diff, return a JSON array of `{ file, line, severity,
+message, suggestion }`. Note the OpenAI path uses JSON mode and then digs the array out of the
+wrapper object - a reminder from project 01 that "JSON mode" guarantees valid JSON, not the *shape*
+you asked for, so the code defends against both `[...]` and `{ findings: [...] }`.
 
-### Sample 1: Authentication Service (sample1-auth.diff)
-
-```
-[MODE: MOCK — no API key]
-
-Code Review Results
-==================================================
-
-📁 src/auth.ts
-  ℹ️  Line 3 [INFO] TODO comment found - consider addressing or creating a task
-     Suggestion: Create a tracking ticket for this item
-     Source: linter
-  ⚠️  Line 3 [WARNING] No error handling for network request - fetch() can fail
-     Suggestion: Wrap in try-catch block or add .catch() handler
-     Source: llm
-  ❌ Line 4 [ERROR] Hardcoded secret detected - credentials should be stored in environment variables
-     Suggestion: Use environment variables (process.env) or a secure configuration management system
-     Source: linter
-  ⚠️  Line 7 [WARNING] console.log() statement found - remove before production
-     Suggestion: Use a proper logging library or remove debug statements
-     Source: linter
-  ❌ Line 8 [ERROR] Missing await on fetch() call - will return a Promise instead of Response
-     Suggestion: Add await keyword: const response = await fetch(...)
-     Source: llm
-  ⚠️  Line 13 [WARNING] Using loose equality operator (== or !=) instead of strict (=== or !==)
-     Suggestion: Replace == with === and != with !== to avoid type coercion bugs
-     Source: linter
-
-Summary:
-  Files reviewed: 1
-  Errors: 2
-  Warnings: 3
-  Info: 1
-```
-
-### Sample 2: User Handler (sample2-user.diff)
+## Files
 
 ```
-[MODE: MOCK — no API key]
-
-Code Review Results
-==================================================
-
-📁 lib/user-handler.js
-  ⚠️  Line 8 [WARNING] Variable "timestamp" is declared but never used
-     Suggestion: Remove unused variable or use it in the update operation
-     Source: llm
-  ⚠️  Line 11 [WARNING] Using loose equality operator (== or !=) instead of strict (=== or !==)
-     Suggestion: Replace == with === and != with !== to avoid type coercion bugs
-     Source: linter
-  ℹ️  Line 11 [INFO] Consider more specific error handling for null/undefined cases
-     Suggestion: Add else branch to handle null case or throw descriptive error
-     Source: llm
-
-Summary:
-  Files reviewed: 1
-  Warnings: 2
-  Info: 1
+src/
+  types.ts        ReviewComment / ParsedDiff / Hunk - the shared shapes
+  parser.ts       unified diff → structured data, with real new-file line numbers
+  linter.ts       the five regex rules (deterministic, source: 'linter')
+  llm-reviewer.ts OpenAI / Anthropic / mock, all returning source: 'llm'
+  formatter.ts    pretty terminal report and JSON
+  index.ts        CLI: load diff → parse → lint → LLM → merge → format
+samples/
+  sample1-auth.diff   hardcoded key, missing await, console.log, loose equality
+  sample2-user.diff   unused variable, loose equality, null check
+tests/
+  parser.test.ts, linter.test.ts, formatter.test.ts
 ```
 
-## Architecture
+`RESEARCH.md` and `PLAN.md` record the background and design decisions.
 
-### Components
+## Where to go next
 
-1. **Parser** (`src/parser.ts`): Parses git unified diff format into structured data
-2. **Linter** (`src/linter.ts`): Runs deterministic regex-based checks
-3. **LLM Reviewer** (`src/llm-reviewer.ts`): AI-powered contextual review with provider detection
-4. **Formatter** (`src/formatter.ts`): Converts results to JSON or pretty terminal output
-5. **Main Entry** (`src/index.ts`): CLI interface and orchestration
-
-### Linter Rules
-
-The deterministic linter catches:
-- Hardcoded secrets (API keys, passwords, tokens)
-- Loose equality operators (`==` vs `===`)
-- Console statements left in code
-- TODO/FIXME comments
-- Missing await on promises (heuristic)
-
-### Sample Diffs
-
-Two bundled sample diffs with intentional issues:
-- `samples/sample1-auth.diff`: Authentication service (hardcoded key, missing await, console.log)
-- `samples/sample2-user.diff`: User handler (unused variable, loose equality)
-
-## Project Structure
-
-```
-08-ai-code-reviewer-agent/
-├── RESEARCH.md              # Background research and concepts
-├── PLAN.md                  # Implementation plan and design
-├── README.md                # This file
-├── package.json             # Dependencies and scripts
-├── tsconfig.json            # TypeScript configuration
-├── vitest.config.ts         # Test configuration
-├── .env.example             # Environment variable template
-├── .gitignore               # Git ignore rules
-├── src/
-│   ├── index.ts             # Main entry point
-│   ├── parser.ts            # Diff parser
-│   ├── linter.ts            # Static analysis rules
-│   ├── llm-reviewer.ts      # LLM integration
-│   ├── formatter.ts         # Output formatting
-│   └── types.ts             # TypeScript types
-├── samples/
-│   ├── sample1-auth.diff    # Authentication sample
-│   └── sample2-user.diff    # User handler sample
-└── tests/
-    ├── parser.test.ts       # Parser tests (8 tests)
-    ├── linter.test.ts       # Linter tests (8 tests)
-    └── formatter.test.ts    # Formatter tests (9 tests)
-```
-
-## Test Results
-
-All 25 tests pass offline with no API keys:
-
-```
- ✓ tests/parser.test.ts  (8 tests)
- ✓ tests/linter.test.ts  (8 tests)
- ✓ tests/formatter.test.ts  (9 tests)
-
- Test Files  3 passed (3)
-      Tests  25 passed (25)
-```
-
-## Future Enhancements (v2+)
-
-- Auto-fix suggestions (apply patches)
-- Multi-file cross-reference analysis
-- GitHub PR API integration
-- Custom rule configuration (YAML)
-- Support for more languages (Python, Go, Rust)
-- Web UI for review results
-- CI/CD integration (exit non-zero on errors)
-
-## Environment
-
-- Node.js v22.17.0
-- TypeScript 5.5+
-- ESM modules
-- Tested on macOS arm64
-
-## License
-
-MIT
+- Run the tool on a real diff from one of your own repos (`git diff > x.diff; npm run demo -- --file x.diff`)
+  and count the linter's false positives. That gap between "flagged" and "actually wrong" is the case
+  for AST-based tools.
+- Add a rule to `linter.ts` - a regex plus a severity - and a test for it. Then try to write one that
+  *doesn't* misfire on strings, and feel where regex runs out.
+- With a key set, diff the two review sources on the same input: what does the model catch that the
+  linter can't, and what does it hallucinate that the linter never would?
