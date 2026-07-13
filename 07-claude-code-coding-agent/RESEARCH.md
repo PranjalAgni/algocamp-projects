@@ -57,7 +57,7 @@ For learning purposes, we support two modes:
 
 **LIVE mode** (when ANTHROPIC_API_KEY is set):
 - Use the real Claude API
-- Model: `claude-3-5-haiku-latest` (fast, cheap, capable)
+- Model: `claude-3-5-haiku-20241022` (fast, cheap, capable)
 - The model receives tool schemas and learns to call them
 
 **MOCK mode** (no API key):

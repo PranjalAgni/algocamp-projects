@@ -123,8 +123,8 @@ Functions:
 - `reviewWithLLM(parsedDiff: ParsedDiff): Promise<ReviewComment[]>`
 
 Mode detection:
-1. Check `OPENAI_API_KEY` env var → use OpenAI GPT-4
-2. Else check `ANTHROPIC_API_KEY` → use Anthropic Claude
+1. Check `OPENAI_API_KEY` env var → use OpenAI gpt-4o-mini
+2. Else check `ANTHROPIC_API_KEY` → use Anthropic claude-3-haiku
 3. Else use MOCK mode
 
 **Mock implementation:**
@@ -157,7 +157,7 @@ Functions:
 
 Pretty format:
 ```
-[MODE: MOCK — no API key] or [MODE: LIVE — OpenAI GPT-4]
+[MODE: MOCK — no API key] or [MODE: LIVE — OpenAI gpt-4o-mini]
 
 Code Review Results
 ===================

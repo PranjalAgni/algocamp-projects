@@ -58,7 +58,7 @@ Uses natural language understanding to catch:
 - Architecture/design concerns
 
 **API Options:**
-- **OpenAI** (`openai` npm package) — GPT-4, structured output via JSON mode
+- **OpenAI** (`openai` npm package) — gpt-4o-mini, structured output via JSON mode
 - **Anthropic** (`@anthropic-ai/sdk`) — Claude, strong at code analysis
 - **Local models** — Ollama, LM Studio (requires setup)
 

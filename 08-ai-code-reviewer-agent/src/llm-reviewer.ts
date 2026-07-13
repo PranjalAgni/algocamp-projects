@@ -2,8 +2,8 @@
  * LLM Reviewer - AI-powered code review
  *
  * Supports multiple providers with automatic fallback:
- * 1. OpenAI (GPT-4) if OPENAI_API_KEY is set
- * 2. Anthropic (Claude) if ANTHROPIC_API_KEY is set
+ * 1. OpenAI (gpt-4o-mini) if OPENAI_API_KEY is set
+ * 2. Anthropic (claude-3-haiku) if ANTHROPIC_API_KEY is set
  * 3. Mock mode (deterministic canned responses) if no keys
  */
 
@@ -53,7 +53,7 @@ function formatDiffForPrompt(parsedDiff: ParsedDiff): string {
 }
 
 /**
- * Review using OpenAI GPT-4
+ * Review using OpenAI gpt-4o-mini
  */
 async function reviewWithOpenAI(parsedDiff: ParsedDiff): Promise<ReviewComment[]> {
   const { default: OpenAI } = await import('openai');
@@ -278,9 +278,9 @@ export function getProviderName(): string {
   const provider = detectProvider();
   switch (provider) {
     case 'openai':
-      return 'OpenAI GPT-4';
+      return 'OpenAI gpt-4o-mini';
     case 'anthropic':
-      return 'Anthropic Claude';
+      return 'Anthropic claude-3-haiku';
     case 'mock':
       return 'MOCK — no API key';
   }
