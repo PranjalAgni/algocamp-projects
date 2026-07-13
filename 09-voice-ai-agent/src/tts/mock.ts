@@ -27,7 +27,7 @@ export class MockTTS implements TTS {
 
     // Generate a simple WAV file (440Hz tone for 1 second)
     // This proves we created a real audio artifact
-    const wavBuffer = generateWav(outputPath, 440, 1.0, 44100);
+    const wavBuffer = generateWav(440, 1.0, 44100);
     await writeFile(outputPath, wavBuffer);
     console.log(`[MockTTS] Generated WAV file: ${outputPath}`);
   }
