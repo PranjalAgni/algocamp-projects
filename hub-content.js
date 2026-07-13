@@ -397,7 +397,7 @@ const HUB = [
     {eyebrow:"Why fuse", title:"Modalities carry complementary info",
      explain:"Each input supplies what the other lacks: the image shows visual patterns; aux features capture measurements (aspect ratio, density) that are hard to read off raw pixels.",
      analogy:"Identifying a bird from a photo (colour, size) <em>and</em> its song (species that look identical) — neither alone is decisive.",
-     aha:"Aux features aren't <em>better</em> than the image — they're <em>different</em>. Five simple numbers can push 95%→99% by surfacing patterns buried in pixels."},
+     aha:"Aux features aren't <em>better</em> than the image — they're <em>different</em>. But prove it before you claim it: on this toy dataset an ablation shows each input already scores ~100% alone, so fusion adds nothing here. A headline accuracy means nothing without baselines; fusion earns its keep only when the inputs are genuinely complementary (medical scan + labs, camera + LiDAR)."},
     {eyebrow:"Framework", title:"Functional API for branching graphs",
      explain:"The Sequential API stacks layers in one line — fine for a single path. Branching/merging needs the Functional API, where models are graphs and you explicitly wire outputs to inputs.",
      analogy:"Sequential = one assembly line. Functional = a factory floor where several lines converge at a final inspection station.",
