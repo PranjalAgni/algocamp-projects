@@ -12,12 +12,14 @@ import path from 'path';
  * Learning point: Always validate user-provided paths before file operations!
  */
 export function isPathSafe(sandboxRoot: string, requestedPath: string): boolean {
-  const resolved = path.resolve(sandboxRoot, requestedPath);
-  const normalized = path.normalize(resolved);
+  const root = path.resolve(sandboxRoot);
+  const resolved = path.resolve(root, requestedPath);
 
-  // Check if the normalized path starts with the sandbox root
-  // This catches both ".." traversal and absolute paths outside sandbox
-  return normalized.startsWith(sandboxRoot);
+  // The root itself is inside the sandbox; anything below it must sit under
+  // "root + separator". Comparing against the bare prefix would let a sibling
+  // directory like "/tmp/sandbox-evil" escape a "/tmp/sandbox" jail, because
+  // "/tmp/sandbox-evil".startsWith("/tmp/sandbox") is true.
+  return resolved === root || resolved.startsWith(root + path.sep);
 }
 
 /**
@@ -47,10 +49,27 @@ const SAFE_COMMANDS = [
 ];
 
 /**
+ * Shell metacharacters that let one command string invoke another.
+ * Because runCommand hands the whole string to a shell, checking only the
+ * first word is not enough: "node x.js; rm file" would pass the whitelist and
+ * then run rm. Rejecting these characters closes that command-chaining hole.
+ *
+ * Learning point: this is defence in depth, not a real sandbox. "node" is on
+ * the whitelist and `node -e "<code>"` still runs arbitrary JavaScript, so the
+ * only real boundary is OS-level isolation (containers, seccomp). Treat the
+ * whitelist as a speed bump, not a wall.
+ */
+const SHELL_METACHARACTERS = /[;&|`$(){}<>\n\\]/;
+
+/**
  * Check if a command is safe to execute.
- * Only allows whitelisted commands to prevent dangerous operations.
+ * Requires a whitelisted program AND no shell metacharacters that could chain
+ * a second command.
  */
 export function isCommandSafe(command: string): boolean {
+  if (SHELL_METACHARACTERS.test(command)) {
+    return false;
+  }
   const firstWord = command.trim().split(/\s+/)[0];
   return SAFE_COMMANDS.includes(firstWord);
 }
