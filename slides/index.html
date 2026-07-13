@@ -454,9 +454,9 @@ answer = llm(prompt)                  # answers from docs, not memory
 
       <section>
         <div class="concept-h"><span class="pid">05</span><h3>Query expansion &amp; metadata filtering</h3></div>
-        <p class="lede"><strong>Query expansion</strong> rewrites/enriches the question (add synonyms, or HyDE: generate a fake ideal answer and search for docs like it). <strong>Metadata filtering</strong> restricts by department, date, or type first.</p>
+        <p class="lede"><strong>Query expansion</strong> rewrites/enriches the question (add synonyms, or HyDE: generate a fake ideal answer and search for docs like it). <strong>Metadata filtering</strong> restricts by department, date, or type first. <em>This</em> project keeps expansion simple: <code>query-processing.ts</code> is a hand-built 13-term synonym map (no LLM, no HyDE), so "time off" picks up "PTO, vacation, leave."</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Netflix search with filters: "space adventure" + Sci-Fi + PG-13 + year≥2020 cuts the noise instantly.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>HyDE works even if the fake answer hallucinates — the embedding still lands in the right neighborhood of <em>real</em> docs.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>HyDE works even if the fake answer hallucinates — the embedding still lands in the right neighborhood of <em>real</em> docs. The synonym map teaches the <em>shape</em>; HyDE is the production upgrade that fills the same slot.</p></div>
       </section>
 
       <section data-background-color="#0b0d12">
