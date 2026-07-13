@@ -89,7 +89,7 @@ async function main() {
 
   // Print overall mode banner
   const overallMode = openaiKey ? 'LIVE' : 'MOCK — no API key';
-  console.log(`\n🚀 [MODE: ${overallMode}]\n`);
+  console.log(`\n[MODE: ${overallMode}]\n`);
 
   // Create and run the agent
   const agent = new VoiceAgent(stt, llm, tts);
