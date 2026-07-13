@@ -47,6 +47,27 @@ npm test         # vitest suite (offline)
 
 **Total: 250 tests passing, all offline.**
 
+## The slide decks
+
+Two RevealJS decks explain the ideas behind the builds. Both run locally with Python's
+built-in server (no install), or open them in a browser directly.
+
+```bash
+npm run slides    # deck 1 → http://localhost:8000
+npm run hub       # deck 2 → http://localhost:8001/learning-hub.html
+```
+
+- **`slides/index.html` — The Concepts Behind 12 AI Builds.** One section per project:
+  a plain-English idea, an analogy, an "aha", then the real code that makes it concrete.
+  Press **S** for presenter notes (the honest caveats about what each project's offline
+  mode actually exercises).
+- **`learning-hub.html` — AI Learning Hub.** A deeper concept-first tour (78 concept cards
+  across the 12 projects) with analogies and cited sources, generated from `hub-content.js`.
+  It must be served from the repo root so it can load `hub-content.js` (that's what
+  `npm run hub` does).
+
+Only `slides/` is published to GitHub Pages.
+
 ## How it was built
 
 One autonomous agent per project, each running its own research → plan → build → test feedback

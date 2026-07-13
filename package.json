@@ -2,9 +2,11 @@
   "name": "algocamp-projects",
   "version": "1.0.0",
   "private": true,
-  "description": "12 hands-on AI/ML learning builds + a RevealJS learning hub deck.",
+  "description": "12 hands-on AI/ML learning builds + two RevealJS concept decks.",
   "scripts": {
     "slides": "python3 -m http.server 8000 --directory slides",
-    "slides:open": "python3 -m http.server 8000 --directory slides & sleep 1 && open http://localhost:8000"
+    "slides:open": "python3 -m http.server 8000 --directory slides & sleep 1 && open http://localhost:8000",
+    "hub": "python3 -m http.server 8001",
+    "hub:open": "python3 -m http.server 8001 & sleep 1 && open http://localhost:8001/learning-hub.html"
   }
 }
