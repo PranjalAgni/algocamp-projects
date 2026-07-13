@@ -652,8 +652,8 @@ def is_safe_path(path, workspace):
 
       <section>
         <div class="concept-h"><span class="pid">08</span><h3>Why combine them + structured output</h3></div>
-        <p class="lede">Layer them like a <strong>test pyramid</strong>: cheap linter rules catch clear violations; the LLM catches subtle ones. Force the LLM to return a <strong>schema</strong> (file, line, severity, suggestion) so results feed dashboards and CI.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>Car safety: airbags + lane-departure warnings. Each catches what the other can't. Structured output = a filled-in form, not prose.</p></div>
+        <p class="lede">Layer them like a <strong>test pyramid</strong>: cheap linter rules catch clear violations; the LLM catches subtle ones. Ask the LLM for <strong>JSON</strong> (file, line, severity, suggestion) so results feed dashboards and CI.</p>
+        <div class="box analogy"><span class="label">Analogy</span><p>Car safety: airbags + lane-departure warnings. Each catches what the other can't. JSON output = a filled-in form, not prose.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>If the LLM flags something a regex <em>could</em> have caught — write the regex. Push checks as low (fast/cheap) as possible.</p></div>
       </section>
 
@@ -676,16 +676,16 @@ def lint(code):
     return findings
 
 # Layer 2 — LLM: judges intent, naming, risky logic a regex can't see.
-# Forced to return the SAME schema {line, severity, message}.
+# Asked (in the prompt) to reply as JSON findings {line, severity, message}.
 def llm_review(code):
     return ask_llm(f"Review this code. Reply as JSON findings:\n{code}")
 
 # Merge both into one structured list → feeds CI & dashboards
 findings = lint(code) + llm_review(code)
         </code></pre>
-        <p class="code-cap">Cheap <b>rules</b> catch the obvious; the <b>LLM</b> catches the subtle. Forcing both into one schema (not prose) lets the results gate CI together.</p>
+        <p class="code-cap">Cheap <b>rules</b> catch the obvious; the <b>LLM</b> catches the subtle. Both emit JSON (not prose), so the results gate CI together.</p>
         <aside class="notes">
-          Point out the two opposite failure modes honestly. Project 08's regex linter has no lexer, so it false-positives on <code>==</code> inside strings/comments and flags JS-only patterns on valid Python — the inherent ceiling of regex vs AST linting. And its offline "LLM review" is filename-pattern-matched canned text keyed to the two sample diffs (auth.ts / user-handler.js); any other diff yields zero Source:llm comments, so the mock shows the pipeline, not analysis. The <code>source</code> tag on each comment is the honest signal of which trust it deserves.
+          Point out the two opposite failure modes honestly. Project 08's regex linter has no lexer, so it false-positives on <code>==</code> inside strings/comments and flags JS-only patterns on valid Python — the inherent ceiling of regex vs AST linting. And its offline "LLM review" is filename-pattern-matched canned text keyed to the two sample diffs (auth.ts / user-handler.js); any other diff yields zero Source:llm comments, so the mock shows the pipeline, not analysis. The <code>source</code> tag on each comment is the honest signal of which trust it deserves. One more precision: <code>llm-reviewer.ts</code> uses OpenAI <em>JSON mode</em> (<code>response_format: {type:'json_object'}</code>), which guarantees the reply parses as JSON but not that it matches the fields — that's why the code still defaults every missing key (<code>finding.file || ''</code>). Enforcing the shape at the API layer is a separate feature, Structured Outputs.
         </aside>
       </section>
     </section>
