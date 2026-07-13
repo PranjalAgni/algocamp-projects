@@ -839,7 +839,7 @@ def signal(prices):
 
       <section>
         <div class="concept-h"><span class="pid">11</span><h3>Two branches, one head: feature fusion</h3></div>
-        <p class="lede">A <strong>multi-input model</strong> runs each input through its own branch (CNN for the image, dense layers for auxiliary features), then <strong>concatenates</strong> them into a shared head for the final decision.</p>
+        <p class="lede">A <strong>multi-input model</strong> runs each input through its own branch, then <strong>concatenates</strong> them into a shared head for the final decision. Real OCR would put a CNN in the image branch; <em>this</em> project flattens the tiny 14×14 digit into a dense branch (<code>model.ts</code>: <code>Input → Flatten → Dense(64)</code>, no <code>Conv2D</code>) to keep the focus on the fusion, not the CNN.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Picking a restaurant: one friend reads reviews (text), another studies food photos (images). You merge both to decide.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>You let each input speak its own "language" <em>before</em> merging — not just stapling raw pixels and numbers together upfront.</p></div>
       </section>
@@ -872,7 +872,7 @@ model = Model(inputs=[image_input, aux_input], outputs=output)
         </code></pre>
         <p class="code-cap"><b>Two branches, one head.</b> Each input is processed in its own "language" before being <b>concatenated</b> — which needs the functional API, not a single stack.</p>
         <aside class="notes">
-          The architecture lesson (inputs-as-array + concatenate in the functional API) is real, but be honest about the demo's headline 100% accuracy: a per-branch ablation shows image-only also hits 100% and aux-only ~99%, so each input already solves this toy task alone and the second branch buys nothing here. That's the actual teachable point — a headline accuracy is meaningless without baselines. On real data (medical scan + labs, camera + LiDAR) the fusion genuinely matters; this toy dataset just makes the pattern visible.
+          Two honesty notes. First, the <code>Conv2D</code> line above is the <em>general</em> multi-input pattern — the actual project skips it: <code>model.ts</code> is <code>Input(14×14×1) → Flatten → Dense(64)</code> with no convolution, because on a tiny 14×14 digit the CNN waste is small and the teaching budget is spent on the fusion step. Second, be honest about the demo's headline 100% accuracy: a per-branch ablation shows image-only also hits 100% and aux-only ~99%, so each input already solves this toy task alone and the second branch buys nothing here. That's the actual teachable point — a headline accuracy is meaningless without baselines. On real data (medical scan + labs, camera + LiDAR) the fusion genuinely matters; this toy dataset just makes the pattern visible.
         </aside>
       </section>
     </section>
