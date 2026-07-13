@@ -446,10 +446,10 @@ answer = llm(prompt)                  # answers from docs, not memory
       </section>
 
       <section>
-        <div class="concept-h"><span class="pid">05</span><h3>Reranking with a cross-encoder</h3></div>
-        <p class="lede">A <strong>cross-encoder</strong> reads the query and a candidate <em>together</em> for a precise relevance score — far more accurate than the bi-encoder used to retrieve, but too slow to run on everything.</p>
+        <div class="concept-h"><span class="pid">05</span><h3>Reranking: precise second pass</h3></div>
+        <p class="lede">After retrieval returns a shortlist, a <strong>reranker</strong> rescores it for precision. In production that's a <strong>cross-encoder</strong> reading query and candidate <em>together</em> — far more accurate than the bi-encoder used to retrieve, but too slow to run on everything. <em>This</em> project keeps it simple: <code>reranking.ts</code> is a heuristic (query-term overlap + title match + recency bonus), a stand-in for the real learned cross-encoder.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Bi-encoder = speed dating (2 min each, compare later). Cross-encoder = a full dinner date. Speed-date 100, dine with the top 10.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Hence the two-stage pipeline: <em>fast retrieve → slow rerank</em>. You get scale <strong>and</strong> precision.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Two stages either way: <em>fast retrieve → slow rerank</em>. The heuristic teaches the <em>shape</em> of a rerank pass; a cross-encoder is the production upgrade that fills the same slot.</p></div>
       </section>
 
       <section>
