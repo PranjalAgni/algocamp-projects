@@ -50,7 +50,7 @@ The learning objective is **understanding multi-input architecture**, not achiev
 
 ### Documentation
 
-- `README.md`: What it is, install, run demo, run tests, example output (paste real training logs)
+- `README.md`: What it is, install, run demo, run tests, and a short, honest slice of real output (not a full pasted training-log dump)
 - `.env.example`: Note "No API keys needed for this project"
 - `.gitignore`: Standard Node ignores
 

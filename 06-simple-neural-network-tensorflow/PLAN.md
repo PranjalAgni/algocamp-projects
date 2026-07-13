@@ -80,7 +80,7 @@ Build a runnable feed-forward neural network that trains on a synthetic dataset 
 - [ ] Code implements all components
 - [ ] `npm run demo` trains successfully, prints epoch logs + test accuracy > 90%
 - [ ] `npm test` passes all tests
-- [ ] README.md contains real output paste
+- [ ] README.md shows a short, honest slice of real output (not a full pasted dump)
 - [ ] No runtime errors, no warnings
 
 ## Stretch Goals (NOT v1)

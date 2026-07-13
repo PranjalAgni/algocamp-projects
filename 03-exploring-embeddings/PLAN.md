@@ -105,5 +105,5 @@ Tests (using hash embedder for determinism/offline):
 - [x] Implementation complete, well-commented.
 - [x] `npm run demo` works offline (prints mode banner).
 - [x] `npm test` passes offline (uses hash fallback).
-- [x] README.md includes pasted passing output.
+- [x] README.md shows a short, honest slice of real output (not a full pasted dump).
 - [x] .env.example, .gitignore present.

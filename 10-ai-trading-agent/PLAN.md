@@ -142,7 +142,7 @@ Build a complete backtesting system that:
 - How to run demo: `npm run demo`
 - How to run tests: `npm test`
 - How to enable LLM (set OPENAI_API_KEY in .env)
-- Example output (paste real output after testing)
+- Example output (a short, honest slice of real output, not a full pasted dump)
 
 **.env.example**:
 ```
@@ -173,7 +173,7 @@ Before completion:
 - [ ] `npm run demo` runs and prints full backtest report
 - [ ] `npm test` passes all tests
 - [ ] Demo works WITHOUT any API key (MOCK mode)
-- [ ] README includes real output example
+- [ ] README shows a short, honest slice of real output (not a full pasted dump)
 - [ ] All files have clear comments explaining concepts
 
 ## Stretch Goals (Not v1)

@@ -126,7 +126,7 @@ if (query.match(/bug|issue|problem|broken|error/i)) → createTicket
 3. ✅ `OPENAI_API_KEY=sk-... npm run demo` works in live mode
 4. ✅ Agent demonstrates tool calling loop (not just direct tool execution)
 5. ✅ Code is well-commented for learning purposes
-6. ✅ README includes pasted passing output
+6. ✅ README shows a short, honest slice of real output (not a full pasted dump)
 
 ## Stretch Goals (NOT v1)
 

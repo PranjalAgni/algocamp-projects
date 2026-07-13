@@ -169,4 +169,4 @@ npm run demo  # Now uses GPT-4o-mini
 8. Run and verify offline
 9. Add transformers.js embedder (may require model download on first run)
 10. Add OpenAI generator for LIVE mode
-11. Write README with pasted output
+11. Write README with a short, honest slice of real output (not a full pasted dump)
