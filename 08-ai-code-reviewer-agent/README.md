@@ -94,7 +94,7 @@ understands lines of text, so it's honest about roughly that much.
 cp .env.example .env
 # add ONE of:
 #   OPENAI_API_KEY=sk-...       → uses gpt-4o-mini
-#   ANTHROPIC_API_KEY=sk-ant-... → uses claude-3-haiku
+#   ANTHROPIC_API_KEY=sk-ant-... → uses claude-3-5-haiku
 npm run demo
 ```
 

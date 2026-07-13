@@ -124,7 +124,7 @@ Functions:
 
 Mode detection:
 1. Check `OPENAI_API_KEY` env var → use OpenAI gpt-4o-mini
-2. Else check `ANTHROPIC_API_KEY` → use Anthropic claude-3-haiku
+2. Else check `ANTHROPIC_API_KEY` → use Anthropic claude-3-5-haiku
 3. Else use MOCK mode
 
 **Mock implementation:**

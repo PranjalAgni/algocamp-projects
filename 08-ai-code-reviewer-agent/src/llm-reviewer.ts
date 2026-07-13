@@ -3,7 +3,7 @@
  *
  * Supports multiple providers with automatic fallback:
  * 1. OpenAI (gpt-4o-mini) if OPENAI_API_KEY is set
- * 2. Anthropic (claude-3-haiku) if ANTHROPIC_API_KEY is set
+ * 2. Anthropic (claude-3-5-haiku) if ANTHROPIC_API_KEY is set
  * 3. Mock mode (deterministic canned responses) if no keys
  */
 
@@ -149,7 +149,7 @@ Return ONLY valid JSON array, no other text.`;
 
   try {
     const response = await anthropic.messages.create({
-      model: 'claude-3-haiku-20240307',
+      model: 'claude-3-5-haiku-20241022',
       max_tokens: 2048,
       temperature: 0.3,
       messages: [{ role: 'user', content: prompt }]
@@ -280,7 +280,7 @@ export function getProviderName(): string {
     case 'openai':
       return 'OpenAI gpt-4o-mini';
     case 'anthropic':
-      return 'Anthropic claude-3-haiku';
+      return 'Anthropic claude-3-5-haiku';
     case 'mock':
       return 'MOCK — no API key';
   }
