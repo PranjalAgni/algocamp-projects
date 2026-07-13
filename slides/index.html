@@ -185,7 +185,7 @@
         <div class="code-h"><span class="pid">01</span><h3>The idea, in code</h3><span class="file">calling the chat API</span></div>
         <pre><code data-trim data-noescape class="language-python">
 response = client.chat.completions.create(
-    model="gpt-4",              # which brain to use
+    model="gpt-4o-mini",        # which brain to use (project 01's default)
     messages=[
         {"role": "system", "content": "You are a helpful tutor."},
         {"role": "user",   "content": "Explain photosynthesis simply."}
