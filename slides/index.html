@@ -176,9 +176,9 @@
 
       <section>
         <div class="concept-h"><span class="pid">01</span><h3>Structured output &amp; one client for all providers</h3></div>
-        <p class="lede"><strong>Structured outputs</strong> force replies to match a schema exactly — no missing keys, safe to feed into typed code. A <strong>provider-agnostic interface</strong> hides differences between OpenAI / Anthropic / others behind one call.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>Schema = a form with a pen that only writes inside the boxes. Provider interface = a universal remote for any TV brand.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Abstraction isn't just tidy — it's freedom from lock-in. Swap models with a config change when one is slow or pricey.</p></div>
+        <p class="lede"><strong>JSON mode</strong> (what this project uses) guarantees the reply <em>parses</em> as JSON, but not which keys or types come back. <strong>Structured Outputs</strong> (a strict schema) is the stronger option that forces the exact shape. A <strong>provider-agnostic interface</strong> hides differences between OpenAI / Anthropic / others behind one call.</p>
+        <div class="box analogy"><span class="label">Analogy</span><p>JSON mode = a form written in non-smudge ink (legible). Structured Outputs = that form with required fields you can't leave blank. Provider interface = a universal remote for any TV brand.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>JSON mode still lets the wrong keys through, so you validate the shape yourself. Structured Outputs is what removes that step. And the provider abstraction buys freedom from lock-in: swap models with a config change.</p></div>
       </section>
 
       <section data-background-color="#0b0d12">
