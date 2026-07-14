@@ -137,6 +137,7 @@ export async function trainModel(
     epochs,
     batchSize,
     validationSplit, // Hold out 10% of training data for validation during training
+    verbose: 0, // Suppress tfjs-node's built-in per-epoch line; we do our own logging below
     callbacks: {
       // Log progress every epoch
       onEpochEnd: (epoch, logs) => {

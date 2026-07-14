@@ -59,6 +59,7 @@ export async function trainAutoencoder(
     batchSize,
     validationSplit,
     shuffle: true, // Shuffle training data each epoch for better generalization
+    verbose: 0, // Suppress tfjs-node's built-in per-epoch line; we do our own logging below
     callbacks: {
       onEpochEnd: (epoch, logs) => {
         // Print progress every epoch (since we only train for ~15 epochs)
