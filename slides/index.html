@@ -335,7 +335,7 @@ print(cosine_similarity(vectors["dog"], vectors["skyscraper"]))  # ~0.31  far
         </code></pre>
         <p class="code-cap">Text becomes numbers (an <b>embedding</b>), so "meaning" turns into <b>distance</b> - close vectors mean similar ideas, with zero shared keywords.</p>
         <aside class="notes">
-          Project 03 runs a real local model (Xenova all-MiniLM-L6-v2, 384-dim) offline, so the semantics are genuine - the query "coding in a language named after a snake" ranks the Python line first with zero shared words. Two gotchas: the hash-fallback mode has no semantic meaning (identical strings score 1.0, everything else ~0), and vectors from different embedders (384-dim vs OpenAI's 1536-dim) can't be compared - <code>cosineSimilarity</code> throws on a dimension mismatch, so swapping models means re-embedding the corpus.
+          Project 03 runs a real local model (Xenova all-MiniLM-L6-v2, 384-dim) offline, so the semantics are genuine - the query "coding in a language named after a snake" ranks the Python line first. The one word it shares with the corpus - "language" - is a trap: keyword matching latches onto "natural language processing" and ranks Python near the bottom, while the embedder reads the whole meaning and still gets Python right. Two gotchas: the hash-fallback mode has no semantic meaning (identical strings score 1.0, everything else ~0), and vectors from different embedders (384-dim vs OpenAI's 1536-dim) can't be compared - <code>cosineSimilarity</code> throws on a dimension mismatch, so swapping models means re-embedding the corpus.
         </aside>
       </section>
     </section>
