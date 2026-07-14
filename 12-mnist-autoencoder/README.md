@@ -4,6 +4,16 @@ An autoencoder is a network that learns to copy its input to its output - but th
 
 This is the last project in the series and the second unsupervised one (project 03 taught embeddings). Everything runs offline on synthetic digits - no MNIST download, no API key.
 
+## Run it
+
+```bash
+npm install
+npm run demo    # generate data, train 15 epochs, show reconstructions + a latent vector
+npm test        # vitest, offline
+```
+
+The demo prints each digit as ASCII art (` .:-=+*#%@█` mapped over pixel intensity) with the original on the left and the reconstruction on the right, so you can see the network learning shape before it learns sharpness.
+
 ## The one idea
 
 Supervised learning needs a target that is different from the input (an image and its label). An autoencoder makes the input its own target:
@@ -18,16 +28,6 @@ loss = how different is the reconstruction from the original image?
 If the latent layer were 784-wide, the network could learn the identity function and "reconstruct" perfectly by memorising. The 32-wide bottleneck makes that impossible: 752 dimensions of information have to be thrown away and then guessed back. The only way to keep reconstruction error low is to throw away the *redundant* dimensions and keep the *informative* ones. Those 32 numbers are the learned representation.
 
 No labels appear anywhere in training. The digit classes (0, 1, 2) are used only to *generate* varied images and to caption the demo output - the model never sees them.
-
-## Run it
-
-```bash
-npm install
-npm run demo    # generate data, train 15 epochs, show reconstructions + a latent vector
-npm test        # vitest, offline
-```
-
-The demo prints each digit as ASCII art (` .:-=+*#%@█` mapped over pixel intensity) with the original on the left and the reconstruction on the right, so you can see the network learning shape before it learns sharpness.
 
 ## What the demo actually shows
 
@@ -66,7 +66,7 @@ tests/
 
 `RESEARCH.md` records why an autoencoder and synthetic digits; `PLAN.md` lists the build order.
 
-## Where this fits
+## Where to go next
 
 This closes the loop opened in project 06 (a supervised classifier on tfjs) and project 03 (embeddings as learned vectors). An autoencoder's latent space is an embedding you trained yourself, with no labels - the same "data becomes a vector where geometry is meaning" idea from project 03, arrived at through reconstruction instead of a pretrained model.
 
