@@ -53,6 +53,17 @@ you; you run it and feed the result back in a follow-up message. **JSON mode gua
 valid JSON, not a valid schema** - you still validate the shape yourself. Look at
 `openai-client.ts` to see exactly where each of these happens in a real request.
 
+## What the mock can and can't do with a system prompt
+
+Pattern 3 sets a `system` message ("respond like a pirate") to show that a system prompt
+steers the whole turn. A real model reads that instruction and adapts. The mock can't
+reason, so it recognizes the handful of personas the demo uses (`applyPersona` in
+`mock-client.ts`) and rewrites its canned reply - enough to prove that the *same* user
+message produces a different answer once a system prompt is present. Set an unfamiliar
+persona and the mock says so explicitly rather than pretending to follow it; only `LIVE`
+mode follows an arbitrary instruction. That gap is the honest edge of every offline mock in
+this repo: it exercises the *shape* of the call, not the intelligence behind it.
+
 ## Files
 
 ```

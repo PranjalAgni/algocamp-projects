@@ -44,6 +44,24 @@ describe('MockLLMClient', () => {
 
       expect(response.toLowerCase()).toContain('paris');
     });
+
+    it('should let a system prompt steer the reply (Pattern 3)', async () => {
+      const withoutSystem: Message[] = [
+        { role: 'user', content: 'Hello!' }
+      ];
+      const withPirateSystem: Message[] = [
+        { role: 'system', content: 'You are a pirate. Always respond in pirate speak with "Arrr".' },
+        { role: 'user', content: 'Hello!' }
+      ];
+
+      const plain = await client.chat(withoutSystem);
+      const pirate = await client.chat(withPirateSystem);
+
+      // Same user turn, different output once a system prompt is set - that is
+      // the whole point of Pattern 3, and the mock must not ignore it.
+      expect(pirate).not.toBe(plain);
+      expect(pirate.toLowerCase()).toContain('arrr');
+    });
   });
 
   describe('streamChat', () => {
