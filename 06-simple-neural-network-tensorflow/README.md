@@ -34,8 +34,11 @@ Input (2 features: x, y)
 ```
 
 The `relu` (`max(0, x)`) is the part that matters. Remove the activations and the whole stack
-collapses into a single linear map - no matter how many layers, it could only draw straight
-boundaries and would never separate the moons. ReLU is the kink that lets the network bend.
+collapses into a single linear map - no matter how many layers, it can only draw one straight
+boundary. At this noise level a straight line already gets most points right (~90%), but it can't
+follow the crescents where they interleave; those wrapped-around tips are the points it keeps
+getting wrong. ReLU is the kink that lets the network bend the boundary around them and clear the
+last ~10%.
 
 Training is then just a loop TensorFlow runs for you inside `model.fit`: predict, measure error with
 categorical cross-entropy, compute gradients by backpropagation, nudge every weight a step downhill
@@ -91,9 +94,11 @@ steps and stretch ideas.
 
 ## Where to go next
 
-- Break it to understand it: change all three activations to `'linear'` and re-run. Accuracy should
-  collapse toward chance, because a purely linear stack can't bend a boundary around the crescents.
-  Put ReLU back and it recovers - non-linearity shown rather than asserted.
+- Break it to understand it: change all three activations to `'linear'` and re-run. Accuracy drops
+  to around 90% and gets stuck there - a straight-line boundary handles the bulk of the moons but
+  can't follow the interleaving tips. Put ReLU back and it climbs to ~100%. That last ~10% is exactly
+  the non-linear part, shown rather than asserted. (Don't expect a collapse to chance: at noise 0.1
+  the two moons are mostly linearly separable, so linear still does well - the gap is the tips.)
 - Turn up `noise` in `prepareTwoMoonsDataset` (try 0.3) and watch the two moons blur together and
   test accuracy fall. That is the data-quality ceiling every model lives under.
 - We built and trained a net by hand here. Project 07 goes the other direction - using a large
