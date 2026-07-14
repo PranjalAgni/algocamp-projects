@@ -80,6 +80,7 @@ calling from silently drifting out of sync.
 - Break the mock's single-iteration ceiling: make `mockPlanner` return a second tool call
   based on the first result (e.g. look up an order, then search the FAQ for its product).
   You'll feel exactly why the loop has an iteration limit.
-- The FAQ search here is plain keyword matching, so "money back" won't find the "refund"
-  article. Project 03 replaces that with embeddings, where meaning - not shared words -
-  decides what matches.
+- The FAQ search here is plain keyword matching, so "reverse the charge" finds nothing -
+  it shares no word with the "refund" article, even though that's what it's asking for.
+  Project 03 replaces that with embeddings, where meaning - not shared words - decides what
+  matches.

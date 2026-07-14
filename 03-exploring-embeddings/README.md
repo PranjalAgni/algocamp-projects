@@ -1,10 +1,11 @@
 # 03 · Exploring Embeddings
 
-Project 02's FAQ lookup matched on keywords, so "how do I get my money back" missed an
-entry titled "refund policy". This project fixes that. An **embedding** turns a piece of
-text into a vector of numbers positioned so that texts with similar *meaning* land close
-together - and once text is a vector, "find similar" becomes plain geometry. That's the
-foundation every RAG project after this one is built on.
+Project 02's FAQ lookup matched on keywords, so "reverse the charge" found nothing - it
+shares no word with the "What is your refund policy?" entry, even though that's exactly
+what it's asking for. This project fixes that. An **embedding** turns a piece of text into
+a vector of numbers positioned so that texts with similar *meaning* land close together -
+and once text is a vector, "find similar" becomes plain geometry. That's the foundation
+every RAG project after this one is built on.
 
 ## Run it
 
