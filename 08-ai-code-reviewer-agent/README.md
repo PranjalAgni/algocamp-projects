@@ -1,8 +1,9 @@
 # 08 · AI Code Reviewer
 
-Project 07 pointed an agent at a diff to *write* code. This one points a reviewer at a diff to
-*judge* it - roughly what CodeRabbit or a GitHub review bot does. The interesting design choice
-here isn't the AI part. It's that the review comes from two sources stacked on top of each other:
+Project 07 gave an agent tools to *write* code - create files, run commands, complete a task.
+This one points a reviewer at a diff to *judge* code instead - roughly what CodeRabbit or a
+GitHub review bot does. The interesting design choice here isn't the AI part. It's that the
+review comes from two sources stacked on top of each other:
 a deterministic linter that always runs, and an LLM pass that runs only when it can. Understanding
 why you'd want both - and where each one lies to you - is the whole point.
 

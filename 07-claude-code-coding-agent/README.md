@@ -1,10 +1,10 @@
 # 07 · Coding Agent
 
-Project 02 built an agent loop that answered questions by calling read-only tools. This one gives
-the loop hands: tools that write files and run commands. That single change - tools with side
-effects - is the whole distance between a chatbot and something like Claude Code, and it's why the
-interesting part of this project isn't the loop, it's the sandbox that keeps the loop from wrecking
-your machine.
+Project 02 built an agent loop whose tools looked up orders, searched a FAQ, and filed tickets -
+nothing that touched your machine. This one gives the loop hands: tools that write files and run
+commands. That single change - tools with side effects on your filesystem and OS - is the whole
+distance between a chatbot and something like Claude Code, and it's why the interesting part of
+this project isn't the loop, it's the sandbox that keeps the loop from wrecking your machine.
 
 The agent runs one task end to end: create `hello.js`, run it with Node, report the output. Small
 on purpose, so the machinery is visible.
