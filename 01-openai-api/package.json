@@ -1,5 +1,5 @@
 {
-  "name": "01-openai-api",
+  "name": "openai-api",
   "version": "1.0.0",
   "description": "Learning project for OpenAI API patterns",
   "type": "module",

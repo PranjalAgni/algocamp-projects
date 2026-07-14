@@ -1,4 +1,4 @@
-# 12 - MNIST Autoencoder
+# 12 · MNIST Autoencoder
 
 An autoencoder is a network that learns to copy its input to its output - but through a bottleneck too small to fit the input. To reconstruct a 784-pixel image after squeezing it down to 32 numbers, the network has no choice but to learn which structure in the data is worth keeping. That forced compression, learned without any labels, is the whole idea.
 
