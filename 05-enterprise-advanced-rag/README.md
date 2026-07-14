@@ -14,7 +14,7 @@ that pure semantic search misses.
 ```bash
 npm install
 npm run demo     # naive vs advanced retrieval, side by side, over 10 company docs
-npm test         # vitest suite (27 tests, deterministic, offline)
+npm test         # vitest suite (29 tests, deterministic, offline)
 ```
 
 The demo needs no API key. Unlike project 04, it does *not* force a hash fallback: on first run it

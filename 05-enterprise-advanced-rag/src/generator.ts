@@ -13,10 +13,12 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
  * Extract the most relevant sentence from the top document (mock mode)
  * Simple heuristic: find sentence with most query term matches
  */
-function extractiveAnswer(query: string, topDoc: string): string {
-  // Split into sentences (simple approach)
+export function extractiveAnswer(query: string, topDoc: string): string {
+  // Split into sentences. Only break on .!? when followed by whitespace or
+  // end-of-text, so a decimal like "1.25 days" is not split at the period
+  // (a naive /[.!?]+/ turns "1.25" into "1" + "25 days", printing a wrong figure).
   const sentences = topDoc
-    .split(/[.!?]+/)
+    .split(/[.!?]+(?=\s|$)/)
     .map(s => s.trim())
     .filter(s => s.length > 20); // Filter out very short fragments
 
