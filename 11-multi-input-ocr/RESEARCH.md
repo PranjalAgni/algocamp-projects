@@ -18,16 +18,20 @@ Instead of concatenating these features before the network, a multi-input archit
 ### Architecture Pattern
 
 ```
-Image Input (28x28) → Conv/Dense layers → Feature Vector A (64)
+Image Input (14x14) → Flatten → Dense layer → Feature Vector A (64)
                                                            ↓
-Auxiliary Input (5) → Dense layers     → Feature Vector B (32)
+Auxiliary Input (5) → Dense layer          → Feature Vector B (32)
                                                            ↓
                             [CONCATENATE A + B] → (96)
                                     ↓
                             Dense Classification Head
                                     ↓
-                            Output (10 classes)
+                            Output (5 classes, digits 0-4)
 ```
+
+(This project flattens the tiny 14x14 image into a Dense branch rather than
+using convolutions - real OCR would use a CNN, but the point here is the
+multi-input merge, not the image encoder. See `src/model.ts`.)
 
 The key learning point: **Two separate input branches, explicit merge, shared head.**
 
