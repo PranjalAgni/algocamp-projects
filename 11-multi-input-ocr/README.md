@@ -106,11 +106,16 @@ tests/
 - **Do the ablation for real.** Build a one-input version of the model (drop the aux branch, keep only
   the image input and its dense layer) and compare test accuracy. On this data you'll see it barely
   moves - that null result *is* the lesson about when a second input is worth its complexity.
-- **Make the aux input honest.** Delete feature 5 (the label lookup) from `computeAuxFeatures` and
-  retrain. Now the aux vector only carries real image-derived signal, the aux-only accuracy drops, and
-  the two branches finally have complementary information to merge - which is the case multi-input
-  models actually exist for.
-- **Harder images.** Turn up the pixel noise in `drawDigit` or add per-sample shifts so the templates
-  stop being identical, and the image branch has to generalise instead of memorise.
+- **Delete feature 5 and watch nothing happen.** Drop the label-lookup feature from
+  `computeAuxFeatures` and retrain aux-only: accuracy stays at ~100%. Surprising, but it's the deeper
+  lesson - features 1-4 are computed from the *fixed templates*, so each class has a nearly constant
+  aspect ratio, fill density, and line count (a "3" is always ~2.9 wide-to-tall, a "1" always ~0.2).
+  Removing the leaky feature doesn't make the aux vector honest while the images stay identical; the
+  templates are the real reason both inputs ace the task.
+- **Make the inputs genuinely complementary.** To get the aux branch to actually lose its edge you have
+  to attack the templates: turn up the pixel noise in `drawDigit` or add per-sample shifts so the
+  images stop being identical. Then the image-derived aux features (aspect ratio, symmetry, line count)
+  become noisy too, the image branch has to generalise instead of memorise, and there's finally a gap
+  for a second input to fill - which is the case multi-input models actually exist for.
 - Project 12 stays in TensorFlow.js but changes the goal from classification to reconstruction: an
   autoencoder that compresses MNIST digits and rebuilds them, with no labels at all.
