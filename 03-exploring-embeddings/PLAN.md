@@ -20,7 +20,7 @@ Build a TypeScript project that demonstrates:
 ├── README.md           # Usage, examples, output
 ├── package.json        # Scripts: demo, test, dev
 ├── tsconfig.json       # TypeScript config (ESM, Node22)
-├── .env.example        # OPENAI_API_KEY=your-key-here
+├── .env.example        # OPENAI_API_KEY= (empty; set it to enable live mode)
 ├── .gitignore          # node_modules, .env, .cache
 ├── src/
 │   ├── embedder.ts     # Embedder factory (auto-selects: Xenova, OpenAI, or hash)

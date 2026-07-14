@@ -146,7 +146,7 @@ Build a complete backtesting system that:
 
 **.env.example**:
 ```
-OPENAI_API_KEY=your-key-here-optional
+OPENAI_API_KEY=
 ```
 
 ## Commands

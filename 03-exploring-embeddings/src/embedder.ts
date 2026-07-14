@@ -35,7 +35,7 @@ export async function createEmbedder(): Promise<Embedder> {
 
   // Try OpenAI if API key is present
   const apiKey = process.env.OPENAI_API_KEY;
-  if (apiKey && apiKey !== 'your-key-here') {
+  if (apiKey && apiKey.trim() !== '') {
     try {
       const embedder = await createOpenAIEmbedder(apiKey);
       console.log(`\n[MODE: ${embedder.mode}] Using OpenAI text-embedding-3-small\n`);
