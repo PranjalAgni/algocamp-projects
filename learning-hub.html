@@ -159,9 +159,10 @@
         </div>
       </section>`;
 
+    const conceptCount = HUB.reduce((n,p)=>n+p.concepts.length,0);
     const overviewSlide = `
       <section data-background-gradient="linear-gradient(135deg,#0a0e17,#101a2e)">
-        <h2 style="font-size:1.5em">The Map <span style="color:var(--muted);font-size:.5em;font-weight:400">- 4 themes, 12 builds</span></h2>
+        <h2 style="font-size:1.5em">The Map <span style="color:var(--muted);font-size:.5em;font-weight:400">- ${HUB.length} builds, ${conceptCount} concepts</span></h2>
         <p style="color:var(--muted);font-size:.6em;margin:.2em 0 .1em">Move <b style="color:var(--accent)">→</b> across projects, <b style="color:var(--accent)">↓</b> through the concepts inside each.</p>
         <div class="grid">
           ${HUB.map(p=>`<div class="card"><b>${String(p.n).padStart(2,'0')} · ${esc(p.title)}</b><span>${esc(p.tag)}</span></div>`).join('')}
