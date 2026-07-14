@@ -41,12 +41,12 @@ npm test         # vitest suite (offline)
 | 06 | [Simple Neural Network](06-simple-neural-network-tensorflow) | Feed-forward NN: layers, loss, optimizer, training loop (two-moons) | TS + tfjs | 14 ✓ |
 | 07 | [Claude Code-like Coding Agent](07-claude-code-coding-agent) | Agentic tool-use loop with a sandboxed (path-jailed) file/command toolset | TS | 25 ✓ |
 | 08 | [AI Code Reviewer Agent](08-ai-code-reviewer-agent) | Diff parsing + deterministic linter + LLM reviewer → structured review | TS | 25 ✓ |
-| 09 | [Voice-based AI Agent](09-voice-ai-agent) | STT → LLM → TTS pipeline with swappable stages; generates a real WAV | TS | 14 ✓ |
+| 09 | [Voice-based AI Agent](09-voice-ai-agent) | STT → LLM → TTS pipeline with swappable stages; generates a real WAV | TS | 15 ✓ |
 | 10 | [AI Trading Agent](10-ai-trading-agent) | Indicators (SMA/EMA/RSI) + strategy + backtester (simulation only, not advice) | TS | 27 ✓ |
 | 11 | [Multi-Input OCR Model](11-multi-input-ocr) | Multi-input NN: image branch + aux-feature branch concatenated into a head | TS + tfjs | 22 ✓ |
 | 12 | [MNIST Autoencoder](12-mnist-autoencoder) | Encoder → bottleneck → decoder; reconstruction loss; latent space; ASCII viz | TS + tfjs | 22 ✓ |
 
-**Total: 256 tests passing, all offline.**
+**Total: 257 tests passing, all offline.**
 
 ## The slide decks
 

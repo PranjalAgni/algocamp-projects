@@ -11,7 +11,7 @@ voice tech - it's the interface seam that makes a multi-stage system testable.
 ```bash
 npm install
 npm run demo    # runs the full pipeline, mock mode, writes output/response.{wav,txt}
-npm test        # vitest suite (14 tests, deterministic, offline)
+npm test        # vitest suite (15 tests, deterministic, offline)
 ```
 
 No API key needed. Without one every stage runs a mock described honestly below; with one the
