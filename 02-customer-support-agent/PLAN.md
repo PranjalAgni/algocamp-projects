@@ -63,11 +63,12 @@ Build a TypeScript-based customer support agent that demonstrates tool calling a
 │   │   ├── openaiPlanner.ts # Live mode with OpenAI function calling
 │   │   └── mockPlanner.ts   # Offline keyword-based planner
 │   │
-│   └── data/
-│       ├── orders.json      # 8-10 fake orders
-│       └── faq.json         # 12-15 common Q&As
+│   ├── data/
+│   │   ├── orders.json      # 8-10 fake orders
+│   │   └── faq.json         # 12-15 common Q&As
+│   │
+│   └── demo.ts              # Demonstration script
 │
-├── demo.ts                  # Demonstration script
 └── tests/
     ├── tools.test.ts        # Unit tests for tools
     └── agent.test.ts        # Integration test for agent

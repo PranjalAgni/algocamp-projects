@@ -4,7 +4,7 @@
   "description": "Learning project: AI agent with tool calling for customer support",
   "type": "module",
   "scripts": {
-    "demo": "tsx demo.ts",
+    "demo": "tsx src/demo.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },

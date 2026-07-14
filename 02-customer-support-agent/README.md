@@ -63,7 +63,7 @@ src/
   data/
     orders.json           # sample orders
     faq.json              # sample FAQ entries
-demo.ts                   # four sample queries end to end
+  demo.ts                 # four sample queries end to end
 tests/
   tools.test.ts           # each tool in isolation
   agent.test.ts           # the loop over a full query

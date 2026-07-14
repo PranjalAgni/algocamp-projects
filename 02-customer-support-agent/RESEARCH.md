@@ -108,7 +108,7 @@ src/
     orders.json
     faq.json
   types.ts          # Shared TypeScript types
-demo.ts             # Demonstration script
+  demo.ts           # Demonstration script
 ```
 
 ### Testing Strategy
