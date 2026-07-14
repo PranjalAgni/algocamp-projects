@@ -94,7 +94,7 @@ async function main() {
 
   // 6. Show sample trades
   if (result.trades.length > 0) {
-    console.log('📝 Sample Trades (first 5):');
+    console.log(result.trades.length > 5 ? '📝 Sample Trades (first 5):' : '📝 Trades:');
     console.log('   Date       | Type | Price    | Shares | Value');
     console.log('   ' + '-'.repeat(55));
     result.trades.slice(0, 5).forEach(trade => {
