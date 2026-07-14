@@ -143,7 +143,7 @@
           <div class="tag">${esc(p.tag)}</div>
           <div class="concepts"><b style="color:var(--ink)">You'll learn:</b> ${p.concepts.map(c=>esc(c.title)).join(' · ')}</div>
           ${p.warn?`<div class="warn"><b>⚠ Heads up:</b> ${esc(p.warn)}</div>`:''}
-          <div class="down">↓ ${total} concept${total>1?'s':''} below — press <b>Space</b> to walk through</div>
+          <div class="down">↓ ${total} concept${total>1?'s':''} below - press <b>Space</b> to walk through</div>
         </section>`;
       return `<section>${intro}${p.concepts.map(conceptSlide).join('')}</section>`;
     }
@@ -153,7 +153,7 @@
       <section class="hero" data-background-gradient="radial-gradient(circle at 30% 20%, #1b2a4a, #0a0e17 70%)">
         <div class="kicker">AlgoCamp · 12 Hands-On Builds</div>
         <h1 class="grad">AI Learning Hub</h1>
-        <p class="sub">A concept-first tour of 12 AI/ML projects — the ideas behind the code, explained with analogies that stick.</p>
+        <p class="sub">A concept-first tour of 12 AI/ML projects - the ideas behind the code, explained with analogies that stick.</p>
         <div class="hint">
           <kbd>→</kbd> next project &nbsp; <kbd>↓</kbd> dive into concepts &nbsp; <kbd>Esc</kbd> overview map
         </div>
@@ -161,7 +161,7 @@
 
     const overviewSlide = `
       <section data-background-gradient="linear-gradient(135deg,#0a0e17,#101a2e)">
-        <h2 style="font-size:1.5em">The Map <span style="color:var(--muted);font-size:.5em;font-weight:400">— 4 themes, 12 builds</span></h2>
+        <h2 style="font-size:1.5em">The Map <span style="color:var(--muted);font-size:.5em;font-weight:400">- 4 themes, 12 builds</span></h2>
         <p style="color:var(--muted);font-size:.6em;margin:.2em 0 .1em">Move <b style="color:var(--accent)">→</b> across projects, <b style="color:var(--accent)">↓</b> through the concepts inside each.</p>
         <div class="grid">
           ${HUB.map(p=>`<div class="card"><b>${String(p.n).padStart(2,'0')} · ${esc(p.title)}</b><span>${esc(p.tag)}</span></div>`).join('')}
@@ -174,7 +174,7 @@
       HUB.map(projectSection).join('') +
       `<section class="hero" data-background-gradient="radial-gradient(circle at 70% 30%, #1b2a4a, #0a0e17 70%)">
         <h1 class="grad" style="font-size:1.8em">That's the tour ✦</h1>
-        <p class="sub">From a single API call to autoencoders — you've seen the big ideas behind every build. Now go open the code and watch them come alive.</p>
+        <p class="sub">From a single API call to autoencoders - you've seen the big ideas behind every build. Now go open the code and watch them come alive.</p>
         <div class="hint">Press <kbd>Esc</kbd> for the map · <kbd>←</kbd> to revisit any concept</div>
       </section>`;
 
