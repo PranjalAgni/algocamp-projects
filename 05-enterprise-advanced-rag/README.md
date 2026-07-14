@@ -96,9 +96,13 @@ reranking, self-query metadata extraction, an NDCG/MRR evaluation harness).
 
 ## Where to go next
 
-- Swap the naive query for one with heavy vocabulary mismatch (ask about "annual leave" or
-  "working from a cafe") and compare the naive top-3 against the advanced top-3. That gap is the
-  whole point of this project.
+- Change the demo query (`src/demo.ts`) and watch the `Added terms` line. A query that hits the
+  hand-built synonym map - `"pto"`, `"wfh"`, `"cybersecurity"` - expands; `"annual leave"` or
+  `"working from a cafe"` expand to nothing, because the map has no entry for those words. That is
+  the lesson *and* the limit of a hand-built map: it only helps vocabulary it was told about, which
+  is why production expansion is learned. Don't expect the advanced top-3 to out-rank the naive
+  pass on this small, well-separated corpus (see the honesty note above) - on the "time off" query
+  naive already puts PTO Policy first, and the extra machinery only earns its keep at scale.
 - Everything here is heuristic by design. The real upgrades are learned components: a cross-encoder
   reranker instead of the term-overlap heuristic, and an LLM that extracts metadata filters from
   the query itself. `PLAN.md` sketches both.
