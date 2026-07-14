@@ -926,10 +926,12 @@ model = Model(inputs=[image_input, aux_input], outputs=output)
 # ENCODER: squeeze 784 pixels → 32 numbers (the bottleneck)
 input_img = Input(shape=(784,))
 encoded   = Dense(128, activation="relu")(input_img)
+encoded   = Dense(64,  activation="relu")(encoded)   # gradual compression
 encoded   = Dense(32,  activation="relu")(encoded)   # keep only what matters
 
-# DECODER: expand 32 numbers back → 784 pixels
-decoded = Dense(128, activation="relu")(encoded)
+# DECODER: mirror the encoder back up 32 → 64 → 128 → 784
+decoded = Dense(64,  activation="relu")(encoded)
+decoded = Dense(128, activation="relu")(decoded)
 decoded = Dense(784, activation="sigmoid")(decoded)
 
 autoencoder = Model(input_img, decoded)
