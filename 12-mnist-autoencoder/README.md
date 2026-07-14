@@ -49,6 +49,23 @@ The fix is a one-liner in principle and a real lesson in practice: the encoder y
 
 Lesson theme: a model that runs and prints plausible numbers is not the same as a model that is wired correctly. Verify that the thing you are *measuring* is the thing you *trained*.
 
+## Files
+
+```
+src/
+  data.ts       synthetic 28×28 digit images (0, 1, 2) via a seeded LCG - no MNIST download
+  model.ts      buildEncoder/buildDecoder and buildAutoencoderWithEncoder (the shared-layer fix)
+  train.ts      compile, fit, evaluate, and reconstruct helpers (input is its own target)
+  visualize.ts  ASCII-art rendering of images, side-by-side comparison, latent-vector print
+  demo.ts       the full workflow - generate, train 15 epochs, reconstruct, show a latent vector
+tests/
+  data.test.ts    shapes, pixel range, class balance, seeded determinism
+  model.test.ts   encoder/decoder/autoencoder shapes, layer count, sigmoid output
+  train.test.ts   loss decreases, reconstructions differ from noise, the trained-encoder guard
+```
+
+`RESEARCH.md` records why an autoencoder and synthetic digits; `PLAN.md` lists the build order.
+
 ## Where this fits
 
 This closes the loop opened in project 06 (a supervised classifier on tfjs) and project 03 (embeddings as learned vectors). An autoencoder's latent space is an embedding you trained yourself, with no labels - the same "data becomes a vector where geometry is meaning" idea from project 03, arrived at through reconstruction instead of a pretrained model.
