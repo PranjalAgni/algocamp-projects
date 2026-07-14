@@ -107,7 +107,7 @@ npm test
 ## Switching from Mock to Live
 1. Copy `.env.example` to `.env`
 2. Set `OPENAI_API_KEY=sk-...`
-3. Run `npm run demo` again — banner shows `[MODE: LIVE]`
+3. Run `npm run demo` again - banner shows `[MODE: LIVE]`
 
 ## Stretch Goals (v2+, NOT implementing now)
 - Image input (vision models)

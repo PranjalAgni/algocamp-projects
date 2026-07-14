@@ -1,4 +1,4 @@
-# Exploring Embeddings — Research
+# Exploring Embeddings - Research
 
 ## What are Text Embeddings?
 
@@ -40,7 +40,7 @@ At the sentence level, this can demonstrate semantic composition.
 
 ### Primary: @xenova/transformers (chosen)
 - **Pros**: Runs locally, no API key needed, good quality (transformer-based models).
-- **Model**: `Xenova/all-MiniLM-L6-v2` — 384-dim embeddings, ~25MB, fast inference.
+- **Model**: `Xenova/all-MiniLM-L6-v2` - 384-dim embeddings, ~25MB, fast inference.
 - **First-run**: Downloads model and caches in `~/.cache/huggingface/`. Works fully offline after that.
 - **Network unavailable**: Falls back to hash-based deterministic embedder (for tests/offline).
 
@@ -63,7 +63,7 @@ At the sentence level, this can demonstrate semantic composition.
 
 ## References
 
-- [Sentence Transformers](https://www.sbert.net/) — Original research on sentence embeddings.
-- [Hugging Face Transformers.js](https://huggingface.co/docs/transformers.js) — Xenova docs.
+- [Sentence Transformers](https://www.sbert.net/) - Original research on sentence embeddings.
+- [Hugging Face Transformers.js](https://huggingface.co/docs/transformers.js) - Xenova docs.
 - [OpenAI Embeddings API](https://platform.openai.com/docs/guides/embeddings)
 - [Cosine Similarity](https://en.wikipedia.org/wiki/Cosine_similarity)

@@ -1,4 +1,4 @@
-# AI Code Reviewer Agent — Implementation Plan
+# AI Code Reviewer Agent - Implementation Plan
 
 ## V1 Goals
 
@@ -109,11 +109,11 @@ Functions:
 - `runLinter(parsedDiff: ParsedDiff): ReviewComment[]`
 
 Rules (regex-based, check added lines only):
-1. **Hardcoded secrets** — `/(password|api_key|secret|token)\s*=\s*["'][^"']+["']/i`
-2. **Equality operators** — `/[^=!]==[^=]|[^!]!=[^=]/` (JS/TS)
-3. **Console statements** — `/console\.(log|warn|error|debug)/`
-4. **Missing await** — Heuristic: line has `.then(` without `await`
-5. **TODO/FIXME** — `/\/\/\s*(TODO|FIXME|HACK)/i`
+1. **Hardcoded secrets** - `/(password|api_key|secret|token)\s*=\s*["'][^"']+["']/i`
+2. **Equality operators** - `/[^=!]==[^=]|[^!]!=[^=]/` (JS/TS)
+3. **Console statements** - `/console\.(log|warn|error|debug)/`
+4. **Missing await** - Heuristic: line has `.then(` without `await`
+5. **TODO/FIXME** - `/\/\/\s*(TODO|FIXME|HACK)/i`
 
 Return ReviewComment array with source='linter'.
 
@@ -152,8 +152,8 @@ Mode detection:
 ### 5. Formatter (`formatter.ts`)
 
 Functions:
-- `formatJSON(result: ReviewResult): string` — JSON.stringify
-- `formatPretty(result: ReviewResult): string` — Terminal report
+- `formatJSON(result: ReviewResult): string` - JSON.stringify
+- `formatPretty(result: ReviewResult): string` - Terminal report
 
 Pretty format:
 ```

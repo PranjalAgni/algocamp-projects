@@ -1,4 +1,4 @@
-# Multi-Input Neural Networks for OCR — Research
+# Multi-Input Neural Networks for OCR - Research
 
 ## The Core Concept: Multi-Input Models
 

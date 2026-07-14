@@ -1,4 +1,4 @@
-# Customer Support Agent — Research
+# Customer Support Agent - Research
 
 ## What is a Customer Support Agent?
 
@@ -8,7 +8,7 @@ A customer support agent is an AI system that can autonomously handle customer i
 3. Using the retrieved information to formulate helpful responses
 4. Escalating to human support when necessary (creating tickets)
 
-This demonstrates a **tool-calling agent loop** — a core pattern in modern AI applications.
+This demonstrates a **tool-calling agent loop** - a core pattern in modern AI applications.
 
 ## Key Concepts
 
@@ -84,7 +84,7 @@ For the learning goal, we need a fully functional offline mode:
 
 ## Practical Assumptions
 
-1. **Fictional Product**: "CloudStore" — a SaaS e-commerce platform
+1. **Fictional Product**: "CloudStore" - a SaaS e-commerce platform
 2. **Tool Set**: Kept minimal (3 tools) to focus on the agent loop pattern
 3. **Single-turn queries**: User asks one question, agent responds (no multi-turn chat persistence)
 4. **Simple matching**: FAQ search uses basic string includes (no embeddings/vector search)

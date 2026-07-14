@@ -1,4 +1,4 @@
-# Customer Support Agent — Plan
+# Customer Support Agent - Plan
 
 ## v1 Scope
 

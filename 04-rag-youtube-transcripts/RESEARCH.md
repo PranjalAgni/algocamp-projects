@@ -1,4 +1,4 @@
-# RAG Chatbot over YouTube Transcripts — Research
+# RAG Chatbot over YouTube Transcripts - Research
 
 ## What is RAG?
 

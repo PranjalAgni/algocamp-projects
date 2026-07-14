@@ -1,4 +1,4 @@
-# RAG Chatbot over YouTube Transcripts — Implementation Plan
+# RAG Chatbot over YouTube Transcripts - Implementation Plan
 
 ## Goal
 
@@ -13,7 +13,7 @@ Build a working RAG pipeline that:
 ### Core Components
 
 1. **Data Layer** (`src/data/`)
-   - `transcripts/sample1.json`, `sample2.json` — bundled YouTube transcripts with timestamps
+   - `transcripts/sample1.json`, `sample2.json` - bundled YouTube transcripts with timestamps
    - Schema: `{videoId, title, transcript: [{text, start, duration}]}`
 
 2. **Chunker** (`src/chunker.ts`)
@@ -28,8 +28,8 @@ Build a working RAG pipeline that:
 
 4. **Vector Store** (`src/vectorStore.ts`)
    - In-memory store: `{chunks: Chunk[], embeddings: number[][]}`
-   - `addChunk(chunk, embedding)` — store a chunk
-   - `search(queryEmbedding, topK)` — cosine similarity search
+   - `addChunk(chunk, embedding)` - store a chunk
+   - `search(queryEmbedding, topK)` - cosine similarity search
    - Return: `{chunk, score}[]`
 
 5. **Generator** (`src/generator.ts`)
@@ -52,18 +52,18 @@ Build a working RAG pipeline that:
 
 ### Tests (`tests/`)
 
-- `chunker.test.ts` — verify chunk size, overlap
-- `embedder.test.ts` — hash embedder consistency
-- `vectorStore.test.ts` — retrieval returns expected chunk
-- `generator.test.ts` — mock answer includes citation
+- `chunker.test.ts` - verify chunk size, overlap
+- `embedder.test.ts` - hash embedder consistency
+- `vectorStore.test.ts` - retrieval returns expected chunk
+- `generator.test.ts` - mock answer includes citation
 
 ### Config Files
 
-- `package.json` — scripts: `demo`, `test`, `dev`
-- `tsconfig.json` — ESM, strict mode
-- `.env.example` — `OPENAI_API_KEY=your_key_here`
-- `.gitignore` — standard Node.js + .env
-- `vitest.config.ts` — vitest setup
+- `package.json` - scripts: `demo`, `test`, `dev`
+- `tsconfig.json` - ESM, strict mode
+- `.env.example` - `OPENAI_API_KEY=your_key_here`
+- `.gitignore` - standard Node.js + .env
+- `vitest.config.ts` - vitest setup
 
 ## File Layout
 

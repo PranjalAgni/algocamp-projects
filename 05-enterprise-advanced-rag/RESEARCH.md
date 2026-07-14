@@ -1,4 +1,4 @@
-# Enterprise Advanced RAG — Research
+# Enterprise Advanced RAG - Research
 
 ## What is RAG?
 Retrieval-Augmented Generation (RAG) is a technique that enhances LLM responses by retrieving relevant context from a knowledge base before generation. Instead of relying solely on the model's training data, RAG fetches pertinent documents to ground the answer.

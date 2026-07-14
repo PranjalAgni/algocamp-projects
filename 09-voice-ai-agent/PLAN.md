@@ -1,4 +1,4 @@
-# Voice-Based AI Agent — Plan
+# Voice-Based AI Agent - Plan
 
 ## v1 Scope
 

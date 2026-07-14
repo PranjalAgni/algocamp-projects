@@ -1,4 +1,4 @@
-# Voice-Based AI Agent — Research
+# Voice-Based AI Agent - Research
 
 ## Concept Overview
 A voice-based AI agent is a conversational system that processes spoken input, reasons about it, and generates spoken responses. The architecture follows a three-stage pipeline:

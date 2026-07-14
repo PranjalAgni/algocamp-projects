@@ -1,4 +1,4 @@
-# AlgoCamp Projects — 12 Hands-On AI Learning Builds
+# AlgoCamp Projects - 12 Hands-On AI Learning Builds
 
 A swarm-built collection of small, **runnable, well-commented** AI/ML projects. The goal is
 **learning** the concepts, not shipping production apps. Every project is independent and lives
@@ -15,7 +15,7 @@ the live provider. The two pure-ML projects need no keys at all.
 
 - **TypeScript** (ESM, run with `tsx`, tested with `vitest`) for 10 of 12 projects.
 - **TensorFlow.js** (`@tensorflow/tfjs-node`) for the deep-learning projects (verified working on
-  this Apple-Silicon machine — avoids Python 3.9/arm64 TensorFlow install pain).
+  this Apple-Silicon machine - avoids Python 3.9/arm64 TensorFlow install pain).
 - Local/offline embeddings via `@xenova/transformers`, with a deterministic hash-embedder
   fallback so tests pass with no network.
 
@@ -57,11 +57,11 @@ npm run slides    # deck 1 → http://localhost:8000
 npm run hub       # deck 2 → http://localhost:8001/learning-hub.html
 ```
 
-- **`slides/index.html` — The Concepts Behind 12 AI Builds.** One section per project:
+- **`slides/index.html` - The Concepts Behind 12 AI Builds.** One section per project:
   a plain-English idea, an analogy, an "aha", then the real code that makes it concrete.
   Press **S** for presenter notes (the honest caveats about what each project's offline
   mode actually exercises).
-- **`learning-hub.html` — AI Learning Hub.** A deeper concept-first tour (78 concept cards
+- **`learning-hub.html` - AI Learning Hub.** A deeper concept-first tour (78 concept cards
   across the 12 projects) with analogies and cited sources, generated from `hub-content.js`.
   It must be served from the repo root so it can load `hub-content.js` (that's what
   `npm run hub` does).
@@ -75,5 +75,5 @@ loop. Every project folder contains `RESEARCH.md` (the concept space + assumptio
 (what v1 builds) written before the code. See [SHARED_STANDARDS.md](SHARED_STANDARDS.md) for the
 conventions all projects follow.
 
-> ⚠️ Project 10 (trading) is a **learning simulation only** — synthetic data, no live markets,
+> ⚠️ Project 10 (trading) is a **learning simulation only** - synthetic data, no live markets,
 > not financial advice.

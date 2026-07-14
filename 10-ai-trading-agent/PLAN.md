@@ -1,4 +1,4 @@
-# AI Trading Agent — Implementation Plan
+# AI Trading Agent - Implementation Plan
 
 ## v1 Goals
 
@@ -151,20 +151,20 @@ OPENAI_API_KEY=your-key-here-optional
 
 ## Commands
 
-- `npm install` — install dependencies
-- `npm run demo` — run backtest demo (src/demo.ts via tsx)
-- `npm test` — run vitest
+- `npm install` - install dependencies
+- `npm run demo` - run backtest demo (src/demo.ts via tsx)
+- `npm test` - run vitest
 
 ## Dependencies
 
-- `seedrandom` — deterministic random number generation
-- `openai` — OpenAI SDK (optional LLM)
-- `dotenv` — load .env file
-- `tsx` — run TypeScript directly
-- `vitest` — testing
-- `typescript` — compiler
-- `@types/node` — Node type definitions
-- `@types/seedrandom` — seedrandom types
+- `seedrandom` - deterministic random number generation
+- `openai` - OpenAI SDK (optional LLM)
+- `dotenv` - load .env file
+- `tsx` - run TypeScript directly
+- `vitest` - testing
+- `typescript` - compiler
+- `@types/node` - Node type definitions
+- `@types/seedrandom` - seedrandom types
 
 ## Validation Checklist
 

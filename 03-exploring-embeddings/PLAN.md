@@ -1,4 +1,4 @@
-# Exploring Embeddings — Plan
+# Exploring Embeddings - Plan
 
 ## v1 Scope (Learning Goal)
 
@@ -35,7 +35,7 @@ Build a TypeScript project that demonstrates:
 
 ## Core API
 
-### `embedder.ts` — Factory
+### `embedder.ts` - Factory
 ```typescript
 export async function createEmbedder(): Promise<Embedder> {
   // Try Xenova → OpenAI (if key) → hash fallback
@@ -43,13 +43,13 @@ export async function createEmbedder(): Promise<Embedder> {
 }
 ```
 
-### `similarity.ts` — Math
+### `similarity.ts` - Math
 ```typescript
 export function cosineSimilarity(a: number[], b: number[]): number;
 export function semanticSearch(query: string, corpus: string[], topK: number): Promise<Result[]>;
 ```
 
-### `demo.ts` — Showcase
+### `demo.ts` - Showcase
 - Embed ~12 sample sentences (mix of related/unrelated topics).
 - Run 2-3 semantic search queries, print ranked results with scores.
 - Compute and display a similarity matrix (console table).

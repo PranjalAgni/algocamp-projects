@@ -72,7 +72,7 @@ Input (2) → Dense(8, relu) → Dense(4, relu) → Dense(2, softmax) → Output
 
 ## Training Strategy
 - **Loss**: Categorical cross-entropy (standard for multi-class classification)
-- **Optimizer**: Adam (lr=0.01) — adaptive learning rate, faster convergence
+- **Optimizer**: Adam (lr=0.01) - adaptive learning rate, faster convergence
 - **Epochs**: 50 (sufficient for convergence on this dataset)
 - **Batch size**: 32 (small dataset, so this is fine)
 - **Metrics**: Accuracy (easy to interpret for learning)
