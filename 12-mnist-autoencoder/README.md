@@ -2,7 +2,7 @@
 
 An autoencoder is a network that learns to copy its input to its output - but through a bottleneck too small to fit the input. To reconstruct a 784-pixel image after squeezing it down to 32 numbers, the network has no choice but to learn which structure in the data is worth keeping. That forced compression, learned without any labels, is the whole idea.
 
-This is the last project in the series and the second unsupervised one (project 03 taught embeddings). Everything runs offline on synthetic digits - no MNIST download, no API key.
+This is the last project in the series and the only one that trains a model with no labels at all - unsupervised learning. (Projects 06 and 11 trained against labels; project 03 worked with unlabeled text but used a pretrained embedding model rather than training one.) Everything runs offline on synthetic digits - no MNIST download, no API key.
 
 ## Run it
 
