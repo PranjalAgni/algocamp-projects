@@ -86,9 +86,12 @@ tests/
 
 ## Where to go next
 
-- Run the demo, then change a query in `src/demo.ts` to something that shares no words with
-  any sentence (e.g. "coding in a language named after a snake") and watch it still find the
-  Python line. That miss-turned-hit is the whole point of embeddings over keyword search.
+- Run the demo, then change a query in `src/demo.ts` to a description of one sentence that
+  avoids its distinctive words (e.g. "coding in a language named after a snake" for the Python
+  line) and watch semantic search still rank that line #1. The one word it does share -
+  "language" - is a trap: keyword matching latches onto "natural language processing" and never
+  surfaces Python, while the embedder reads the whole meaning and gets it right. That gap is the
+  point of embeddings over keyword search.
 - Project 04 takes this exact retrieval step and puts it in front of an LLM: chunk a
   document, embed the chunks, retrieve the ones closest to a question, and let the model
   answer from them. That's RAG.
