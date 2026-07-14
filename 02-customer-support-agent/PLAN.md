@@ -1,4 +1,4 @@
-# Customer Support Agent — Plan
+# Customer Support Agent - Plan
 
 ## v1 Scope
 
@@ -41,8 +41,8 @@ Build a TypeScript-based customer support agent that demonstrates tool calling a
 
 ```
 02-customer-support-agent/
-├── RESEARCH.md              # ✅ Concepts, approaches, libraries
-├── PLAN.md                  # ✅ This file
+├── RESEARCH.md              # Concepts, approaches, libraries
+├── PLAN.md                  # This file
 ├── README.md                # Usage, setup, example output
 ├── package.json             # Dependencies, scripts
 ├── tsconfig.json            # TypeScript config (ESM, strict)
@@ -63,11 +63,12 @@ Build a TypeScript-based customer support agent that demonstrates tool calling a
 │   │   ├── openaiPlanner.ts # Live mode with OpenAI function calling
 │   │   └── mockPlanner.ts   # Offline keyword-based planner
 │   │
-│   └── data/
-│       ├── orders.json      # 8-10 fake orders
-│       └── faq.json         # 12-15 common Q&As
+│   ├── data/
+│   │   ├── orders.json      # 8-10 fake orders
+│   │   └── faq.json         # 12-15 common Q&As
+│   │
+│   └── demo.ts              # Demonstration script
 │
-├── demo.ts                  # Demonstration script
 └── tests/
     ├── tools.test.ts        # Unit tests for tools
     └── agent.test.ts        # Integration test for agent
@@ -121,12 +122,12 @@ if (query.match(/bug|issue|problem|broken|error/i)) → createTicket
 
 ## Success Criteria
 
-1. ✅ `npm run demo` works offline (mock mode) with zero setup
-2. ✅ `npm test` passes offline with zero setup
-3. ✅ `OPENAI_API_KEY=sk-... npm run demo` works in live mode
-4. ✅ Agent demonstrates tool calling loop (not just direct tool execution)
-5. ✅ Code is well-commented for learning purposes
-6. ✅ README includes pasted passing output
+1. `npm run demo` works offline (mock mode) with zero setup
+2. `npm test` passes offline with zero setup
+3. `OPENAI_API_KEY=sk-... npm run demo` works in live mode
+4. Agent demonstrates tool calling loop (not just direct tool execution)
+5. Code is well-commented for learning purposes
+6. README shows a short, honest slice of real output (not a full pasted dump)
 
 ## Stretch Goals (NOT v1)
 

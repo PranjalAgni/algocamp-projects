@@ -23,7 +23,7 @@ import {
 
 async function main() {
   console.log('\n╔═══════════════════════════════════════════════════════╗');
-  console.log('║   Simple Neural Network - TensorFlow.js Demo         ║');
+  console.log('║   Simple Neural Network - TensorFlow.js Demo          ║');
   console.log('╚═══════════════════════════════════════════════════════╝\n');
 
   // Step 1: Generate and prepare the dataset
@@ -80,10 +80,13 @@ async function main() {
 
   // Step 6: Run sample predictions
   console.log('\n🔮 Sample Predictions:');
+  // Moon 0 traces (cos θ, sin θ); moon 1 traces (1 - cos θ, 0.5 - sin θ).
+  // These points sit in the unambiguous body of each arc (not the interleaving
+  // tips), so the trained network classifies them the same way every run.
   const sampleInputs = [
-    [0.0, 0.5], // Should be class 0 (first moon)
-    [1.0, 0.0], // Should be class 1 (second moon)
-    [0.5, 0.75], // Should be class 0 (first moon)
+    [0.0, 1.0], // Top of moon 0's arc → class 0
+    [1.0, -0.5], // Bottom of moon 1's arc → class 1
+    [0.707, 0.707], // Along moon 0's arc → class 0
   ];
 
   const predictions = predict(model, sampleInputs);

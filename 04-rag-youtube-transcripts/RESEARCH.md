@@ -1,4 +1,4 @@
-# RAG Chatbot over YouTube Transcripts — Research
+# RAG Chatbot over YouTube Transcripts - Research
 
 ## What is RAG?
 
@@ -32,9 +32,11 @@
 ### Text Chunking
 
 **Strategy**: Fixed-size chunks with overlap
-- Chunk size: 300-500 tokens (balance context vs. precision)
-- Overlap: 50-100 tokens (prevents information loss at boundaries)
+- Chunk size: ~400 characters (balance context vs. precision)
+- Overlap: 100 characters (prevents information loss at boundaries)
 - Preserve timestamps for citation
+
+We count in characters, not tokens, to keep chunking dependency-free (no tokenizer). As a rough guide ~4 characters ≈ 1 token, so a 400-char chunk is roughly 100 tokens.
 
 ### Embeddings
 

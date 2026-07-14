@@ -48,7 +48,9 @@ async function main() {
   // 2. Calculate indicators and generate signals
   console.log('📈 Running SMA Crossover Strategy...');
   // Using shorter periods (10, 30) for more active trading in demo
-  const strategyResult = smaCrossoverStrategy(prices, 10, 30);
+  const FAST_PERIOD = 10;
+  const SLOW_PERIOD = 30;
+  const strategyResult = smaCrossoverStrategy(prices, FAST_PERIOD, SLOW_PERIOD);
   const { signals, fastSMA, slowSMA } = strategyResult;
 
   // Calculate RSI for additional context
@@ -92,7 +94,7 @@ async function main() {
 
   // 6. Show sample trades
   if (result.trades.length > 0) {
-    console.log('📝 Sample Trades (first 5):');
+    console.log(result.trades.length > 5 ? '📝 Sample Trades (first 5):' : '📝 Trades:');
     console.log('   Date       | Type | Price    | Shares | Value');
     console.log('   ' + '-'.repeat(55));
     result.trades.slice(0, 5).forEach(trade => {
@@ -126,6 +128,8 @@ async function main() {
     fastSMA: fastSMA[fastSMA.length - 1],
     slowSMA: slowSMA[slowSMA.length - 1],
     rsi: rsi[rsi.length - 1],
+    fastPeriod: FAST_PERIOD,
+    slowPeriod: SLOW_PERIOD,
   });
   console.log(`   ${commentary}`);
   console.log();

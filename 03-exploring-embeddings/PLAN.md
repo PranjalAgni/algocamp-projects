@@ -1,4 +1,4 @@
-# Exploring Embeddings — Plan
+# Exploring Embeddings - Plan
 
 ## v1 Scope (Learning Goal)
 
@@ -20,7 +20,7 @@ Build a TypeScript project that demonstrates:
 ├── README.md           # Usage, examples, output
 ├── package.json        # Scripts: demo, test, dev
 ├── tsconfig.json       # TypeScript config (ESM, Node22)
-├── .env.example        # OPENAI_API_KEY=your-key-here
+├── .env.example        # OPENAI_API_KEY= (empty; set it to enable live mode)
 ├── .gitignore          # node_modules, .env, .cache
 ├── src/
 │   ├── embedder.ts     # Embedder factory (auto-selects: Xenova, OpenAI, or hash)
@@ -35,7 +35,7 @@ Build a TypeScript project that demonstrates:
 
 ## Core API
 
-### `embedder.ts` — Factory
+### `embedder.ts` - Factory
 ```typescript
 export async function createEmbedder(): Promise<Embedder> {
   // Try Xenova → OpenAI (if key) → hash fallback
@@ -43,13 +43,13 @@ export async function createEmbedder(): Promise<Embedder> {
 }
 ```
 
-### `similarity.ts` — Math
+### `similarity.ts` - Math
 ```typescript
 export function cosineSimilarity(a: number[], b: number[]): number;
 export function semanticSearch(query: string, corpus: string[], topK: number): Promise<Result[]>;
 ```
 
-### `demo.ts` — Showcase
+### `demo.ts` - Showcase
 - Embed ~12 sample sentences (mix of related/unrelated topics).
 - Run 2-3 semantic search queries, print ranked results with scores.
 - Compute and display a similarity matrix (console table).
@@ -105,5 +105,5 @@ Tests (using hash embedder for determinism/offline):
 - [x] Implementation complete, well-commented.
 - [x] `npm run demo` works offline (prints mode banner).
 - [x] `npm test` passes offline (uses hash fallback).
-- [x] README.md includes pasted passing output.
+- [x] README.md shows a short, honest slice of real output (not a full pasted dump).
 - [x] .env.example, .gitignore present.

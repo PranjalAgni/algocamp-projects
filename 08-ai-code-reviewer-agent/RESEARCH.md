@@ -1,4 +1,4 @@
-# AI Code Reviewer Agent — Research
+# AI Code Reviewer Agent - Research
 
 ## Concept
 
@@ -26,9 +26,9 @@ Key elements to extract:
 - Context lines (prefixed with space)
 
 **Libraries considered:**
-- `diff-parser` (npm) — mature parser for unified diff format
-- `parse-diff` (npm) — similar, lightweight
-- **Custom parser** — Educational value for learning; diffs are text-based and parseable with regex
+- `diff-parser` (npm) - mature parser for unified diff format
+- `parse-diff` (npm) - similar, lightweight
+- **Custom parser** - Educational value for learning; diffs are text-based and parseable with regex
 
 **Decision:** Custom parser for learning, with regex-based extraction of files, hunks, and line numbers.
 
@@ -58,9 +58,9 @@ Uses natural language understanding to catch:
 - Architecture/design concerns
 
 **API Options:**
-- **OpenAI** (`openai` npm package) — GPT-4, structured output via JSON mode
-- **Anthropic** (`@anthropic-ai/sdk`) — Claude, strong at code analysis
-- **Local models** — Ollama, LM Studio (requires setup)
+- **OpenAI** (`openai` npm package) - gpt-4o-mini, structured output via JSON mode
+- **Anthropic** (`@anthropic-ai/sdk`) - Claude, strong at code analysis
+- **Local models** - Ollama, LM Studio (requires setup)
 
 **Decision:** Support both OpenAI and Anthropic with MOCK fallback when no key present.
 
@@ -95,10 +95,10 @@ interface ReviewComment {
 - Summary stats at the end
 
 **Libraries considered:**
-- `chalk` — Terminal colors
-- `cli-table3` — Tables
-- `boxen` — Bordered boxes
-- **Custom formatting** — Use ANSI codes directly for learning
+- `chalk` - Terminal colors
+- `cli-table3` - Tables
+- `boxen` - Bordered boxes
+- **Custom formatting** - Use ANSI codes directly for learning
 
 **Decision:** Use `chalk` for colors (very common), custom formatting for the rest.
 
@@ -141,7 +141,7 @@ These serve as:
 ## References
 
 - [Git Diff Format](https://git-scm.com/docs/diff-format)
-- [CodeRabbit](https://coderabbit.ai) — Commercial AI code reviewer
-- [Danger.js](https://danger.systems/js/) — Automated PR reviewer
-- [ESLint](https://eslint.org) — Static analysis patterns
+- [CodeRabbit](https://coderabbit.ai) - Commercial AI code reviewer
+- [Danger.js](https://danger.systems/js/) - Automated PR reviewer
+- [ESLint](https://eslint.org) - Static analysis patterns
 - [OpenAI Structured Outputs](https://platform.openai.com/docs/guides/structured-outputs)

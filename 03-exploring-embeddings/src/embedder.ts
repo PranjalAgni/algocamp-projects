@@ -1,10 +1,10 @@
 /**
- * Embedder factory — auto-selects the best available embedder.
+ * Embedder factory - auto-selects the best available embedder.
  *
  * Priority order:
- * 1. Xenova (local model) — if model can be loaded
- * 2. OpenAI — if OPENAI_API_KEY is set
- * 3. Hash fallback — deterministic, works offline, no semantic meaning
+ * 1. Xenova (local model) - if model can be loaded
+ * 2. OpenAI - if OPENAI_API_KEY is set
+ * 3. Hash fallback - deterministic, works offline, no semantic meaning
  *
  * The factory tries each option in order and falls back gracefully.
  * A banner is printed showing which mode is active.
@@ -35,7 +35,7 @@ export async function createEmbedder(): Promise<Embedder> {
 
   // Try OpenAI if API key is present
   const apiKey = process.env.OPENAI_API_KEY;
-  if (apiKey && apiKey !== 'your-key-here') {
+  if (apiKey && apiKey.trim() !== '') {
     try {
       const embedder = await createOpenAIEmbedder(apiKey);
       console.log(`\n[MODE: ${embedder.mode}] Using OpenAI text-embedding-3-small\n`);

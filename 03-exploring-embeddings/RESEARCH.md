@@ -1,4 +1,4 @@
-# Exploring Embeddings — Research
+# Exploring Embeddings - Research
 
 ## What are Text Embeddings?
 
@@ -40,12 +40,12 @@ At the sentence level, this can demonstrate semantic composition.
 
 ### Primary: @xenova/transformers (chosen)
 - **Pros**: Runs locally, no API key needed, good quality (transformer-based models).
-- **Model**: `Xenova/all-MiniLM-L6-v2` — 384-dim embeddings, ~25MB, fast inference.
+- **Model**: `Xenova/all-MiniLM-L6-v2` - 384-dim embeddings, ~25MB, fast inference.
 - **First-run**: Downloads model and caches in `~/.cache/huggingface/`. Works fully offline after that.
 - **Network unavailable**: Falls back to hash-based deterministic embedder (for tests/offline).
 
 ### Optional: OpenAI text-embedding-3-small
-- **Pros**: State-of-the-art quality, 1536 dimensions.
+- **Pros**: 1536 dimensions (4x the local model), no local model download.
 - **Cons**: Requires API key, network, costs money.
 - **Use case**: If `OPENAI_API_KEY` is present, allow live comparison.
 
@@ -58,12 +58,12 @@ At the sentence level, this can demonstrate semantic composition.
 
 1. **Learning goal**: Build intuition, not production system. Small corpus (~12 sentences) is sufficient.
 2. **Offline-first**: Hash fallback ensures tests/demo work even on a plane.
-3. **Quality hierarchy**: Xenova > OpenAI (if key present) > Hash fallback.
+3. **Selection order (offline-first)**: Xenova (local, no key) > OpenAI (if key present) > Hash fallback. This is a preference for what runs with no key/network, not a quality ranking: OpenAI's `text-embedding-3-small` (1536-dim) is generally the higher-quality embedder, but the local 384-dim model is tried first because it needs neither a key nor a network round-trip. Only the hash fallback carries no semantic meaning.
 4. **Auto-detect mode**: Print banner `[MODE: LOCAL-MODEL]` / `[MODE: LIVE]` / `[MODE: HASH-FALLBACK]`.
 
 ## References
 
-- [Sentence Transformers](https://www.sbert.net/) — Original research on sentence embeddings.
-- [Hugging Face Transformers.js](https://huggingface.co/docs/transformers.js) — Xenova docs.
+- [Sentence Transformers](https://www.sbert.net/) - Original research on sentence embeddings.
+- [Hugging Face Transformers.js](https://huggingface.co/docs/transformers.js) - Xenova docs.
 - [OpenAI Embeddings API](https://platform.openai.com/docs/guides/embeddings)
 - [Cosine Similarity](https://en.wikipedia.org/wiki/Cosine_similarity)

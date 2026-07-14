@@ -1,4 +1,4 @@
-# AI Code Reviewer Agent — Implementation Plan
+# AI Code Reviewer Agent - Implementation Plan
 
 ## V1 Goals
 
@@ -109,11 +109,11 @@ Functions:
 - `runLinter(parsedDiff: ParsedDiff): ReviewComment[]`
 
 Rules (regex-based, check added lines only):
-1. **Hardcoded secrets** — `/(password|api_key|secret|token)\s*=\s*["'][^"']+["']/i`
-2. **Equality operators** — `/[^=!]==[^=]|[^!]!=[^=]/` (JS/TS)
-3. **Console statements** — `/console\.(log|warn|error|debug)/`
-4. **Missing await** — Heuristic: line has `.then(` without `await`
-5. **TODO/FIXME** — `/\/\/\s*(TODO|FIXME|HACK)/i`
+1. **Hardcoded secrets** - `/(password|api_key|secret|token)\s*=\s*["'][^"']+["']/i`
+2. **Equality operators** - `/[^=!]==[^=]|[^!]!=[^=]/` (JS/TS)
+3. **Console statements** - `/console\.(log|warn|error|debug)/`
+4. **Missing await** - Heuristic: line has `.then(` without `await`
+5. **TODO/FIXME** - `/\/\/\s*(TODO|FIXME|HACK)/i`
 
 Return ReviewComment array with source='linter'.
 
@@ -123,8 +123,8 @@ Functions:
 - `reviewWithLLM(parsedDiff: ParsedDiff): Promise<ReviewComment[]>`
 
 Mode detection:
-1. Check `OPENAI_API_KEY` env var → use OpenAI GPT-4
-2. Else check `ANTHROPIC_API_KEY` → use Anthropic Claude
+1. Check `OPENAI_API_KEY` env var → use OpenAI gpt-4o-mini
+2. Else check `ANTHROPIC_API_KEY` → use Anthropic claude-3-5-haiku
 3. Else use MOCK mode
 
 **Mock implementation:**
@@ -152,12 +152,12 @@ Mode detection:
 ### 5. Formatter (`formatter.ts`)
 
 Functions:
-- `formatJSON(result: ReviewResult): string` — JSON.stringify
-- `formatPretty(result: ReviewResult): string` — Terminal report
+- `formatJSON(result: ReviewResult): string` - JSON.stringify
+- `formatPretty(result: ReviewResult): string` - Terminal report
 
 Pretty format:
 ```
-[MODE: MOCK — no API key] or [MODE: LIVE — OpenAI GPT-4]
+[MODE: MOCK — no API key] or [MODE: LIVE — OpenAI gpt-4o-mini]
 
 Code Review Results
 ===================
@@ -329,11 +329,11 @@ Not implementing in v1, but noted for learning:
 
 ## Success Criteria
 
-✅ `npm install` succeeds  
-✅ `npm run demo` runs and prints review report (offline, no keys)  
-✅ `npm test` passes all tests  
-✅ README.md includes real output from passing demo  
-✅ Both linter and LLM-mock return findings for sample diffs  
-✅ Pretty output is readable and color-coded  
-✅ JSON output is valid and matches schema  
-✅ Works on macOS arm64 with Node v22  
+- `npm install` succeeds
+- `npm run demo` runs and prints review report (offline, no keys)
+- `npm test` passes all tests
+- README.md shows a short, honest slice of real output (not a full pasted dump)
+- Both linter and LLM-mock return findings for sample diffs
+- Pretty output is readable and color-coded
+- JSON output is valid and matches schema
+- Works on macOS arm64 with Node v22

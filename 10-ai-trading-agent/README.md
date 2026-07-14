@@ -1,265 +1,149 @@
-# AI Trading Agent — Learning Project
+# 10 · AI Trading Agent
 
-**⚠️ IMPORTANT DISCLAIMER: This is a LEARNING SIMULATION for educational purposes ONLY.**
+A backtester is the one tool that keeps trading honest: it replays a strategy over historical
+data and asks "would this rule actually have made money?" This project builds a full backtesting
+loop from scratch - synthetic price data, three technical indicators, an SMA-crossover strategy,
+a trade simulator, and performance metrics - then bolts an *optional* LLM commentator on the side.
+The point to internalize is that **the LLM touches nothing that matters**: the trading decisions
+are rule-based and testable, and the model only narrates. That separation is the whole lesson.
 
-This project is NOT:
-- Financial advice
-- A real trading system
-- Connected to any brokerage or live markets
-- Suitable for actual trading decisions
+> This is a learning simulation. It is not financial advice, not connected to any brokerage or
+> live market, and not usable for real trading. The data is a synthetic random walk.
 
-This is a sandbox for learning about:
-- Backtesting fundamentals
-- Technical indicators (SMA, EMA, RSI)
-- Trading strategy development
-- Performance metrics and analysis
-- How LLMs could be integrated (optionally)
-
----
-
-## What It Does
-
-This project implements a complete algorithmic trading backtesting system:
-
-1. **Synthetic Data Generation**: Creates deterministic OHLC (Open, High, Low, Close) market data using a seeded random walk
-2. **Technical Indicators**: Implements SMA, EMA, and RSI from scratch with detailed comments
-3. **Trading Strategy**: SMA crossover strategy (golden cross = buy, death cross = sell)
-4. **Backtesting Engine**: Simulates executing trades, tracks portfolio value, maintains equity curve
-5. **Performance Metrics**: Calculates return %, win rate, max drawdown, and compares vs. buy-and-hold
-6. **Optional LLM Analyst**: Provides market commentary (LIVE with OpenAI API key, MOCK without)
-
----
-
-## Installation
+## Run it
 
 ```bash
 npm install
+npm run demo    # backtests 100 days of synthetic data, prints a full report (mock LLM)
+npm test        # vitest suite (27 tests, deterministic, offline)
 ```
 
----
+No API key needed. Without one the LLM commentary is a deterministic canned string; with one it
+switches to `gpt-4o-mini` (see [Live commentary](#live-commentary)). Either way the numbers are
+identical - the model never enters the trading path.
 
-## Usage
+## The one idea
 
-### Run the Demo (Backtest Simulation)
+A backtest is a loop over days that maintains three pieces of state - `cash`, `position` (shares
+held), and the running `equity` curve - and mutates them according to a signal:
+
+```
+for each day:
+  signal = strategy(prices up to today)   # BUY / SELL / HOLD, rule-based
+  if BUY  and flat:  spend all cash on shares
+  if SELL and long:  sell the whole position
+  record equity = cash + position * close  # mark to market every day
+```
+
+That's `runBacktest` in `src/backtester/backtester.ts`, and it's deliberately blunt: all-in
+sizing, no fees, no slippage, fills at the close. Those simplifications (listed in full below)
+are what let the loop stay ~40 readable lines so the *mechanics* are visible. The strategy that
+feeds it (`src/strategy/smaCrossover.ts`) is equally plain: buy when the fast SMA crosses above
+the slow one (golden cross), sell when it crosses below (death cross). Crossover detection needs
+*yesterday and today* of both averages - comparing only today's values would fire a signal on
+every day the fast SMA sits above the slow, not just the day it crosses.
+
+## Indicators, built by hand
+
+All three live in `src/indicators/` with the math spelled out, because implementing them is more
+instructive than importing them:
+
+- **SMA** - arithmetic mean of the last N closes. Lagging by construction; smooths noise.
+- **EMA** - weights recent prices more (`k = 2/(period+1)`), so it reacts faster than SMA.
+- **RSI** - momentum oscillator 0-100 using Wilder's smoothing. `>70` overbought, `<30` oversold.
+
+Each returns `undefined` for the leading days where there isn't enough data yet, rather than
+faking a value - a small honesty that matters, because a strategy that reads a fabricated early
+SMA would trade on noise.
+
+## Reading the report
+
+The demo's headline result is the honest part: on the default synthetic series the SMA-crossover
+strategy returns **+20.95%** while simple buy-and-hold returns **+42.91%**. The strategy
+*underperforms the benchmark by ~22 points*. That is not a bug and not tuned away - it's the
+lesson. A trend-following strategy sits in cash during the early flat stretch (the equity curve
+is a flat $10,000 for the first ~40 days) and only catches part of the move, while buy-and-hold
+is fully exposed the whole time. In a steadily rising market, being clever loses to being
+invested. The metrics that quantify this:
+
+- **Total Return** - end equity vs. start, in % and dollars.
+- **Win Rate** - fraction of round-trip trades that closed green. 50% here (one of two won).
+- **Max Drawdown** - largest peak-to-trough drop in the equity curve; the risk you'd have stomached.
+- **vs. Buy-and-Hold** - the benchmark every strategy has to beat to justify its complexity.
+
+## The LLM is a passenger, not the driver
+
+`src/llm/analyst.ts` produces one paragraph of market commentary. Read the code and you'll see it
+is never consulted by `runBacktest` or `smaCrossoverStrategy` - it runs *after* the backtest, on
+the final indicator values, purely to demonstrate how an LLM *could* sit alongside a trading
+system (sentiment, trade-explanation audit trails) without being trusted with the decision. Two
+things worth knowing:
+
+**Mock commentary is a rule tree, not a model.** With no API key, `getMockCommentary` branches on
+the 10-day trend, the fast-vs-slow SMA relationship, and the RSI band to stitch three canned
+sentences. It's deterministic and offline by design - but it "understands" nothing; it's the same
+"mock proves the shape, not the intelligence" pattern as the earlier projects. The banner
+`[MODE: MOCK — no API key, using canned responses]` says so out loud.
+
+**The live prompt must be told the *actual* SMA periods.** The demo runs a 10/30-period crossover,
+not the textbook 20/50. The prompt builder (`buildLivePrompt`) therefore takes `fastPeriod` /
+`slowPeriod` from the demo and labels the numbers `Fast SMA (10)` / `Slow SMA (30)`. This is a
+fixed bug: the prompt used to hard-code `(20)` / `(50)`, so in live mode the model was handed the
+right *values* under the wrong *labels* - a silent factual error an LLM can't detect and will
+happily reason from. `tests/analyst.test.ts` now pins the labels to the periods passed in. The
+lesson generalizes: when you feed structured facts to a model, a mislabeled field is worse than a
+missing one, because the model trusts it.
+
+## Simplifications (deliberate, so the loop stays readable)
+
+No transaction costs · perfect fills at the close (no slippage) · long-only (no shorting) ·
+all-in sizing · one asset · daily bars · synthetic data. Real systems need fees, slippage,
+position sizing, diversification, and risk management - every one of these would add realism at
+the cost of obscuring the core loop, so they're left as the extensions below.
+
+## Live commentary
 
 ```bash
-npm run demo
+cp .env.example .env
+# set OPENAI_API_KEY=sk-...
+npm run demo    # banner flips to [MODE: LIVE — OpenAI API enabled]
 ```
 
-This runs a complete backtest on 100 days of synthetic data and prints a detailed report.
-
-### Run Tests
-
-```bash
-npm test
-```
-
-Runs unit tests for indicators and backtesting logic.
-
----
-
-## Example Output
-
-```
-======================================================================
-AI TRADING AGENT - BACKTEST SIMULATION
-======================================================================
-
-⚠️  DISCLAIMER: This is a learning simulation for educational purposes only.
-   NOT financial advice. NOT for real trading. NOT connected to live markets.
-
-📊 Generating synthetic OHLC data...
-   Generated 100 days of market data
-   Start date: 2024-01-01, End date: 2024-04-09
-   Start price: $100.73, End price: $144.07
-
-📈 Running SMA Crossover Strategy...
-   Generated 2 BUY signals and 3 SELL signals
-
-💰 Running backtest simulation...
-   Initial cash: $10000.00
-   Final equity: $12095.20
-   Executed 4 transactions (2 round trips)
-
-📊 Performance Metrics:
-   Total Return: +20.95% ($+2095.20)
-   Number of Trades: 2
-   Win Rate: 50.00%
-   Max Drawdown: 9.98%
-
-📉 Benchmark Comparison:
-   Buy-and-Hold: +42.91% (Final: $14290.66)
-   Strategy: +20.95% (Final: $12095.20)
-   Strategy UNDERPERFORMED by 21.95%
-
-📝 Sample Trades (first 5):
-   Date       | Type | Price    | Shares | Value
-   -------------------------------------------------------
-   2024-02-05 | BUY  | $ 121.16 |     82 | $  9935.12
-   2024-03-16 | SELL | $ 158.84 |     82 | $ 13024.88
-   2024-03-17 | BUY  | $ 154.93 |     84 | $ 13014.12
-   2024-03-20 | SELL | $ 143.09 |     84 | $ 12019.56
-
-📈 Equity Curve (sample, every 10 days):
-   Day | Equity
-   --------------------
-     1 | $10000.00
-    11 | $10000.00
-    21 | $10000.00
-    31 | $10000.00
-    41 | $10858.54
-    51 | $12650.24
-    61 | $12450.16
-    71 | $12770.78
-    81 | $12095.20
-    91 | $12095.20
-   100 | $12095.20
-
-🤖 LLM Market Commentary:
-[MODE: MOCK — no API key, using canned responses]
-   Market shows strong upward momentum over the recent period. Short-term momentum below long-term trend (bearish positioning). RSI at 53 reflects balanced momentum.
-
-======================================================================
-✅ Backtest complete! Remember: This is for learning, not real trading.
-======================================================================
-```
-
----
-
-## Enabling Live LLM Commentary
-
-The system runs in **MOCK mode** by default (no API key required).
-
-To enable **LIVE mode** with OpenAI API:
-
-1. Create a `.env` file (copy from `.env.example`):
-   ```bash
-   cp .env.example .env
-   ```
-
-2. Add your OpenAI API key:
-   ```
-   OPENAI_API_KEY=sk-your-key-here
-   ```
-
-3. Run the demo again. You'll see `[MODE: LIVE — OpenAI API enabled]`
-
-**Note**: The LLM commentary is purely educational and does NOT affect trading decisions. The core strategy is rule-based.
-
----
-
-## Project Structure
-
-```
-src/
-├── data/
-│   └── generateOHLC.ts          # Synthetic market data generator
-├── indicators/
-│   ├── sma.ts                   # Simple Moving Average
-│   ├── ema.ts                   # Exponential Moving Average
-│   └── rsi.ts                   # Relative Strength Index
-├── strategy/
-│   └── smaCrossover.ts          # SMA crossover trading strategy
-├── backtester/
-│   ├── backtester.ts            # Core backtesting engine
-│   └── metrics.ts               # Performance metrics calculator
-├── llm/
-│   └── analyst.ts               # Optional LLM analyst (LIVE/MOCK)
-└── demo.ts                      # Main demo script
-
-tests/
-├── indicators.test.ts           # Indicator tests
-└── backtester.test.ts           # Backtester tests
-```
-
----
-
-## Key Learning Concepts
-
-### Technical Indicators (Built from Scratch)
-
-1. **SMA (Simple Moving Average)**: Arithmetic mean of last N prices. Smooths noise, shows trends.
-2. **EMA (Exponential Moving Average)**: Weighted average favoring recent prices. More responsive than SMA.
-3. **RSI (Relative Strength Index)**: Momentum oscillator (0-100). >70 = overbought, <30 = oversold.
-
-### Trading Strategy
-
-**SMA Crossover**:
-- Fast SMA (10-day) crosses above Slow SMA (30-day) = **BUY** (golden cross)
-- Fast SMA crosses below Slow SMA = **SELL** (death cross)
-- Otherwise = **HOLD**
-
-Classic trend-following strategy. Works in trending markets, whipsaws in choppy markets.
-
-### Backtesting
-
-Simulates executing trades on historical data:
-1. Start with initial cash ($10,000)
-2. For each day: calculate indicators → generate signal → execute trade
-3. Track cash, position, equity curve
-4. Calculate metrics: return, win rate, max drawdown
-
-### Performance Metrics
-
-- **Total Return**: % gain/loss from start to finish
-- **Number of Trades**: How many buy/sell pairs
-- **Win Rate**: % of profitable trades
-- **Max Drawdown**: Largest peak-to-trough decline (risk measure)
-- **vs. Buy-and-Hold**: Compare strategy to passive benchmark
-
----
-
-## Simplifications (For Learning)
-
-These simplifications let us focus on core concepts:
-
-1. **No transaction costs**: Trades are free (unrealistic)
-2. **Perfect execution**: Orders fill at close price (no slippage)
-3. **No short selling**: Only long positions
-4. **All-in sizing**: Use all cash on buy, sell entire position
-5. **Single asset**: One stock only
-6. **Daily timeframe**: One data point per day
-7. **Synthetic data**: Deterministic random walk (no real market data)
-
-Real trading systems would need proper risk management, transaction costs, slippage modeling, position sizing, diversification, and regulatory compliance.
-
----
-
-## Extending This Project
-
-Ideas for further learning (see `PLAN.md` for details):
-
-- Implement RSI-based strategy or combined indicators
-- Add real historical data import (CSV)
-- Parameter optimization (grid search for best SMA periods)
-- Walk-forward testing (train/test split)
-- Risk metrics (Sharpe ratio, Sortino ratio)
-- Multiple assets / portfolio allocation
-- Transaction costs and slippage modeling
-- ASCII visualization of equity curve
-
----
+The strategy, trades, and every metric are byte-for-byte identical to mock mode - only the
+commentary paragraph changes. That invariance is the design working: the model is decoration on a
+deterministic core.
 
 ## Files
 
-- `RESEARCH.md` — Background on concepts, indicators, and approaches
-- `PLAN.md` — Implementation plan and stretch goals
-- `README.md` — This file
-- `.env.example` — Environment variables template
-- `.gitignore` — Excludes node_modules, .env, etc.
+```
+src/
+  data/generateOHLC.ts     seeded random walk → deterministic OHLC bars
+  indicators/sma.ts        simple moving average
+  indicators/ema.ts        exponential moving average (faster reacting)
+  indicators/rsi.ts        Wilder-smoothed momentum oscillator
+  strategy/smaCrossover.ts golden/death cross → BUY/SELL/HOLD signals
+  backtester/backtester.ts the day loop: cash, position, equity curve
+  backtester/metrics.ts    return, win rate, max drawdown, benchmark compare
+  llm/analyst.ts           optional commentary (mock rule-tree or gpt-4o-mini)
+  demo.ts                  wires it all together and prints the report
+tests/
+  indicators, backtester, analyst
+```
 
----
+`RESEARCH.md` and `PLAN.md` record the background concepts and stretch goals.
 
-## Resources
+## Where to go next
 
-- [Investopedia: Technical Indicators](https://www.investopedia.com/terms/t/technicalindicator.asp)
-- [SMA vs EMA](https://www.investopedia.com/ask/answers/071414/whats-difference-between-moving-average-and-exponential-moving-average.asp)
-- [RSI Explained](https://www.investopedia.com/terms/r/rsi.asp)
-- [Backtesting Basics](https://www.investopedia.com/terms/b/backtesting.asp)
-- Book: "Algorithmic Trading" by Ernest Chan (for deeper study)
-
----
-
-## License
-
-MIT — This is a learning project. Use at your own risk. NOT financial advice.
+- **Make the strategy earn its keep.** It loses to buy-and-hold on this rising series. Give it a
+  *falling* series instead (set a negative `drift`, e.g. `-0.005`, in `demo.ts`) and the result
+  flips: the trend-follower sits in cash through the decline and finishes roughly flat while a
+  fully-invested buy-and-hold sinks well into the red, so it wins by *not losing*. Note what does
+  **not** help: just cranking up
+  `volatility` on a flat/sideways series makes it worse, not better - the extra false crossovers
+  whipsaw it into buying high and selling low. Crossovers earn their keep by dodging sustained
+  downtrends, not by trading a choppy market more.
+- **Add a risk-adjusted metric.** Total return ignores volatility; add a Sharpe ratio to
+  `metrics.ts` and see whether the "worse" strategy was actually less risky per unit of return.
+- **Swap the signal source.** Build an RSI-based strategy (buy oversold, sell overbought) behind
+  the same `Signal[]` contract the backtester consumes, and the loop won't need a single change -
+  the same interface-seam idea as project 09's swappable stages.

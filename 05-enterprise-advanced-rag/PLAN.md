@@ -1,4 +1,4 @@
-# Enterprise Advanced RAG — Implementation Plan
+# Enterprise Advanced RAG - Implementation Plan
 
 ## V1 Goals
 Build a learning project that demonstrates the quality difference between naive and advanced RAG retrieval techniques using a small fictional company knowledge base.
@@ -139,9 +139,9 @@ Result: Engineering Handbook, Security Guidelines (2 docs)
 All tests must pass **offline** (no network calls).
 
 ## Commands
-- `npm install` — install dependencies
-- `npm run demo` — run the side-by-side demo
-- `npm test` — run vitest tests
+- `npm install` - install dependencies
+- `npm run demo` - run the side-by-side demo
+- `npm test` - run vitest tests
 - Switch to live mode: Set `OPENAI_API_KEY=sk-...` in `.env`
 
 ## V2 Stretch Ideas (NOT implemented in V1)

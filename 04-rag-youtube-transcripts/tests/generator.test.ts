@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
-import { generateAnswer } from '../src/generator.js';
+import { generateAnswer, firstSentences } from '../src/generator.js';
 import { setUseHashEmbedder } from '../src/embedder.js';
 import type { SearchResult } from '../src/vectorStore.js';
 import type { Chunk } from '../src/chunker.js';
@@ -80,6 +80,24 @@ describe('generator', () => {
     const result = await generateAnswer('What is quantum computing?', []);
 
     expect(result.answer).toContain('No relevant information');
+  });
+
+  describe('firstSentences', () => {
+    it('keeps question marks and exclamation points instead of rewriting them to periods', () => {
+      const excerpt = firstSentences('Thanks for watching! Next time we explore vector databases. And more.', 2);
+      expect(excerpt).toBe('Thanks for watching! Next time we explore vector databases.');
+    });
+
+    it('does not split a decimal into two sentences', () => {
+      // A naive /[.!?]+/ split would treat "1" and "5 billion parameters" as
+      // two sentences, dropping the real second sentence ("It runs fast.").
+      const excerpt = firstSentences('The model has 1.5 billion parameters. It runs fast. Done.', 2);
+      expect(excerpt).toBe('The model has 1.5 billion parameters. It runs fast.');
+    });
+
+    it('returns text unchanged when there is no sentence terminator', () => {
+      expect(firstSentences('No terminator here at all', 2)).toBe('No terminator here at all');
+    });
   });
 
   it('should extract content from chunks', async () => {

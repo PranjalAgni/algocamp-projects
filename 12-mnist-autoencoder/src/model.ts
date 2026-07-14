@@ -17,7 +17,7 @@
  * - Training minimizes this error, forcing the network to learn good features
  *
  * KEY INSIGHT: The bottleneck (32 dims) forces compression, so the network
- * can't just memorize inputs—it must learn meaningful representations.
+ * can't just memorize inputs - it must learn meaningful representations.
  */
 
 import * as tf from '@tensorflow/tfjs-node';
@@ -169,6 +169,36 @@ export function buildAutoencoder(config: AutoencoderConfig = DEFAULT_CONFIG): tf
   decoder.layers.forEach(layer => autoencoder.add(layer));
 
   return autoencoder;
+}
+
+/**
+ * Build the autoencoder AND return the encoder that is part of it.
+ *
+ * Why this exists: `buildAutoencoder` composes the model from a *fresh*
+ * encoder/decoder built inside it, so the caller gets no handle on the
+ * encoder whose weights actually get trained. If you separately call
+ * `buildEncoder()` and train the autoencoder, that standalone encoder keeps
+ * its random initial weights - encoding an image with it shows a meaningless
+ * latent vector, not what the model learned.
+ *
+ * This function shares the SAME layer instances between the returned encoder
+ * and the autoencoder. Training the autoencoder updates those layers in place,
+ * so `encoder.predict(image)` afterwards returns the trained latent vector.
+ *
+ * @param config Autoencoder configuration
+ * @returns Both the full autoencoder and the encoder sharing its trained weights
+ */
+export function buildAutoencoderWithEncoder(
+  config: AutoencoderConfig = DEFAULT_CONFIG
+): { autoencoder: tf.Sequential; encoder: tf.Sequential } {
+  const encoder = buildEncoder(config);
+  const decoder = buildDecoder(config);
+
+  const autoencoder = tf.sequential({ name: 'autoencoder' });
+  encoder.layers.forEach(layer => autoencoder.add(layer));
+  decoder.layers.forEach(layer => autoencoder.add(layer));
+
+  return { autoencoder, encoder };
 }
 
 /**

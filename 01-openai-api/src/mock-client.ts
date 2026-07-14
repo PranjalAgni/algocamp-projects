@@ -8,6 +8,26 @@
 import { LLMClient } from './llm-client.js';
 import { Message, Tool, ToolCall, ChatOptions } from './types.js';
 
+/**
+ * Rewrite a base reply to reflect the persona a system prompt asks for.
+ *
+ * A real LLM reads the instruction and adapts. The mock can't, so it recognizes
+ * the handful of personas the demo/tests exercise (e.g. "pirate") and rewrites
+ * accordingly. The point is only to prove that a system message changes the
+ * output for the same user turn - not to be a general instruction follower.
+ */
+export function applyPersona(reply: string, systemPrompt?: string): string {
+  if (!systemPrompt) return reply;
+  const system = systemPrompt.toLowerCase();
+
+  if (system.includes('pirate')) {
+    return `Arrr! ${reply} - and may fair winds fill yer sails, matey!`;
+  }
+  // Unknown persona: acknowledge the system prompt is present but note the mock
+  // can't follow an arbitrary instruction (a real model would).
+  return `${reply} [mock: a system prompt is set, but only the live model can follow arbitrary personas]`;
+}
+
 export class MockLLMClient implements LLMClient {
   private model: string;
 
@@ -17,23 +37,41 @@ export class MockLLMClient implements LLMClient {
 
   /**
    * Basic chat - returns a deterministic response based on input.
+   *
+   * A `system` message is supposed to steer behavior for the whole turn, so the
+   * mock keys its reply off the user's request AND then applies the persona from
+   * any system message. A real model can follow an arbitrary instruction; the
+   * mock can't reason, so it deterministically simulates the personas the demo
+   * uses (see `applyPersona`). That is enough to show the lesson - the same user
+   * message yields a different reply once a system prompt is set - without
+   * pretending the mock is a real LLM.
    */
   async chat(messages: Message[], options?: ChatOptions): Promise<string> {
-    const lastMessage = messages[messages.length - 1];
-    const userContent = lastMessage.content.toLowerCase();
+    const systemMessage = messages.find(m => m.role === 'system');
+    const lastUserMessage =
+      [...messages].reverse().find(m => m.role === 'user') ??
+      messages[messages.length - 1];
+    const userContent = lastUserMessage.content.toLowerCase();
 
-    // Simple pattern matching for realistic responses
+    // Base canned reply, keyed off the user's request.
+    let reply: string;
     if (userContent.includes('hello') || userContent.includes('hi')) {
-      return 'Hello! How can I help you today?';
+      reply = 'Hello! How can I help you today?';
     } else if (userContent.includes('weather')) {
-      return "I'd be happy to help with weather information. Which location would you like to know about?";
+      reply =
+        "I'd be happy to help with weather information. Which location would you like to know about?";
     } else if (userContent.includes('explain')) {
-      return 'This is a mock response. In live mode, I would provide a detailed explanation based on your question.';
+      reply =
+        'This is a mock response. In live mode, I would provide a detailed explanation based on your question.';
     } else if (userContent.includes('capital')) {
-      return 'The capital of France is Paris. Is there anything else you would like to know?';
+      reply = 'The capital of France is Paris. Is there anything else you would like to know?';
     } else {
-      return `Mock response to: "${lastMessage.content.substring(0, 50)}..." (using ${this.model})`;
+      reply = `Mock response to: "${lastUserMessage.content.substring(0, 50)}..." (using ${this.model})`;
     }
+
+    // Let the system prompt steer the reply, so Pattern 3 actually demonstrates
+    // that a system message changes behavior.
+    return applyPersona(reply, systemMessage?.content);
   }
 
   /**

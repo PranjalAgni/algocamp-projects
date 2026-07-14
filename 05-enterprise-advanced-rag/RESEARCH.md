@@ -1,4 +1,4 @@
-# Enterprise Advanced RAG — Research
+# Enterprise Advanced RAG - Research
 
 ## What is RAG?
 Retrieval-Augmented Generation (RAG) is a technique that enhances LLM responses by retrieving relevant context from a knowledge base before generation. Instead of relying solely on the model's training data, RAG fetches pertinent documents to ground the answer.
@@ -35,7 +35,7 @@ Combine multiple retrieval methods:
 After retrieving candidates (10-20 docs), rerank with a more powerful model:
 - **Cross-encoders**: Jointly encode query+doc, produce relevance score (more accurate than bi-encoders)
 - **Heuristic rerankers**: Metadata-based (recency, source authority)
-- **Implementation choice**: Try @xenova/transformers cross-encoder (e.g., ms-marco-MiniLM-L-6), fallback to heuristic
+- **Implementation choice**: Heuristic reranker (query-term overlap + title match + recency bonus), no LLM. A cross-encoder is the production upgrade but adds complexity for this learning project
 
 ### 4. Metadata Filtering
 Pre-filter or post-filter by:
@@ -81,10 +81,10 @@ Pre-filter or post-filter by:
 - LangChain retrieval docs: https://python.langchain.com/docs/concepts/retrieval/
 
 ## Success Metrics for This Project
-✅ Naive retrieval returns semantically close but not best docs
-✅ Query expansion improves recall
-✅ Hybrid retrieval catches both keyword + semantic matches
-✅ Reranking moves most relevant doc to #1
-✅ Metadata filtering correctly excludes non-matching docs
-✅ Tests pass offline
-✅ Demo runs without API key (mock mode)
+- Naive retrieval returns semantically close but not best docs
+- Query expansion improves recall
+- Hybrid retrieval catches both keyword + semantic matches
+- Reranking moves most relevant doc to #1
+- Metadata filtering correctly excludes non-matching docs
+- Tests pass offline
+- Demo runs without API key (mock mode)

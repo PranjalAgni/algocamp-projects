@@ -1,4 +1,4 @@
-# AI Trading Agent — Implementation Plan
+# AI Trading Agent - Implementation Plan
 
 ## v1 Goals
 
@@ -142,29 +142,29 @@ Build a complete backtesting system that:
 - How to run demo: `npm run demo`
 - How to run tests: `npm test`
 - How to enable LLM (set OPENAI_API_KEY in .env)
-- Example output (paste real output after testing)
+- Example output (a short, honest slice of real output, not a full pasted dump)
 
 **.env.example**:
 ```
-OPENAI_API_KEY=your-key-here-optional
+OPENAI_API_KEY=
 ```
 
 ## Commands
 
-- `npm install` — install dependencies
-- `npm run demo` — run backtest demo (src/demo.ts via tsx)
-- `npm test` — run vitest
+- `npm install` - install dependencies
+- `npm run demo` - run backtest demo (src/demo.ts via tsx)
+- `npm test` - run vitest
 
 ## Dependencies
 
-- `seedrandom` — deterministic random number generation
-- `openai` — OpenAI SDK (optional LLM)
-- `dotenv` — load .env file
-- `tsx` — run TypeScript directly
-- `vitest` — testing
-- `typescript` — compiler
-- `@types/node` — Node type definitions
-- `@types/seedrandom` — seedrandom types
+- `seedrandom` - deterministic random number generation
+- `openai` - OpenAI SDK (optional LLM)
+- `dotenv` - load .env file
+- `tsx` - run TypeScript directly
+- `vitest` - testing
+- `typescript` - compiler
+- `@types/node` - Node type definitions
+- `@types/seedrandom` - seedrandom types
 
 ## Validation Checklist
 
@@ -173,7 +173,7 @@ Before completion:
 - [ ] `npm run demo` runs and prints full backtest report
 - [ ] `npm test` passes all tests
 - [ ] Demo works WITHOUT any API key (MOCK mode)
-- [ ] README includes real output example
+- [ ] README shows a short, honest slice of real output (not a full pasted dump)
 - [ ] All files have clear comments explaining concepts
 
 ## Stretch Goals (Not v1)

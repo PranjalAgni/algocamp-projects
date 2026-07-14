@@ -1,197 +1,112 @@
-# Enterprise Advanced RAG
+# 05 · Enterprise Advanced RAG
 
-A learning project demonstrating **advanced RAG (Retrieval-Augmented Generation) techniques** and how they improve over naive semantic search. Built with TypeScript, runs fully offline with mock mode.
+Project 04 built the basic RAG pipeline: chunk, embed, retrieve top-`k`, generate. It also left a
+warning - at scale, plain semantic search retrieves the wrong chunks, and no model can answer well
+from bad context. This project is the fix. It runs a naive retriever and an advanced one side by
+side over the same corpus so you can watch the extra machinery change what comes back.
 
-## What This Demonstrates
+The takeaway: "advanced RAG" is not one technique, it's a small stack of independent moves - expand
+the query, retrieve two ways and fuse, rerank, filter on metadata - each patching a specific way
+that pure semantic search misses.
 
-This project shows the quality difference between **naive RAG** (simple semantic search) and **advanced RAG** techniques:
-
-1. **Query Expansion**: Add synonyms to improve recall (e.g., "PTO" → "vacation, leave, time off")
-2. **Hybrid Retrieval**: Combine semantic (embeddings) + keyword (BM25) search using Reciprocal Rank Fusion
-3. **Reranking**: Re-score candidates with metadata and term overlap heuristics
-4. **Metadata Filtering**: Pre-filter by department, document type, or date range
-
-## Architecture
-
-- **Corpus**: 10 fictional company documents (policies, handbooks) in `corpus/`
-- **Embeddings**: `@xenova/transformers` (all-MiniLM-L6-v2) with hash fallback
-- **Sparse Retrieval**: Custom TF-IDF/BM25 implementation
-- **Hybrid Fusion**: Reciprocal Rank Fusion to merge rankings
-- **Generation**: OpenAI API (live mode) or extractive QA (mock mode)
-
-## Installation
+## Run it
 
 ```bash
 npm install
+npm run demo     # naive vs advanced retrieval, side by side, over 10 company docs
+npm test         # vitest suite (29 tests, deterministic, offline)
 ```
 
-## Running
+The demo needs no API key. Unlike project 04, it does *not* force a hash fallback: on first run it
+downloads the Xenova `all-MiniLM-L6-v2` model (~25MB, cached after), so retrieval is genuinely
+semantic. Only the final answer is stubbed offline - see the honesty note below.
 
-### Demo (Mock Mode - No API Key Required)
+## The four moves
+
+Each is a small file you can read top to bottom. Naive retrieval is one cosine-similarity pass;
+advanced retrieval layers these on:
+
+1. **Query expansion** (`src/query-processing.ts`) - the query "time off" and the document word
+   "PTO" are the same concept but share no characters, so a lexical retriever scores them zero.
+   `expandQuery` looks up a hand-built synonym map and appends related terms ("pto vacation leave
+   absence") before retrieval, so both dense and sparse search have more surface to match on.
+2. **Hybrid retrieval + RRF** (`src/dense-retrieval.ts`, `src/sparse-retrieval.ts`,
+   `src/hybrid-retrieval.ts`) - run dense (embeddings, catches meaning) and sparse (BM25, catches
+   exact terms) retrieval separately, then merge with Reciprocal Rank Fusion. RRF sums
+   `1 / (k + rank)` across lists (`k=60`), so it fuses on *rank position*, not raw scores - which
+   sidesteps the fact that a cosine score of 0.4 and a BM25 score of 8.0 aren't on the same scale.
+3. **Reranking** (`src/reranking.ts`) - a cheap second pass over the fused top results, nudging
+   scores with query-term overlap (30%), title matches (20%), and recency (a flat 10% for docs
+   under a year old). This stands in for a cross-encoder, which is the real production tool.
+4. **Metadata filtering** (`src/metadata-filter.ts`) - narrow the candidate set *before* retrieval
+   ("only Engineering docs") so the search never has to rank irrelevant documents in the first
+   place. The demo filters to 2 of 10 docs and then retrieves within them.
+
+## The honest part
+
+Two things worth being explicit about, because both are visible in the demo output:
+
+- **The answer is extractive, not generated.** With no `OPENAI_API_KEY`, `src/generator.ts` runs
+  `extractiveAnswer` - it splits the top document into sentences and returns the one with the most
+  query-word overlap. That's why the "Final Answer" reads as a raw quoted fragment (bullet points
+  and a stray heading) rather than a clean sentence. Retrieval is real; generation is a lookup.
+  Add a key (below) to see gpt-4o-mini actually compose an answer from the retrieved context.
+
+- **The recency bonus is dead code against this corpus.** The reranker gives a boost to docs less
+  than 365 days old, computed from the current date. Every doc in `corpus/metadata.json` is dated
+  2024 or earlier, so as of today none qualify and that branch never fires. It's a good reminder
+  that a scoring signal tied to wall-clock time silently stops contributing as your data ages -
+  worth catching in a real system, not just a demo.
+
+Note too that on this small, well-separated corpus the naive retriever already puts PTO Policy
+first for the time-off query. The advanced stack earns its keep on harder corpora - many
+near-duplicate docs, vocabulary mismatch, mixed departments - where a single similarity pass
+starts returning plausible-but-wrong chunks.
+
+## Live mode (real generation)
 
 ```bash
+cp .env.example .env      # then add OPENAI_API_KEY=sk-...
 npm run demo
 ```
 
-**Actual Output:**
+The banner switches to `[MODE: LIVE]` and the final answer is generated by gpt-4o-mini from the top
+3 retrieved docs. If the call fails, it falls back to the extractive answer rather than crashing.
+
+## Files
 
 ```
-============================================================
-MODE: MOCK — no OPENAI_API_KEY
-============================================================
-
-Loaded 10 documents from corpus
-
-Query: "How do I request time off?"
-
-━━━ NAIVE RETRIEVAL ━━━
-(Pure semantic search, top 3)
-
-1. PTO Policy (score: 0.409)
-2. Remote Work Policy (score: 0.284)
-3. Onboarding Guide (score: 0.276)
-
-
-━━━ ADVANCED RETRIEVAL ━━━
-
-Step 1: Query Expansion
-Original: "How do I request time off?"
-Expanded: "How do I request time off? pto vacation leave absence"
-Added terms: pto, vacation, leave, absence
-
-Step 2: Hybrid Retrieval (Dense + Sparse + RRF)
-1. PTO Policy (RRF score: 0.033)
-2. Benefits Overview (RRF score: 0.032)
-3. Onboarding Guide (RRF score: 0.031)
-
-Step 3: Reranking (Heuristic)
-1. PTO Policy (rerank score: 0.133)
-2. Benefits Overview (rerank score: 0.132)
-3. Onboarding Guide (rerank score: 0.031)
-
-Final Answer:
-"25 days per month
-- Maximum PTO balance cap is 30 days
-
-## Requesting Time Off
-Employees must submit PTO requests through the HR portal at least 2 weeks in advance for approval by their manager"
-
-
-━━━ METADATA FILTERING DEMO ━━━
-
-Query: "What are the security guidelines?"
-Filter: department=Engineering
-
-Filtered to 2 documents:
-  - Engineering Handbook
-  - Security Guidelines
-
-Top result:
-  Security Guidelines (score: 0.687)
-
-============================================================
-Demo complete!
-============================================================
+corpus/                   10 fictional company docs + metadata.json
+src/
+  types.ts                Document / DocumentMetadata / RetrievalResult - the shared shapes
+  document-loader.ts      load corpus + attach metadata
+  embeddings.ts           Xenova all-MiniLM-L6-v2 + hash fallback, cosine similarity
+  query-processing.ts     synonym expansion, tokenization
+  dense-retrieval.ts      semantic search (cosine)
+  sparse-retrieval.ts     BM25 keyword search
+  hybrid-retrieval.ts     Reciprocal Rank Fusion
+  reranking.ts            heuristic reranker (term overlap, title, recency)
+  metadata-filter.ts      pre-filter by department / type / date
+  generator.ts            LIVE (gpt-4o-mini) or MOCK (extractive) answers
+  demo.ts                 naive vs advanced comparison
+tests/                    hybrid, sparse, query-processing, metadata-filter, generator
 ```
 
-### Tests
+`RESEARCH.md` has background on the techniques; `PLAN.md` lists stretch goals (cross-encoder
+reranking, self-query metadata extraction, an NDCG/MRR evaluation harness).
 
-```bash
-npm test
-```
+## Where to go next
 
-**Test Output:**
-
-```
- ✓ tests/hybrid-retrieval.test.ts (4 tests) 4ms
- ✓ tests/sparse-retrieval.test.ts (5 tests) 4ms
- ✓ tests/query-processing.test.ts (10 tests) 7ms
- ✓ tests/metadata-filter.test.ts (8 tests) 3ms
-
- Test Files  4 passed (4)
-      Tests  27 passed (27)
-```
-
-All tests pass **offline** without any API keys or network calls.
-
-## Live Mode (Optional)
-
-To use OpenAI for answer generation:
-
-1. Create a `.env` file: `cp .env.example .env`
-2. Add your API key: `OPENAI_API_KEY=sk-...`
-3. Run: `npm run demo`
-
-The system will automatically switch to live mode and use GPT-3.5-turbo for generation.
-
-## Key Learnings
-
-### Naive RAG Problems
-- Query phrasing mismatches document phrasing ("time off" vs "PTO")
-- Pure semantic search misses exact keyword matches
-- No consideration of metadata (department, date, source)
-- Top-K results may include irrelevant chunks
-
-### Advanced RAG Solutions
-1. **Query Expansion**: Broadens recall by adding synonyms
-   - "time off" → adds "PTO", "vacation", "leave"
-   
-2. **Hybrid Retrieval**: Best of both worlds
-   - Dense (embeddings): Captures semantic meaning
-   - Sparse (BM25): Catches exact keyword matches
-   - RRF: Merges rankings without score calibration issues
-
-3. **Reranking**: Second-stage refinement
-   - Metadata signals (recency, department, title matches)
-   - Query term overlap
-   - Could use cross-encoder models for more power
-
-4. **Metadata Filtering**: Pre-filter irrelevant docs
-   - "Show me Engineering docs only"
-   - "Only recent policies (2024+)"
-   - Reduces search space and improves precision
-
-## Project Structure
-
-```
-05-enterprise-advanced-rag/
-├── corpus/              # 10 fictional company docs + metadata.json
-├── src/
-│   ├── types.ts         # TypeScript interfaces
-│   ├── document-loader.ts
-│   ├── embeddings.ts    # @xenova/transformers + hash fallback
-│   ├── query-processing.ts  # Synonym expansion, tokenization
-│   ├── dense-retrieval.ts   # Semantic search (cosine similarity)
-│   ├── sparse-retrieval.ts  # BM25 keyword search
-│   ├── hybrid-retrieval.ts  # Reciprocal Rank Fusion
-│   ├── reranking.ts         # Heuristic reranker
-│   ├── metadata-filter.ts   # Metadata filtering
-│   ├── generator.ts         # OpenAI API / extractive QA
-│   └── demo.ts              # Side-by-side comparison demo
-├── tests/               # 27 passing tests (all offline)
-├── RESEARCH.md          # Background on RAG techniques
-├── PLAN.md              # Implementation plan + stretch goals
-└── README.md            # This file
-```
-
-## Future Ideas (V2)
-
-See `PLAN.md` for stretch goals:
-- Multi-hop reasoning
-- Parent-child chunking
-- Self-query (LLM extracts metadata filters)
-- Agentic RAG (LLM decides when to retrieve)
-- Evaluation harness (NDCG/MRR metrics)
-- Real vector database (hnswlib-node)
-- Web UI
-
-## References
-
-- [RAG Paper (Lewis et al., 2020)](https://arxiv.org/abs/2005.11401)
-- [HyDE Paper (Gao et al.)](https://arxiv.org/abs/2212.10496)
-- [RRF Paper (Cormack et al., 2009)](https://plg.uwaterloo.ca/~gvcormac/cormacksigir09-rrf.pdf)
-- [Pinecone RAG Guide](https://www.pinecone.io/learn/retrieval-augmented-generation/)
-
-## License
-
-MIT
+- Change the demo query (`src/demo.ts`) and watch the `Added terms` line. A query that hits the
+  hand-built synonym map - `"pto"`, `"wfh"`, `"cybersecurity"` - expands; `"annual leave"` or
+  `"working from a cafe"` expand to nothing, because the map has no entry for those words. That is
+  the lesson *and* the limit of a hand-built map: it only helps vocabulary it was told about, which
+  is why production expansion is learned. Don't expect the advanced top-3 to out-rank the naive
+  pass on this small, well-separated corpus (see the honesty note above) - on the "time off" query
+  naive already puts PTO Policy first, and the extra machinery only earns its keep at scale.
+- Everything here is heuristic by design. The real upgrades are learned components: a cross-encoder
+  reranker instead of the term-overlap heuristic, and an LLM that extracts metadata filters from
+  the query itself. `PLAN.md` sketches both.
+- We've now built retrieval from vectors (03) to a pipeline (04) to a tuned stack (05). Project 06
+  steps down a layer to how the models underneath are trained, starting with a neural network from
+  scratch.

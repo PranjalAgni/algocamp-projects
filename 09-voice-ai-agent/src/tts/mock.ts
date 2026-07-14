@@ -14,7 +14,8 @@ import { generateWav } from '../wav-generator.js';
  */
 export class MockTTS implements TTS {
   async synthesize(text: string, outputPath: string): Promise<void> {
-    console.log(`[MockTTS] Generating audio for: "${text.substring(0, 50)}..."`);
+    const preview = text.length > 50 ? `${text.slice(0, 50)}...` : text;
+    console.log(`[MockTTS] Generating audio for: "${preview}"`);
 
     // Ensure output directory exists
     const dir = dirname(outputPath);
@@ -27,7 +28,7 @@ export class MockTTS implements TTS {
 
     // Generate a simple WAV file (440Hz tone for 1 second)
     // This proves we created a real audio artifact
-    const wavBuffer = generateWav(outputPath, 440, 1.0, 44100);
+    const wavBuffer = generateWav(440, 1.0, 44100);
     await writeFile(outputPath, wavBuffer);
     console.log(`[MockTTS] Generated WAV file: ${outputPath}`);
   }

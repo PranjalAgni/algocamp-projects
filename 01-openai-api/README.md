@@ -1,282 +1,101 @@
-# Working with the OpenAI API
+# 01 · Working with the OpenAI API
 
-A learning project demonstrating core OpenAI API patterns in TypeScript. This project teaches you how to work with chat completions, streaming, system messages, function calling, and structured JSON output.
+The five patterns you actually need to build anything with a chat LLM: **basic chat,
+streaming, system prompts, tool calling, and structured JSON output**. Each one is
+implemented twice - once against the real OpenAI SDK, once as an offline mock - behind a
+single `LLMClient` interface, so you can study the shape of each call without an API key.
 
-## Features
-
-- **Zero API Key Required**: Runs in MOCK mode offline with no API key
-- **5 Core Patterns**: Basic chat, streaming, system messages, tool calling, JSON output
-- **Unified Interface**: Single `LLMClient` interface for both mock and live modes
-- **Well-Commented Code**: Learning-focused implementation with clear explanations
-- **Full Test Coverage**: Vitest tests that run completely offline
-
-## Quick Start
+## Run it
 
 ```bash
-# Install dependencies
 npm install
-
-# Run the demo (works offline, no API key needed)
-npm run demo
-
-# Run tests
-npm test
+npm run demo     # walks through all 5 patterns (offline, no key needed)
+npm test         # vitest suite for the mock client
 ```
 
-## Project Structure
+The demo prints `[MODE: MOCK — no API key found, using offline mock]` on the first line.
+Set `OPENAI_API_KEY` (copy `.env.example` to `.env`) and it switches to
+`[MODE: LIVE — using OpenAI API]` and hits the real API instead. No other change needed -
+that's the point of the interface.
 
-```
-01-openai-api/
-├── src/
-│   ├── types.ts              # Shared TypeScript interfaces
-│   ├── llm-client.ts          # LLMClient interface definition
-│   ├── openai-client.ts       # Live OpenAI SDK implementation
-│   ├── mock-client.ts         # Offline mock implementation
-│   ├── factory.ts             # Auto-selects mock vs live
-│   └── demo.ts                # Demo script showcasing all patterns
-├── tests/
-│   └── mock-client.test.ts    # Tests for mock behavior
-└── README.md
-```
+## The idea worth taking away
 
-## The 5 Patterns
+Every provider call in this project goes through one interface:
 
-### 1. Basic Chat Completion
-Simple request-response interaction with the LLM.
-
-```typescript
-const messages: Message[] = [
-  { role: 'user', content: 'What is the capital of France?' }
-];
-const response = await client.chat(messages);
-```
-
-### 2. Streaming Responses
-Stream chunks as they're generated for better UX.
-
-```typescript
-for await (const chunk of client.streamChat(messages)) {
-  process.stdout.write(chunk);
+```ts
+interface LLMClient {
+  chat(messages, options?): Promise<string>;
+  streamChat(messages, options?): AsyncIterable<string>;
+  chatWithTools(messages, tools, options?): Promise<ToolCall | string>;
+  chatJSON<T>(messages, schema, options?): Promise<T>;
 }
 ```
 
-### 3. System + User Messages
-Control the AI's behavior with system messages.
+`OpenAIClient` implements it with the SDK; `MockLLMClient` implements it with deterministic
+canned responses. A factory picks one based on whether a key is present. Your application
+code never knows which it got. This is the pattern that lets you test agents without paying
+per token and without flaky network calls - and it's why every other project in this repo
+can run offline.
 
-```typescript
-const messages: Message[] = [
-  { role: 'system', content: 'You are a pirate. Always respond in pirate speak.' },
-  { role: 'user', content: 'Hello! How are you?' }
-];
+## The five patterns
+
+| # | Pattern | What it teaches |
+|---|---------|-----------------|
+| 1 | Basic chat | Request → single response. The baseline call. |
+| 2 | Streaming | `AsyncIterable<string>` of chunks; how token-by-token output works. |
+| 3 | System prompt | A `system` message steers behavior for the whole turn. |
+| 4 | Tool calling | The model returns a *structured request to call a function*, not prose. |
+| 5 | JSON output | `response_format: json_object` to get parseable data instead of text. |
+
+The two calls people get wrong first are 4 and 5. **Tool calling doesn't run your
+function** - the model returns a `ToolCall` (name + arguments) and hands control back to
+you; you run it and feed the result back in a follow-up message. **JSON mode guarantees
+valid JSON, not a valid schema** - you still validate the shape yourself. Look at
+`openai-client.ts` to see exactly where each of these happens in a real request.
+
+## What the mock can and can't do with a system prompt
+
+Pattern 3 sets a `system` message ("respond like a pirate") to show that a system prompt
+steers the whole turn. A real model reads that instruction and adapts. The mock can't
+reason, so it recognizes the handful of personas the demo uses (`applyPersona` in
+`mock-client.ts`) and rewrites its canned reply - enough to prove that the *same* user
+message produces a different answer once a system prompt is present. Set an unfamiliar
+persona and the mock says so explicitly rather than pretending to follow it; only `LIVE`
+mode follows an arbitrary instruction. That gap is the honest edge of every offline mock in
+this repo: it exercises the *shape* of the call, not the intelligence behind it.
+
+## Files
+
+```
+src/
+  types.ts          # Message, Tool, ToolCall, ChatOptions
+  llm-client.ts     # the LLMClient interface both clients satisfy
+  openai-client.ts  # live implementation (official SDK)
+  mock-client.ts    # offline implementation (deterministic responses)
+  factory.ts        # picks live vs mock from OPENAI_API_KEY
+  demo.ts           # runs all five patterns end to end
+tests/
+  mock-client.test.ts
 ```
 
-### 4. Function/Tool Calling
-Let the AI decide when to call functions.
-
-```typescript
-const tools: Tool[] = [{
-  name: 'get_weather',
-  description: 'Get the current weather',
-  parameters: { /* schema */ }
-}];
-const response = await client.chatWithTools(messages, tools);
-```
-
-### 5. Structured JSON Output
-Get valid JSON responses matching your schema.
-
-```typescript
-const response = await client.chatJSON<UserProfile>(messages, schema);
-```
-
-## Switching from Mock to Live Mode
-
-By default, the project runs in MOCK mode (no API key required). To use the real OpenAI API:
-
-1. Copy the example environment file:
-   ```bash
-   cp .env.example .env
-   ```
-
-2. Add your OpenAI API key to `.env`:
-   ```
-   OPENAI_API_KEY=sk-...
-   ```
-
-3. Run the demo again:
-   ```bash
-   npm run demo
-   ```
-   
-   You'll see `[MODE: LIVE — using OpenAI API]` instead of `[MODE: MOCK]`.
-
-## Example Output (MOCK Mode)
+## Example output (mock mode, abridged)
 
 ```
 [MODE: MOCK — no API key found, using offline mock]
 
-============================================================
-  Pattern 1: Basic Chat Completion
-============================================================
-
-[USER]: What is the capital of France?
-
-[ASSISTANT]:
-The capital of France is Paris. Is there anything else you would like to know?
-
-
-============================================================
-  Pattern 2: Streaming Responses
-============================================================
-
-[USER]: Explain what streaming is in one sentence.
-
-[ASSISTANT] (streaming):
-This is a mock response. In live mode, I would provide a detailed explanation based on your question. 
-
-
-============================================================
-  Pattern 3: System + User Messages
-============================================================
-
-[SYSTEM]: You are a pirate. Always respond in pirate speak with "Arrr".
-[USER]: Hello! How are you?
-
-[ASSISTANT]:
-Hello! How can I help you today?
-
-
-============================================================
   Pattern 4: Function/Tool Calling
-============================================================
-
-[TOOLS AVAILABLE]:
-  - get_weather: Get the current weather for a location
-
 [USER]: What is the weather in Tokyo?
-
 [TOOL CALL]:
   Function: get_weather
-  Arguments: {
-  "location": "Tokyo",
-  "unit": "celsius"
-}
-
+  Arguments: { "location": "Tokyo", "unit": "celsius" }
 [SIMULATED EXECUTION]:
-  get_weather({"location":"Tokyo","unit":"celsius"}) => 
+  get_weather({"location":"Tokyo","unit":"celsius"}) =>
   { temperature: 22, conditions: "Sunny", humidity: 60 }
-
-
-============================================================
-  Pattern 5: Structured JSON Output
-============================================================
-
-[USER]: Generate a user profile with name, age, email, and interests. Respond in JSON format.
-
-[EXPECTED SCHEMA]:
-{
-  "type": "object",
-  "properties": {
-    "name": {
-      "type": "string"
-    },
-    "age": {
-      "type": "number"
-    },
-    "email": {
-      "type": "string"
-    },
-    "interests": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    }
-  },
-  "required": [
-    "name",
-    "age",
-    "email"
-  ]
-}
-
-[ASSISTANT] (JSON):
-{
-  "name": "John Doe",
-  "age": 30,
-  "email": "john.doe@example.com",
-  "occupation": "Software Engineer",
-  "interests": [
-    "coding",
-    "reading",
-    "hiking"
-  ]
-}
-
-
-============================================================
-  Demo Complete!
-============================================================
-
-All 5 patterns demonstrated successfully.
-
-Key Takeaways:
-  1. Basic chat: Simple request-response
-  2. Streaming: Better UX with incremental output
-  3. System messages: Control AI behavior/personality
-  4. Tool calling: Let AI execute functions
-  5. JSON mode: Get structured data for parsing
 ```
 
-## Test Output
+## Where to go next
 
-```
- RUN  v2.1.9
-
- ✓ tests/mock-client.test.ts (11 tests) 1280ms
-
- Test Files  1 passed (1)
-      Tests  11 passed (11)
-   Start at  23:08:44
-   Duration  1.97s
-```
-
-All tests pass offline with no API key required!
-
-## What You'll Learn
-
-After working through this project, you'll understand:
-
-1. How to authenticate and configure the OpenAI client
-2. How to send chat messages with different roles (system, user, assistant)
-3. How to stream responses for better perceived latency
-4. How to define tools/functions and let the AI decide when to call them
-5. How to get structured JSON output with schema validation
-6. How to build a mock provider for testing and offline development
-7. How to design a clean abstraction that works with multiple LLM providers
-
-## Dependencies
-
-- **openai** (v4.x): Official OpenAI SDK
-- **dotenv**: Environment variable loading
-- **tsx**: TypeScript execution for Node.js
-- **vitest**: Fast unit testing framework
-- **TypeScript**: Static typing
-
-## Architecture Highlights
-
-### Interface-Based Design
-The `LLMClient` interface allows swapping implementations without changing calling code. Perfect for testing (mock) vs production (real API).
-
-### Factory Pattern
-The factory automatically selects the right implementation based on environment variables, making the switch seamless.
-
-### Deterministic Mock
-The mock client returns realistic responses based on input patterns, so demos and tests produce consistent, understandable output.
-
-### Async Iteration
-Streaming uses async generators (`AsyncIterable`), providing clean syntax for handling chunked responses.
-
-## License
-
-MIT
+- Swap the mock for the live client and diff the two files - the interface is identical,
+  only the bodies differ.
+- Add a second tool and make the demo loop: call the model, run the returned tool, feed the
+  result back, call again. That loop is the whole idea behind the agent in project 02.

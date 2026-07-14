@@ -32,15 +32,18 @@ export class OpenAITTS implements TTS {
       const dir = dirname(outputPath);
       await mkdir(dir, { recursive: true });
 
-      // Call OpenAI TTS API
-      const mp3Response = await this.client.audio.speech.create({
+      // Call OpenAI TTS API. Request WAV explicitly: the API defaults to MP3,
+      // and the pipeline writes to a .wav path, so without this the bytes and
+      // the file extension would disagree.
+      const speechResponse = await this.client.audio.speech.create({
         model: this.model,
         voice: this.voice,
         input: text,
+        response_format: 'wav',
       });
 
       // Convert response to buffer and save
-      const buffer = Buffer.from(await mp3Response.arrayBuffer());
+      const buffer = Buffer.from(await speechResponse.arrayBuffer());
       await writeFile(outputPath, buffer);
 
       console.log(`[OpenAITTS] Audio saved to: ${outputPath}`);

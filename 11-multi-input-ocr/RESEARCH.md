@@ -1,4 +1,4 @@
-# Multi-Input Neural Networks for OCR — Research
+# Multi-Input Neural Networks for OCR - Research
 
 ## The Core Concept: Multi-Input Models
 
@@ -18,16 +18,20 @@ Instead of concatenating these features before the network, a multi-input archit
 ### Architecture Pattern
 
 ```
-Image Input (28x28) → Conv/Dense layers → Feature Vector A (64)
+Image Input (14x14) → Flatten → Dense layer → Feature Vector A (64)
                                                            ↓
-Auxiliary Input (5) → Dense layers     → Feature Vector B (32)
+Auxiliary Input (5) → Dense layer          → Feature Vector B (32)
                                                            ↓
                             [CONCATENATE A + B] → (96)
                                     ↓
                             Dense Classification Head
                                     ↓
-                            Output (10 classes)
+                            Output (5 classes, digits 0-4)
 ```
+
+(This project flattens the tiny 14x14 image into a Dense branch rather than
+using convolutions - real OCR would use a CNN, but the point here is the
+multi-input merge, not the image encoder. See `src/model.ts`.)
 
 The key learning point: **Two separate input branches, explicit merge, shared head.**
 
@@ -63,10 +67,10 @@ Since this is a **learning project** focused on the multi-input concept (not pro
 ## Dataset Strategy: Synthetic Generated Digits
 
 For a **learning project**, we want:
-- ✅ Zero downloads (fully offline)
-- ✅ Fast generation (sub-second)
-- ✅ Clear signal (not too noisy)
-- ✅ Demonstrates the multi-input concept
+- Zero downloads (fully offline)
+- Fast generation (sub-second)
+- Clear signal (not too noisy)
+- Demonstrates the multi-input concept
 
 ### Approach: Programmatically Draw Simple Digit-Like Shapes
 

@@ -1,4 +1,4 @@
-# Multi-Input OCR Model — Implementation Plan
+# Multi-Input OCR Model - Implementation Plan
 
 ## Goal
 
@@ -50,7 +50,7 @@ The learning objective is **understanding multi-input architecture**, not achiev
 
 ### Documentation
 
-- `README.md`: What it is, install, run demo, run tests, example output (paste real training logs)
+- `README.md`: What it is, install, run demo, run tests, and a short, honest slice of real output (not a full pasted training-log dump)
 - `.env.example`: Note "No API keys needed for this project"
 - `.gitignore`: Standard Node ignores
 
@@ -88,10 +88,10 @@ npm test             # Run all tests
 
 ## Success Criteria
 
-- ✅ Model trains in < 30 seconds
-- ✅ Test accuracy significantly above random (20% baseline for 5 classes) — target 60-80%
-- ✅ Tests pass offline (no downloads)
-- ✅ Code clearly demonstrates the multi-input pattern with comments
+- Model trains in < 30 seconds
+- Test accuracy significantly above random (20% baseline for 5 classes) - target 60-80%
+- Tests pass offline (no downloads)
+- Code clearly demonstrates the multi-input pattern with comments
 
 ## Stretch Ideas (NOT v1)
 

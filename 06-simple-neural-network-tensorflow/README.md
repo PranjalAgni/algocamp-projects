@@ -1,247 +1,106 @@
-# Simple Neural Network in TensorFlow
+# 06 · Simple Neural Network in TensorFlow.js
 
-A learning project demonstrating the fundamentals of feed-forward neural networks using TensorFlow.js for Node. This project trains a neural network on the classic "two-moons" dataset to illustrate core deep learning concepts: layers, activations, loss functions, optimizers, training loops, and evaluation.
+Projects 01-05 called models that someone else trained. This one steps down a layer: it builds a
+neural network from scratch and trains it, so the words "layer", "loss", "optimizer", and "epoch"
+stop being jargon and become the few lines of code you actually wrote.
 
-## What This Project Demonstrates
+The task is deliberately tiny. A network with 70 parameters learns to separate the "two-moons"
+dataset - two interleaving crescents that a straight line can't split. If it can bend a boundary
+around those crescents, you've seen the one thing that makes a neural network more than linear
+regression: stacked non-linear layers learn curved decision boundaries.
 
-- **Model Architecture**: Sequential API with Dense (fully-connected) layers
-- **Activation Functions**: ReLU for hidden layers, Softmax for output
-- **Loss Function**: Categorical Cross-Entropy for multi-class classification
-- **Optimizer**: Adam with adaptive learning rate
-- **Training Loop**: Forward pass, loss computation, backpropagation, weight updates
-- **Evaluation**: Measuring generalization on held-out test data
-- **Dataset**: Two-moons synthetic dataset (two interleaving crescents)
-
-## Architecture
-
-```
-Input (2 features)
-    ↓
-Dense Layer (8 neurons, ReLU)
-    ↓
-Dense Layer (4 neurons, ReLU)
-    ↓
-Dense Layer (2 neurons, Softmax)
-    ↓
-Output (2 classes)
-```
-
-Total parameters: 70 (24 + 36 + 10)
-
-## Installation
+## Run it
 
 ```bash
-cd 06-simple-neural-network-tensorflow
 npm install
+npm run demo     # generate data, build the net, train 50 epochs, evaluate, predict
+npm test         # vitest suite (14 tests, deterministic, offline)
 ```
 
-## Usage
+No API key, no GPU, no network. `@tensorflow/tfjs-node` runs the whole thing on CPU in about a
+second.
 
-### Run the Demo
+## The one idea
 
-Train the neural network and see it in action:
-
-```bash
-npm run demo
-```
-
-This will:
-1. Generate the two-moons dataset (300 samples: 240 train, 60 test)
-2. Create and compile the neural network
-3. Train for 50 epochs (~1 second on CPU)
-4. Evaluate on the test set
-5. Run sample predictions
-
-### Run Tests
-
-```bash
-npm test
-```
-
-Tests validate:
-- Dataset generation and splitting
-- Model architecture correctness
-- Loss decreases during training
-- Accuracy improves over epochs
-- Test accuracy exceeds 75% threshold
-
-## Example Output
+A neural network is a stack of layers, each doing the same two steps: multiply the input by a
+weight matrix, then bend the result through a non-linear function. Reading `src/model.ts` top to
+bottom, that's all `createModel` builds:
 
 ```
-╔═══════════════════════════════════════════════════════╗
-║   Simple Neural Network - TensorFlow.js Demo         ║
-╚═══════════════════════════════════════════════════════╝
-
-📊 Generating Two-Moons Dataset...
-   Training samples: 240
-   Test samples: 60
-   Features per sample: 2
-
-🧠 Creating Neural Network...
-
-=== Model Architecture ===
-
-__________________________________________________________________________________________
-Layer (type)                Input Shape               Output shape              Param #   
-==========================================================================================
-dense_Dense1 (Dense)        [[null,2]]                [null,8]                  24        
-__________________________________________________________________________________________
-dense_Dense2 (Dense)        [[null,8]]                [null,4]                  36        
-__________________________________________________________________________________________
-dense_Dense3 (Dense)        [[null,4]]                [null,2]                  10        
-==========================================================================================
-Total params: 70
-Trainable params: 70
-Non-trainable params: 0
-__________________________________________________________________________________________
-
-⚙️  Compiling Model...
-   Loss: Categorical Cross-Entropy
-   Optimizer: Adam (learning rate = 0.01)
-   Metrics: Accuracy
-
-🏋️  Training Model (50 epochs)...
-
-=== Starting Training ===
-
-Epoch  1/50 - loss: 0.6985 - accuracy: 0.5370 - val_loss: 0.6558 - val_accuracy: 0.6250
-Epoch 10/50 - loss: 0.2517 - accuracy: 0.8843 - val_loss: 0.2449 - val_accuracy: 0.8333
-Epoch 20/50 - loss: 0.1736 - accuracy: 0.9352 - val_loss: 0.1756 - val_accuracy: 0.9167
-Epoch 30/50 - loss: 0.0932 - accuracy: 0.9676 - val_loss: 0.1035 - val_accuracy: 0.9583
-Epoch 40/50 - loss: 0.0396 - accuracy: 0.9954 - val_loss: 0.0371 - val_accuracy: 1.0000
-Epoch 50/50 - loss: 0.0174 - accuracy: 1.0000 - val_loss: 0.0183 - val_accuracy: 1.0000
-
-=== Training Complete ===
-
-   Training completed in 1.16s
-   Initial loss: 0.6985
-   Final loss: 0.0174
-   Initial accuracy: 53.70%
-   Final accuracy: 100.00%
-
-📈 Evaluating on Test Set...
-Test Loss: 0.0106
-Test Accuracy: 100.00%
-
-🔮 Sample Predictions:
-   Input: [0.00, 0.50] → Predicted Class: 1
-   Input: [1.00, 0.00] → Predicted Class: 0
-   Input: [0.50, 0.75] → Predicted Class: 0
-
-╔═══════════════════════════════════════════════════════╗
-║                   SUMMARY                             ║
-╚═══════════════════════════════════════════════════════╝
-   Dataset: Two-Moons (300 samples, 240 train / 60 test)
-   Architecture: Dense(8,relu) → Dense(4,relu) → Dense(2,softmax)
-   Training Time: 1.16s
-   Final Test Accuracy: 100.00%
-   Loss Reduction: 0.6985 → 0.0174
-
-✅ Demo completed successfully!
+Input (2 features: x, y)
+  → Dense(8, relu)     learn 8 intermediate features
+  → Dense(4, relu)     combine them into 4
+  → Dense(2, softmax)  turn those into 2 class probabilities
 ```
 
-## Key Concepts Explained
+The `relu` (`max(0, x)`) is the part that matters. Remove the activations and the whole stack
+collapses into a single linear map - no matter how many layers, it can only draw one straight
+boundary. At this noise level a straight line already gets most points right (~90%), but it can't
+follow the crescents where they interleave; those wrapped-around tips are the points it keeps
+getting wrong. ReLU is the kink that lets the network bend the boundary around them and clear the
+last ~10%.
 
-### Feed-Forward Neural Network
-Data flows in one direction: input → hidden layers → output. Each layer transforms the data using learned weights and biases.
+Training is then just a loop TensorFlow runs for you inside `model.fit`: predict, measure error with
+categorical cross-entropy, compute gradients by backpropagation, nudge every weight a step downhill
+with the Adam optimizer, repeat for 50 epochs. Watch the loss fall from ~0.70 to somewhere in the
+0.05-0.25 range and test accuracy land at 90-100% - that falling number *is* learning.
 
-### Dense (Fully-Connected) Layers
-Every neuron in one layer connects to every neuron in the next layer. The network learns the optimal weights for these connections.
+## What to watch in the output
 
-### Activation Functions
-- **ReLU** (Rectified Linear Unit): `f(x) = max(0, x)` - Introduces non-linearity, allowing the network to learn complex patterns
-- **Softmax**: Converts logits to probability distribution - Essential for multi-class classification
+- **The architecture summary** prints 70 total params (24 + 36 + 10). That count is small enough to
+  reason about: 2×8 weights + 8 biases = 24 in the first layer, and so on. A neural net is just a
+  lot of these numbers.
+- **Loss and accuracy per epoch.** Loss starts near 0.69 - that's `-ln(0.5)`, exactly what you'd
+  expect from a model guessing 50/50 on two classes before it has learned anything. It should fall
+  steadily; a plateau means learning stalled.
+- **Sample predictions.** The three probe points sit in the unambiguous body of each crescent, so a
+  trained net labels them the same way every run (class 0, 1, 0). Points near the tips, where the
+  moons interleave, are genuinely ambiguous and a 70-param net can flip them - which is why they
+  make poor examples.
 
-### Loss Function
-**Categorical Cross-Entropy**: Measures the difference between predicted probability distribution and true labels. Training minimizes this loss.
+## The honest part
 
-### Optimizer
-**Adam** (Adaptive Moment Estimation): Combines momentum and adaptive learning rates for faster, more stable convergence than vanilla SGD.
+The dataset is seeded, but out of the box the *model weights* were not, so earlier versions of this
+project trained from a different random starting point every run. Usually that was invisible
+(two-moons is easy), but occasionally the net started in a bad spot and got stuck around 37%
+accuracy - which made one training test flaky and meant the demo's numbers never reproduced twice.
 
-### Training Process
-1. **Forward Pass**: Compute predictions from inputs
-2. **Loss Computation**: Calculate error between predictions and true labels
-3. **Backward Pass (Backpropagation)**: Compute gradients of loss w.r.t. weights
-4. **Weight Update**: Adjust weights using the optimizer to minimize loss
+`createModel` now seeds its kernel initializers (`glorotNormal({ seed })`), so initialization is
+reproducible and the stuck-at-37% failure is gone. That is a real lesson, not just housekeeping:
+**reproducibility in ML requires seeding every source of randomness - data generation, the
+train/test shuffle, *and* weight initialization.** Seed only some of them and your results still
+wander.
 
-### Evaluation
-Test the model on held-out data to measure **generalization** - how well it performs on data it hasn't seen during training.
+Note that seeding the weights did not make the demo fully deterministic: the mini-batch shuffle
+inside `fit` is still unseeded, so final loss lands in two loose clusters (~0.05 at 100% accuracy,
+or ~0.22 at ~90%) from run to run. That leftover source of randomness is exactly why the numbers
+above are given as ranges - a concrete reminder that "I seeded it" and "it's reproducible" are not
+the same claim until you've found *every* source.
 
-## Project Structure
+## Files
 
 ```
-06-simple-neural-network-tensorflow/
-├── src/
-│   ├── dataset.ts      # Two-moons data generation + train/test split
-│   ├── model.ts        # Neural network definition, compile, train, evaluate
-│   └── demo.ts         # Main demo script
-├── tests/
-│   ├── dataset.test.ts # Dataset validation tests
-│   └── training.test.ts # Training smoke tests
-├── RESEARCH.md         # Background research and design decisions
-├── PLAN.md            # Implementation plan
-├── README.md          # This file
-├── package.json
-├── tsconfig.json
-├── vitest.config.ts
-├── .gitignore
-└── .env.example
+src/
+  dataset.ts   two-moons generation (seeded LCG + Box-Muller noise) and train/test split
+  model.ts     build, compile, train, evaluate, predict; seeded weight init
+  demo.ts      the full workflow, start to finish
+tests/
+  dataset.test.ts    shape, split ratio, determinism of the data
+  training.test.ts   loss decreases, accuracy improves, test accuracy clears 75%
 ```
 
-## Technologies
+`RESEARCH.md` records why two-moons and this architecture were chosen; `PLAN.md` lists the build
+steps and stretch ideas.
 
-- **Runtime**: Node.js v22
-- **Language**: TypeScript (ESM)
-- **ML Framework**: TensorFlow.js for Node (`@tensorflow/tfjs-node` v4.22.0)
-- **Execution**: `tsx` for direct TypeScript execution
-- **Testing**: Vitest
+## Where to go next
 
-## Dataset: Two-Moons
-
-The two-moons dataset consists of two interleaving crescent shapes (like two moons). It's a classic benchmark for testing classifiers because:
-- Simple enough to train quickly
-- Complex enough to require non-linear decision boundaries
-- Visually intuitive (even though we're not plotting it here)
-
-Parameters:
-- 300 total samples (240 train, 60 test)
-- 2 features per sample (x, y coordinates)
-- 2 classes (moon 0 and moon 1)
-- Gaussian noise added for realistic variability
-- Deterministic generation (seeded) for reproducibility
-
-## Performance
-
-- **Training Time**: ~1-2 seconds on CPU (50 epochs)
-- **Test Accuracy**: 100% (two-moons is very learnable with this architecture)
-- **Loss Reduction**: 0.6985 → 0.0174 (97.5% reduction)
-- **Model Size**: Only 70 parameters (very lightweight)
-
-## Learning Notes
-
-This project is intentionally simple to focus on core concepts:
-
-1. **Small Dataset**: Trains in seconds, no GPU needed
-2. **Shallow Network**: Only 2 hidden layers, easy to understand
-3. **Clear Logging**: Every 10 epochs to see training progress
-4. **Commented Code**: Explains the "why" behind each concept
-5. **Fast Tests**: Complete in under 2 seconds
-
-For production use, you'd typically need:
-- Larger datasets and networks
-- Regularization (dropout, L2)
-- Batch normalization
-- More sophisticated architectures (CNNs, RNNs, Transformers)
-- Model checkpointing and versioning
-- Cross-validation
-- Hyperparameter tuning
-
-## Environment Variables
-
-None required! This project runs entirely offline with synthetic data.
-
-See `.env.example` for confirmation.
-
-## License
-
-MIT
+- Break it to understand it: change all three activations to `'linear'` and re-run. Accuracy drops
+  to around 90% and gets stuck there - a straight-line boundary handles the bulk of the moons but
+  can't follow the interleaving tips. Put ReLU back and it climbs to ~100%. That last ~10% is exactly
+  the non-linear part, shown rather than asserted. (Don't expect a collapse to chance: at noise 0.1
+  the two moons are mostly linearly separable, so linear still does well - the gap is the tips.)
+- Turn up `noise` in `prepareTwoMoonsDataset` (try 0.3) and watch the two moons blur together and
+  test accuracy fall. That is the data-quality ceiling every model lives under.
+- We built and trained a net by hand here. Project 07 goes the other direction - using a large
+  pretrained model (Claude) as a coding agent - so you've now seen both ends: the machinery
+  underneath, and the high-level tools built on top of it.

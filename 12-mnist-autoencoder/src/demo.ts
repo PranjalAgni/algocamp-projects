@@ -12,10 +12,9 @@
  */
 
 import * as tf from '@tensorflow/tfjs-node';
-import { generateDataset, getImage2D } from './data.js';
+import { generateDataset } from './data.js';
 import {
-  buildAutoencoder,
-  buildEncoder,
+  buildAutoencoderWithEncoder,
   compileAutoencoder,
   printModelSummary,
 } from './model.js';
@@ -35,13 +34,13 @@ import {
  */
 async function main() {
   console.log('\n╔════════════════════════════════════════╗');
-  console.log('║   MNIST Autoencoder Demonstration     ║');
+  console.log('║   MNIST Autoencoder Demonstration      ║');
   console.log('╚════════════════════════════════════════╝\n');
 
   // =========================================================
   // STEP 1: Generate Synthetic Data
   // =========================================================
-  console.log('=== Step 1: Generating Synthetic Digit Data ===\n');
+  console.log('=== Generating Synthetic Digit Data ===\n');
 
   const dataset = generateDataset(
     300, // 300 training images
@@ -58,11 +57,12 @@ async function main() {
   // =========================================================
   // STEP 2: Build Autoencoder Model
   // =========================================================
-  console.log('\n=== Step 2: Building Autoencoder ===\n');
+  console.log('\n=== Building Autoencoder ===\n');
 
-  // Build encoder and decoder separately so we can use them independently
-  const encoder = buildEncoder();
-  const autoencoder = buildAutoencoder();
+  // Build the autoencoder and keep a handle on the encoder that is part of it.
+  // They share the same layer instances, so training the autoencoder below also
+  // trains this encoder - Step 5 can then read the learned latent vector from it.
+  const { autoencoder, encoder } = buildAutoencoderWithEncoder();
   compileAutoencoder(autoencoder, 0.001); // Learning rate 0.001
 
   printModelSummary(autoencoder);
@@ -107,7 +107,7 @@ async function main() {
   // =========================================================
   // STEP 5: Reconstruct Test Images
   // =========================================================
-  console.log('\n=== Step 4: Reconstructing Test Images ===');
+  console.log('\n=== Reconstructing Test Images ===');
 
   // Reconstruct first 3 test images
   const numExamples = 3;
@@ -141,16 +141,14 @@ async function main() {
   // =========================================================
   // STEP 6: Show Latent Space Encoding
   // =========================================================
-  console.log('\n=== Step 5: Latent Space Encoding ===');
-
-  // Use the separate encoder we built earlier
-  // Encode a test image
+  // Encode a test image with the trained encoder (shares weights with the
+  // autoencoder, so this reflects what training learned - not random init).
   const testIdx = 0;
   const testLabel = dataset.testLabels[testIdx];
   const testImageArray = dataset.testImages.slice(testIdx * 784, (testIdx + 1) * 784);
   const testImageTensor = tf.tensor2d([Array.from(testImageArray)], [1, 784]);
 
-  // Get latent encoding using the separate encoder
+  // Get latent encoding using the trained encoder
   const latentTensor = encoder.predict(testImageTensor) as tf.Tensor2D;
   const latentData = await latentTensor.data();
   const latentVector = Array.from(latentData);

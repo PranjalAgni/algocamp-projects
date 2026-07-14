@@ -1,21 +1,21 @@
 /**
  * WAV File Generator
  *
- * Generates a simple WAV audio file with a sine wave tone.
- * This is used by the mock TTS to create a tangible audio artifact.
+ * Builds an in-memory WAV audio buffer containing a sine wave tone.
+ * The mock TTS uses this to produce a tangible audio artifact; writing
+ * the buffer to disk is the caller's job.
  *
  * WAV format: RIFF header + fmt chunk + data chunk with PCM samples
  */
 
 /**
- * Generate a WAV file with a sine wave tone
- * @param outputPath - Where to save the WAV file
+ * Build a WAV file buffer holding a sine wave tone.
  * @param frequencyHz - Frequency of the tone (default 440Hz = A4 note)
  * @param durationSeconds - Duration of the tone (default 1 second)
  * @param sampleRate - Sample rate in Hz (default 44100 = CD quality)
+ * @returns The complete WAV file as a Buffer (header + PCM samples)
  */
 export function generateWav(
-  outputPath: string,
   frequencyHz: number = 440,
   durationSeconds: number = 1,
   sampleRate: number = 44100

@@ -27,7 +27,7 @@ export interface TrainingHistory {
  * - The model learns to reconstruct its input by minimizing the difference
  *   between input and output (reconstruction loss)
  * - The bottleneck forces the network to learn compressed, meaningful features
- * - No labels needed—this is unsupervised learning
+ * - No labels needed - this is unsupervised learning
  *
  * @param model Compiled autoencoder model
  * @param trainImages Training images [numSamples, 784]
@@ -59,6 +59,7 @@ export async function trainAutoencoder(
     batchSize,
     validationSplit,
     shuffle: true, // Shuffle training data each epoch for better generalization
+    verbose: 0, // Suppress tfjs-node's built-in per-epoch line; we do our own logging below
     callbacks: {
       onEpochEnd: (epoch, logs) => {
         // Print progress every epoch (since we only train for ~15 epochs)
@@ -154,37 +155,4 @@ export function reconstructImages(
 ): tf.Tensor2D {
   // Forward pass through the entire autoencoder
   return model.predict(images) as tf.Tensor2D;
-}
-
-/**
- * Extract the encoder portion of a trained autoencoder.
- *
- * This allows us to use just the encoder for:
- * - Dimensionality reduction
- * - Feature extraction
- * - Latent space visualization
- *
- * @param autoencoder Full autoencoder model
- * @param latentLayerName Name of the latent layer (default: 'latent')
- * @returns Encoder model (input → latent space)
- */
-export function extractEncoder(
-  autoencoder: tf.Sequential,
-  latentLayerName: string = 'latent'
-): tf.LayersModel {
-  // Find the latent layer
-  const latentLayer = autoencoder.getLayer(latentLayerName);
-
-  if (!latentLayer) {
-    throw new Error(`Layer '${latentLayerName}' not found in autoencoder`);
-  }
-
-  // Create a new model: input → latent layer output
-  const encoder = tf.model({
-    inputs: autoencoder.input,
-    outputs: latentLayer.output,
-    name: 'extracted_encoder',
-  });
-
-  return encoder;
 }

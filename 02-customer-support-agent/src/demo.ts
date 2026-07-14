@@ -2,7 +2,7 @@
  * Demo script - demonstrates the customer support agent with scripted queries
  */
 
-import { runAgent } from './src/agent.js';
+import { runAgent } from './agent.js';
 
 const DEMO_QUERIES = [
   "What's the status of order ORD-001?",

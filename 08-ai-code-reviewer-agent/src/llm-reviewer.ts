@@ -1,9 +1,9 @@
 /**
- * LLM Reviewer - AI-powered code review
+ * LLM Reviewer - the contextual half of the review (the linter is the other half)
  *
  * Supports multiple providers with automatic fallback:
- * 1. OpenAI (GPT-4) if OPENAI_API_KEY is set
- * 2. Anthropic (Claude) if ANTHROPIC_API_KEY is set
+ * 1. OpenAI (gpt-4o-mini) if OPENAI_API_KEY is set
+ * 2. Anthropic (claude-3-5-haiku) if ANTHROPIC_API_KEY is set
  * 3. Mock mode (deterministic canned responses) if no keys
  */
 
@@ -53,7 +53,7 @@ function formatDiffForPrompt(parsedDiff: ParsedDiff): string {
 }
 
 /**
- * Review using OpenAI GPT-4
+ * Review using OpenAI gpt-4o-mini
  */
 async function reviewWithOpenAI(parsedDiff: ParsedDiff): Promise<ReviewComment[]> {
   const { default: OpenAI } = await import('openai');
@@ -149,7 +149,7 @@ Return ONLY valid JSON array, no other text.`;
 
   try {
     const response = await anthropic.messages.create({
-      model: 'claude-3-haiku-20240307',
+      model: 'claude-3-5-haiku-20241022',
       max_tokens: 2048,
       temperature: 0.3,
       messages: [{ role: 'user', content: prompt }]
@@ -218,7 +218,7 @@ function reviewWithMock(parsedDiff: ParsedDiff): ReviewComment[] {
     }
 
     // Sample 2: user-handler.js - Unused variable
-    if (file.path.includes('user-handler.js') || file.path.includes('user.')) {
+    if (file.path.includes('user-handler.js')) {
       const timestampLine = addedLines.find(l => l.content.includes('timestamp') && l.content.includes('Date.now'));
       if (timestampLine) {
         // Check if timestamp is used elsewhere
@@ -278,9 +278,9 @@ export function getProviderName(): string {
   const provider = detectProvider();
   switch (provider) {
     case 'openai':
-      return 'OpenAI GPT-4';
+      return 'OpenAI gpt-4o-mini';
     case 'anthropic':
-      return 'Anthropic Claude';
+      return 'Anthropic claude-3-5-haiku';
     case 'mock':
       return 'MOCK — no API key';
   }

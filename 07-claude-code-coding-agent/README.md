@@ -1,194 +1,117 @@
-# Coding Agent
+# 07 · Coding Agent
 
-A minimal coding agent that uses tools to complete programming tasks — a tiny Claude Code. This project demonstrates the **ReAct** (Reasoning + Acting) pattern and teaches how LLMs use tools to accomplish goals.
+Project 02 built an agent loop whose tools looked up orders, searched a FAQ, and filed tickets -
+nothing that touched your machine. This one gives the loop hands: tools that write files and run
+commands. That single change - tools with side effects on your filesystem and OS - is the whole
+distance between a chatbot and something like Claude Code, and it's why the interesting part of
+this project isn't the loop, it's the sandbox that keeps the loop from wrecking your machine.
 
-## What It Does
+The agent runs one task end to end: create `hello.js`, run it with Node, report the output. Small
+on purpose, so the machinery is visible.
 
-The agent can:
-- **Read and write files** in a sandboxed workspace
-- **List directories** to explore the environment
-- **Edit files** using string replacement
-- **Run shell commands** (whitelisted for safety)
-- **Complete tasks** autonomously by chaining tool calls
-
-Key learning concepts:
-- **Tool use**: How to define tool schemas for LLMs
-- **Agent loop**: The ReAct pattern (thought → action → observation → repeat)
-- **Safety**: Path jailing and command whitelisting to prevent escapes
-- **Mock mode**: Running without API keys for offline demos
-
-## Architecture
-
-```
-Agent Loop (ReAct Pattern)
-┌─────────────────────────────────┐
-│ 1. User gives task              │
-│ 2. Brain decides tool to call   │  ← LLM or Mock
-│ 3. Tool executes in sandbox     │
-│ 4. Observation fed back         │
-│ 5. Repeat until task complete   │
-└─────────────────────────────────┘
-```
-
-## Installation
+## Run it
 
 ```bash
 npm install
+npm run demo     # run the canned task in a throwaway sandbox
+npm test         # vitest suite (25 tests, deterministic, offline)
 ```
 
-## Usage
+No API key needed. Without one the demo uses a scripted `MockBrain`; with one it uses the real
+Claude API (see [Live mode](#live-mode) below).
 
-### Run Demo (works offline, no API key needed)
+## The one idea
+
+An agent is a loop, and every turn is the same three steps (`src/agent.ts`):
+
+```
+1. Ask the brain: given the conversation so far, what tool do you call?
+2. Execute that tool, capture the result as an "observation".
+3. Append the observation to the conversation and go back to step 1,
+   until the brain calls `finish` or we hit maxSteps.
+```
+
+This is the ReAct pattern - reason, act, observe, repeat. The brain never touches the filesystem
+itself; it only *names a tool and its arguments*, and the loop decides whether and how to run it.
+That separation is the leverage point. Because every action funnels through `tool.execute`, one
+place gets to say "no" - which is exactly where safety lives.
+
+## Where safety actually lives
+
+The agent can write files and run shell commands, so `src/sandbox.ts` is not decoration - it is the
+only thing between the model and your home directory. Two checks, and both are more subtle than they
+first look:
+
+**Path jailing** (`isPathSafe`) resolves every requested path and confirms it stays under the
+sandbox root. The obvious trap is `../../etc/passwd`, and that's caught. The non-obvious trap is the
+prefix check itself: comparing `resolved.startsWith(root)` on the bare string lets
+`/tmp/sandbox-evil` slip past a `/tmp/sandbox` jail, because one string genuinely is a prefix of the
+other. The fix is to compare against `root + path.sep` (or the root exactly), so a sibling directory
+that merely *shares a name prefix* is rejected. There's a regression test pinning this.
+
+**Command whitelisting** (`isCommandSafe`) allows only `node`, `cat`, `echo`, `ls`. The trap here is
+that `runCommand` hands the whole string to a shell, so checking only the first word isn't enough:
+`node hello.js; whoami` starts with `node` but the shell would happily run `whoami` too. So the
+check also rejects shell metacharacters (`;`, `&&`, `|`, backticks, `$(...)`, and friends) that
+could chain a second command.
+
+## The honest part
+
+Both safety checks above shipped with the exact bugs described - the sibling-prefix escape and the
+command-chaining bypass - and this project fixed them and added tests. That is the real lesson of
+the section: **an allowlist is only as good as the boundary it actually measures.** A jail that
+compares string prefixes isn't measuring "is this path inside the directory", and a whitelist that
+reads one token isn't measuring "is this one command".
+
+And even hardened, this is a speed bump, not a wall. `node` is on the whitelist, and
+`node -e "<anything>"` runs arbitrary JavaScript - which can read files, open sockets, spawn
+processes. A string-level whitelist cannot close that; the program it lets through is itself a
+general-purpose interpreter. The only real boundary for an agent that runs code is OS-level
+isolation: a container, a VM, seccomp. Treat the checks in `sandbox.ts` as a way to catch honest
+mistakes and obvious escapes, not as something you'd expose to an adversary.
+
+One more caveat worth stating plainly: **offline mode doesn't demonstrate reasoning.** The
+`MockBrain` is a scripted sequence - it pattern-matches the task string and emits a fixed
+writeFile → runCommand → finish script. It proves the loop and the sandbox work, nothing more. Only
+live mode has a brain that actually decides what to do next based on what it observed.
+
+## Live mode
 
 ```bash
+cp .env.example .env
+# add: ANTHROPIC_API_KEY=sk-ant-...
 npm run demo
 ```
 
-This runs a canned task: create `hello.js` and execute it using Node.
+With a key present, `index.ts` swaps `MockBrain` for `LLMBrain`, which calls Claude
+(`claude-3-5-haiku-20241022`) with the tool schemas and lets the model choose the tools. This is
+where the loop earns its name - the model reads each observation and picks the next action, instead
+of replaying a script. Try changing the task in `index.ts` to something the mock can't handle (the
+mock only knows the hello.js and "list files + summary" tasks) and watch a real brain work it out.
 
-**Example Output:**
-
-```
-[MODE: MOCK — no API key]
-
-=== CODING AGENT DEMO ===
-Task: Create a file hello.js that prints 'Hello from the agent!' and then run it using node
-Sandbox: /var/folders/.../sandbox-bckRrj
-
---- Step 1 ---
-Assistant: I'll create the hello.js file
-Tool call: writeFile
-Arguments: {"path":"hello.js","content":"console.log('Hello from the agent!');"}
-Observation: Successfully wrote to hello.js
-
---- Step 2 ---
-Assistant: Now I'll run it
-Tool call: runCommand
-Arguments: {"command":"node hello.js"}
-Observation: Hello from the agent!
-
---- Step 3 ---
-Assistant: Task complete
-Tool call: finish
-Arguments: {"result":"Created hello.js and executed it successfully. Output: Hello from the agent!"}
-Observation: Task complete: Created hello.js and executed it successfully. Output: Hello from the agent!
-
-=== RESULT ===
-Created hello.js and executed it successfully. Output: Hello from the agent!
-```
-
-### Run Tests
-
-```bash
-npm test
-```
-
-All tests pass offline:
-
-```
- ✓ test/sandbox.test.ts (9 tests) 9ms
- ✓ test/tools.test.ts (11 tests) 208ms
- ✓ test/agent.test.ts (3 tests) 191ms
-
- Test Files  3 passed (3)
-      Tests  23 passed (23)
-```
-
-Tests cover:
-- **Path jailing**: Rejecting `../` escapes and absolute paths outside sandbox
-- **Tool execution**: File I/O, command execution, string editing
-- **End-to-end agent**: Completing the hello.js task with MockBrain
-
-## LIVE Mode (Optional)
-
-To use the real Claude API instead of mock mode:
-
-1. Copy `.env.example` to `.env`
-2. Add your Anthropic API key:
-   ```
-   ANTHROPIC_API_KEY=sk-ant-...
-   ```
-3. Run `npm run demo`
-
-The agent will automatically detect the key and use Claude (`claude-3-5-haiku-latest`) instead of the mock brain.
-
-## Project Structure
+## Files
 
 ```
 src/
-├── types.ts       # TypeScript types for tools, messages, brain
-├── sandbox.ts     # Path jailing and command whitelisting
-├── tools.ts       # Tool definitions (readFile, writeFile, etc.)
-├── brain.ts       # LLMBrain (Anthropic) and MockBrain
-├── agent.ts       # Main ReAct loop
-└── index.ts       # CLI demo entry point
-
-test/
-├── sandbox.test.ts  # Safety tests
-├── tools.test.ts    # Tool execution tests
-└── agent.test.ts    # End-to-end agent tests
+  types.ts     Tool / Message / Brain interfaces - the contract the loop is built on
+  sandbox.ts   path jailing and command whitelisting (the safety boundary)
+  tools.ts     the six tools: readFile, writeFile, listFiles, applyEdit, runCommand, finish
+  brain.ts     LLMBrain (real Claude) and MockBrain (scripted, offline)
+  agent.ts     the ReAct loop
+  index.ts     CLI demo: makes a temp sandbox, runs one task, cleans up
+tests/
+  sandbox.test.ts   safety checks, including the two escape regressions above
+  tools.test.ts     each tool's behaviour
+  agent.test.ts     the full loop end to end with MockBrain
 ```
 
-## Available Tools
+`RESEARCH.md` and `PLAN.md` record why the design landed where it did.
 
-1. **readFile**: Read file contents from sandbox
-2. **writeFile**: Write content to a file (creates directories if needed)
-3. **listFiles**: List files in a directory
-4. **applyEdit**: Replace a string in a file
-5. **runCommand**: Execute whitelisted commands (`node`, `cat`, `echo`, `ls`)
-6. **finish**: Signal task completion
+## Where to go next
 
-## Safety Features
-
-### Path Jailing
-All file paths are validated to prevent escaping the sandbox:
-- Rejects `../` traversal attacks
-- Rejects absolute paths outside the sandbox
-- Resolves and normalizes paths before access
-
-### Command Whitelisting
-Only safe commands are allowed:
-- `node` (run JavaScript)
-- `cat` (read files)
-- `echo` (print text)
-- `ls` (list directory)
-
-Dangerous commands like `rm -rf /` or `curl` are blocked.
-
-### Resource Limits
-- Command execution: 2 second timeout
-- Agent loop: Maximum 10 steps to prevent infinite loops
-
-## Learning Highlights
-
-This project teaches:
-
-1. **Tool Schemas**: How to define tools (name, description, parameters) for LLMs
-2. **ReAct Pattern**: The thought → action → observation loop
-3. **Message Format**: How to structure tool calls and results for Claude API
-4. **Safety**: Critical techniques to sandbox agent actions
-5. **Mock Fallbacks**: Making projects runnable without external dependencies
-
-## Mock Mode Details
-
-The `MockBrain` is a deterministic "scripted brain" that emits hardcoded tool call sequences for specific tasks:
-
-**Supported tasks:**
-- "create hello.js and run it" → writeFile → runCommand → finish
-- "list files and create summary" → listFiles → writeFile → finish
-
-For any other task, it immediately calls `finish` with a message explaining it only supports canned tasks.
-
-## Future Enhancements
-
-Ideas for v2 (not implemented):
-- More tools: grep/search, git commands
-- Web UI: visualize agent thinking in real-time
-- Streaming: show LLM responses as they arrive
-- Retry logic: if tool fails, let agent try again
-- Better planning: system prompt engineering
-- Multi-file edits: batch operations
-
-## License
-
-MIT
+- Read `sandbox.test.ts` first, then try to break the jail yourself before reading the fix. Feeling
+  the escape land is worth more than being told about it.
+- Add a tool - say `deleteFile` or a grep-style search. You'll define its schema, its `execute`, and
+  a safety check, which is the whole shape of extending an agent.
+- Project 08 turns the agent outward: instead of writing code, it reviews a diff. Same loop, same
+  tool discipline, pointed at a different job.

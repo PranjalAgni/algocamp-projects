@@ -1,4 +1,4 @@
-# AI Trading Agent — Research
+# AI Trading Agent - Research
 
 ## Important Disclaimer
 **THIS IS A LEARNING SIMULATION FOR EDUCATIONAL PURPOSES ONLY.**

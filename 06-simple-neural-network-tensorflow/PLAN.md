@@ -8,12 +8,12 @@ Build a runnable feed-forward neural network that trains on a synthetic dataset 
 - **ML Library**: `@tensorflow/tfjs-node` (primary), fallback to pure TS if installation fails
 - **Build/Run**: `tsx` for direct TS execution
 - **Tests**: `vitest`
-- **Dataset**: Two-moons (240 train, 60 test) — generated deterministically, no downloads
+- **Dataset**: Two-moons (240 train, 60 test) - generated deterministically, no downloads
 
 ## File Structure
 ```
 06-simple-neural-network-tensorflow/
-├── RESEARCH.md          (✓ exists)
+├── RESEARCH.md          (exists)
 ├── PLAN.md              (this file)
 ├── README.md
 ├── package.json
@@ -60,9 +60,9 @@ Build a runnable feed-forward neural network that trains on a synthetic dataset 
   ```
 
 ## Commands
-- `npm install` — install dependencies
-- `npm run demo` — train and demo (should complete in <10 seconds)
-- `npm test` — run vitest tests
+- `npm install` - install dependencies
+- `npm run demo` - train and demo (should complete in <10 seconds)
+- `npm test` - run vitest tests
 
 ## Tests
 1. **Dataset tests** (`tests/dataset.test.ts`):
@@ -80,7 +80,7 @@ Build a runnable feed-forward neural network that trains on a synthetic dataset 
 - [ ] Code implements all components
 - [ ] `npm run demo` trains successfully, prints epoch logs + test accuracy > 90%
 - [ ] `npm test` passes all tests
-- [ ] README.md contains real output paste
+- [ ] README.md shows a short, honest slice of real output (not a full pasted dump)
 - [ ] No runtime errors, no warnings
 
 ## Stretch Goals (NOT v1)

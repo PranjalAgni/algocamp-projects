@@ -29,8 +29,24 @@ async function main() {
 
   const openaiKey = process.env.OPENAI_API_KEY;
 
-  // Input: in mock mode, use bundled transcript; in live mode, would use audio file
-  const inputPath = resolve(projectRoot, 'fixtures', 'input-transcript.txt');
+  // Input differs by mode. Mock STT reads a bundled text transcript, so it can
+  // ignore the "audio" path. Live Whisper needs a real audio file - handing it
+  // the text fixture would fail - so in live mode we require AUDIO_INPUT_PATH.
+  let inputPath: string;
+  if (openaiKey) {
+    const audioInput = process.env.AUDIO_INPUT_PATH;
+    if (!audioInput) {
+      console.error(
+        'LIVE mode needs an audio file for Whisper. Set AUDIO_INPUT_PATH to a\n' +
+          '.wav/.mp3/.m4a file (the bundled fixtures/input-transcript.txt is text,\n' +
+          'not audio, and Whisper would reject it).'
+      );
+      process.exit(1);
+    }
+    inputPath = resolve(audioInput);
+  } else {
+    inputPath = resolve(projectRoot, 'fixtures', 'input-transcript.txt');
+  }
 
   // Output: save generated audio in output directory
   const outputPath = resolve(projectRoot, 'output', 'response.wav');
@@ -73,7 +89,7 @@ async function main() {
 
   // Print overall mode banner
   const overallMode = openaiKey ? 'LIVE' : 'MOCK — no API key';
-  console.log(`\n🚀 [MODE: ${overallMode}]\n`);
+  console.log(`\n[MODE: ${overallMode}]\n`);
 
   // Create and run the agent
   const agent = new VoiceAgent(stt, llm, tts);

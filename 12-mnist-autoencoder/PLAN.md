@@ -127,8 +127,8 @@ Latent Vector (32 dims): [0.12, -0.45, 0.78, ...]
 
 ## Implementation Order
 
-1. ✅ RESEARCH.md (done)
-2. ✅ PLAN.md (this file)
+1. RESEARCH.md (done)
+2. PLAN.md (this file)
 3. Setup: package.json, tsconfig.json, vitest.config.ts, .gitignore, .env.example
 4. Implement: data.ts (test-driven)
 5. Implement: model.ts (test-driven)

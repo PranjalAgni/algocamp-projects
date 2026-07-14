@@ -50,14 +50,14 @@ A critical lesson: the agent must **not** escape its workspace. Key techniques:
 - **Command whitelisting**: only allow safe commands (no `rm -rf /`, no `curl` to arbitrary URLs)
 - **Resource limits**: timeout on command execution, file size limits
 
-This is both a security measure and a pedagogical point — agents need guardrails.
+This is both a security measure and a pedagogical point - agents need guardrails.
 
 ### 4. Mock vs Live Mode
 For learning purposes, we support two modes:
 
 **LIVE mode** (when ANTHROPIC_API_KEY is set):
 - Use the real Claude API
-- Model: `claude-3-5-haiku-latest` (fast, cheap, capable)
+- Model: `claude-3-5-haiku-20241022` (fast, cheap, capable)
 - The model receives tool schemas and learns to call them
 
 **MOCK mode** (no API key):
@@ -68,7 +68,7 @@ For learning purposes, we support two modes:
 ## Libraries Considered
 
 ### LLM SDK
-- **@anthropic-ai/sdk** (chosen) — official Anthropic TypeScript SDK
+- **@anthropic-ai/sdk** (chosen) - official Anthropic TypeScript SDK
   - Native support for tool use
   - Streaming support
   - Good TypeScript types
@@ -82,8 +82,8 @@ For learning purposes, we support two modes:
 - Alternatives: isolated VMs (vm2), Docker (too heavy for a learning project)
 
 ### Testing
-- **vitest** (chosen) — fast, ESM-native, good TypeScript support
-- **temp directories** — `fs.mkdtempSync` for isolated test sandboxes
+- **vitest** (chosen) - fast, ESM-native, good TypeScript support
+- **temp directories** - `fs.mkdtempSync` for isolated test sandboxes
 
 ## Practical Assumptions
 
@@ -91,7 +91,7 @@ For learning purposes, we support two modes:
    - "create hello.js that prints Hello and run it"
    - "list files and create a summary.txt"
    
-2. **Whitelisted commands**: Only allow `node`, `cat`, `echo`, `ls` — safe subset
+2. **Whitelisted commands**: Only allow `node`, `cat`, `echo`, `ls` - safe subset
 
 3. **Max iterations**: 10 steps to prevent infinite loops
 
@@ -136,11 +136,11 @@ For learning purposes, we support two modes:
 ## Learning Objectives
 
 By building this, you learn:
-1. **Tool use schemas** — how to define tools for an LLM
-2. **Agent loops** — the ReAct pattern
-3. **Safety** — path jailing, command whitelisting
-4. **Mock fallbacks** — making projects runnable without API keys
-5. **Observability** — printing each step so you can see the agent think
+1. **Tool use schemas** - how to define tools for an LLM
+2. **Agent loops** - the ReAct pattern
+3. **Safety** - path jailing, command whitelisting
+4. **Mock fallbacks** - making projects runnable without API keys
+5. **Observability** - printing each step so you can see the agent think
 
 ## References
 

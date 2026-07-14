@@ -1,4 +1,4 @@
-# Customer Support Agent — Research
+# Customer Support Agent - Research
 
 ## What is a Customer Support Agent?
 
@@ -8,7 +8,7 @@ A customer support agent is an AI system that can autonomously handle customer i
 3. Using the retrieved information to formulate helpful responses
 4. Escalating to human support when necessary (creating tickets)
 
-This demonstrates a **tool-calling agent loop** — a core pattern in modern AI applications.
+This demonstrates a **tool-calling agent loop** - a core pattern in modern AI applications.
 
 ## Key Concepts
 
@@ -49,17 +49,17 @@ Rather than letting the LLM hallucinate, we ground answers in real data:
 ### Mock Mode (no API key)
 For the learning goal, we need a fully functional offline mode:
 
-**Option 1: Random/canned responses** ❌
+**Option 1: Random/canned responses** (rejected)
 - Too simplistic, doesn't demonstrate agent loop
 
-**Option 2: Keyword/regex-based planner** ✅ CHOSEN
+**Option 2: Keyword/regex-based planner** (CHOSEN)
 - Parse user query for keywords (order number, "refund", "bug", etc.)
 - Deterministically select appropriate tools
 - Execute tools and format response with results
 - Still runs the full agent loop (tool selection → execution → response)
 - Demonstrates the architecture without requiring an API
 
-**Option 3: Local LLM (e.g., Llama via Ollama)** ❌
+**Option 3: Local LLM (e.g., Llama via Ollama)** (rejected)
 - Requires additional installation
 - Slower, less reliable on learning machines
 - Overkill for a learning project
@@ -84,7 +84,7 @@ For the learning goal, we need a fully functional offline mode:
 
 ## Practical Assumptions
 
-1. **Fictional Product**: "CloudStore" — a SaaS e-commerce platform
+1. **Fictional Product**: "CloudStore" - a SaaS e-commerce platform
 2. **Tool Set**: Kept minimal (3 tools) to focus on the agent loop pattern
 3. **Single-turn queries**: User asks one question, agent responds (no multi-turn chat persistence)
 4. **Simple matching**: FAQ search uses basic string includes (no embeddings/vector search)
@@ -108,7 +108,7 @@ src/
     orders.json
     faq.json
   types.ts          # Shared TypeScript types
-demo.ts             # Demonstration script
+  demo.ts           # Demonstration script
 ```
 
 ### Testing Strategy

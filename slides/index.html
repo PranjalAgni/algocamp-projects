@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>AlgoCamp — The Concepts Behind 12 AI Builds</title>
+  <title>AlgoCamp - The Concepts Behind 12 AI Builds</title>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
@@ -101,7 +101,7 @@
       <div class="title-wrap">
         <div class="kicker">A Learning Hub</div>
         <h1>The Concepts Behind<br/>12 AI Builds</h1>
-        <p class="muted">From LLM APIs &amp; agents to embeddings, RAG, and neural nets —<br/>the <em>ideas</em> explained simply, each grounded in <em>real code</em> from the build.</p>
+        <p class="muted">From LLM APIs &amp; agents to embeddings, RAG, and neural nets -<br/>the <em>ideas</em> explained simply, each grounded in <em>real code</em> from the build.</p>
         <p class="small muted" style="margin-top:1.2em;">Use <strong>→</strong> to move between projects &nbsp;·&nbsp; <strong>↓</strong> to walk through a project's concepts &nbsp;·&nbsp; <strong>ESC</strong> for overview</p>
       </div>
     </section>
@@ -124,7 +124,7 @@
         <div class="cell"><b>11 · Multi-Input OCR</b><span>fusing modalities</span></div>
         <div class="cell"><b>12 · Autoencoder</b><span>compress to understand</span></div>
       </div>
-      <p class="small muted" style="margin-top:0.8em;">Each section: a few core concepts — a plain-English idea, an analogy, an "aha" — then the <em>real code</em> that makes it concrete.</p>
+      <p class="small muted" style="margin-top:0.8em;">Each section: a few core concepts - a plain-English idea, an analogy, an "aha" - then the <em>real code</em> that makes it concrete.</p>
     </section>
 
     <!-- ============================================================= -->
@@ -141,63 +141,66 @@
 
       <section>
         <div class="concept-h"><span class="pid">01</span><h3>The chat API is a stateless conversation</h3></div>
-        <p class="lede">You send a list of messages with <strong>roles</strong> — <em>system</em> (sets behavior), <em>user</em> (the ask), <em>assistant</em> (past replies) — and get the next reply. The model remembers nothing between calls; you resend the history every time.</p>
+        <p class="lede">You send a list of messages with <strong>roles</strong> - <em>system</em> (sets behavior), <em>user</em> (the ask), <em>assistant</em> (past replies) - and get the next reply. The model remembers nothing between calls; you resend the history every time.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Texting a brilliant consultant with amnesia. Each message, you paste the whole prior chat so they're caught up.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>"Memory" is an illusion you build by re-sending context. The model is a pure function: messages in → reply out.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">01</span><h3>Tokens are the currency</h3></div>
-        <p class="lede">Models read text in <strong>tokens</strong> — chunks roughly ¾ of a word. Pricing, rate limits, and context windows are all counted in tokens, not words or characters.</p>
+        <p class="lede">Models read text in <strong>tokens</strong> - chunks roughly ¾ of a word. Pricing, rate limits, and context windows are all counted in tokens, not words or characters.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Minutes on a phone plan. "OK" is 1 token; "antidisestablishmentarianism" is ~6. You're billed per token, not per word.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>The same sentence in Japanese can cost ~2× the tokens of English — so language choice affects cost. <span class="muted">(OpenAI tiktoken cookbook)</span></p></div>
+        <div class="box aha"><span class="label">Aha</span><p>The same sentence in Japanese can cost ~2× the tokens of English - so language choice affects cost. <span class="muted">(OpenAI tiktoken cookbook)</span></p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">01</span><h3>System prompt + temperature: the two dials</h3></div>
         <p class="lede">The <strong>system prompt</strong> defines <em>who</em> the model is (priority instructions). <strong>Temperature</strong> controls randomness: 0 = focused &amp; near-deterministic, high = creative &amp; surprising.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>System prompt = an actor's character brief. Temperature = how loaded the dice are — 0 always rolls a 6, 1.5 is a fair die.</p></div>
+        <div class="box analogy"><span class="label">Analogy</span><p>System prompt = an actor's character brief. Temperature = how loaded the dice are - 0 always rolls a 6, 1.5 is a fair die.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>Same question + different system prompt = a different personality. You reshape behavior without touching the user's words.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">01</span><h3>Streaming: same speed, better feel</h3></div>
-        <p class="lede">Instead of waiting for the whole answer, <strong>streaming</strong> sends tokens as they're generated (server-sent events). Generation isn't faster — but it <em>feels</em> instant.</p>
+        <p class="lede">Instead of waiting for the whole answer, <strong>streaming</strong> sends tokens as they're generated (server-sent events). Generation isn't faster - but it <em>feels</em> instant.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Netflix vs. waiting for a full movie download. You start watching while the rest buffers.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Streaming cuts <em>perceived</em> latency, not real latency. The UX win is psychological — and huge.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Streaming cuts <em>perceived</em> latency, not real latency. The UX win is psychological - and huge.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">01</span><h3>Tool calling: the model never runs your code</h3></div>
         <p class="lede">You describe functions (name, purpose, parameters). When useful, the model returns <strong>structured JSON</strong> requesting a call. <em>Your</em> code runs it and passes the result back, which the model uses to finish.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>A boss shouting "get me Tokyo's weather!" through a closed door. You fetch it, slide a note back — they never leave the office.</p></div>
+        <div class="box analogy"><span class="label">Analogy</span><p>A boss shouting "get me Tokyo's weather!" through a closed door. You fetch it, slide a note back - they never leave the office.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>The model emits a <em>request</em>, not an execution. You keep full control to validate, log, or refuse. <span class="muted">(OpenAI function-calling docs)</span></p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">01</span><h3>Structured output &amp; one client for all providers</h3></div>
-        <p class="lede"><strong>Structured outputs</strong> force replies to match a schema exactly — no missing keys, safe to feed into typed code. A <strong>provider-agnostic interface</strong> hides differences between OpenAI / Anthropic / others behind one call.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>Schema = a form with a pen that only writes inside the boxes. Provider interface = a universal remote for any TV brand.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Abstraction isn't just tidy — it's freedom from lock-in. Swap models with a config change when one is slow or pricey.</p></div>
+        <p class="lede"><strong>JSON mode</strong> (what this project uses) guarantees the reply <em>parses</em> as JSON, but not which keys or types come back. <strong>Structured Outputs</strong> (a strict schema) is the stronger option that forces the exact shape. A <strong>provider-agnostic interface</strong> hides differences between OpenAI / Anthropic / others behind one call.</p>
+        <div class="box analogy"><span class="label">Analogy</span><p>JSON mode = a form written in non-smudge ink (legible). Structured Outputs = that form with required fields you can't leave blank. Provider interface = a universal remote for any TV brand.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>JSON mode still lets the wrong keys through, so you validate the shape yourself. Structured Outputs is what removes that step. And the provider abstraction buys freedom from lock-in: swap models with a config change.</p></div>
       </section>
 
       <section data-background-color="#0b0d12">
         <div class="code-h"><span class="pid">01</span><h3>The idea, in code</h3><span class="file">calling the chat API</span></div>
         <pre><code data-trim data-noescape class="language-python">
 response = client.chat.completions.create(
-    model="gpt-4",              # which brain to use
+    model="gpt-4o-mini",        # which brain to use (project 01's default)
     messages=[
         {"role": "system", "content": "You are a helpful tutor."},
         {"role": "user",   "content": "Explain photosynthesis simply."}
     ],
-    temperature=0.7,            # 0 = focused, 1+ = creative
-    max_tokens=150,             # cap the reply length
+    temperature=0.7,            # project 01's default (0 = focused, 1+ = creative)
+    max_tokens=500,             # cap the reply length (project 01's default)
     stream=False                # True = tokens arrive one-by-one (feels faster)
 )
 
 print(response.choices[0].message.content)
         </code></pre>
-        <p class="code-cap">You pass an array of <b>messages</b> with roles (system / user / assistant) plus <b>parameters</b> that shape the reply — then read back the next response.</p>
+        <p class="code-cap">You pass an array of <b>messages</b> with roles (system / user / assistant) plus <b>parameters</b> that shape the reply - then read back the next response.</p>
+        <aside class="notes">
+          Two traps worth calling out live. First, tool calling never runs your function - the model only returns a JSON <em>request</em>; your code executes it and hands the result back. Second, "JSON mode" guarantees the reply is valid JSON, not that it matches your schema, so you still validate. Project 01's offline demo prints a MOCK banner and fakes these calls; only with a real key does it exercise an actual model.
+        </aside>
       </section>
     </section>
 
@@ -215,23 +218,23 @@ print(response.choices[0].message.content)
 
       <section>
         <div class="concept-h"><span class="pid">02</span><h3>Agent vs. chatbot: the autonomy line</h3></div>
-        <p class="lede">A chatbot <em>generates text</em>. An <strong>agent</strong> can <em>act</em> — look up an order, search docs, file a ticket — then decide what to do next on its own.</p>
+        <p class="lede">A chatbot <em>generates text</em>. An <strong>agent</strong> can <em>act</em> - look up an order, search docs, file a ticket - then decide what to do next on its own.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>A librarian who recommends books from memory (chatbot) vs. an assistant who walks the shelves, places holds, and renews loans (agent).</p></div>
         <div class="box aha"><span class="label">Aha</span><p>The moment a system can <em>execute</em> something instead of just describing it, it crossed from chatbot to agent.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">02</span><h3>The ReAct loop: reason → act → observe</h3></div>
-        <p class="lede">The agent <strong>reasons</strong> about the next step, <strong>acts</strong> by calling a tool, <strong>observes</strong> the result — and repeats until done. Grounding each step in real results curbs hallucination.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>A detective: form a hypothesis, chase a lead, examine the evidence, revise. Not solved in one shot — solved by iterating.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>The "thinking" happens <em>between</em> actions. No perfect upfront plan needed — it adapts as observations arrive. <span class="muted">(Yao et al., ReAct 2022)</span></p></div>
+        <p class="lede">The agent <strong>reasons</strong> about the next step, <strong>acts</strong> by calling a tool, <strong>observes</strong> the result - and repeats until done. Grounding each step in real results curbs hallucination.</p>
+        <div class="box analogy"><span class="label">Analogy</span><p>A detective: form a hypothesis, chase a lead, examine the evidence, revise. Not solved in one shot - solved by iterating.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>The "thinking" happens <em>between</em> actions. No perfect upfront plan needed - it adapts as observations arrive. <span class="muted">(Yao et al., ReAct 2022)</span></p></div>
       </section>
 
       <section>
-        <div class="concept-h"><span class="pid">02</span><h3>Tools are the agent's hands — and you write the loop</h3></div>
+        <div class="concept-h"><span class="pid">02</span><h3>Tools are the agent's hands - and you write the loop</h3></div>
         <p class="lede">Tools (<em>lookupOrder</em>, <em>searchFAQ</em>, <em>createTicket</em>) are described like API docs; the model picks one by matching intent. A <code>while</code> loop runs tools until the model says "I'm done."</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Apps on a phone. The agent reads each app's description and opens the right one for the task at hand.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Decision quality lives in your <em>tool descriptions</em>. And you <strong>must</strong> cap iterations — or a confused agent loops forever.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Decision quality lives in your <em>tool descriptions</em>. And you <strong>must</strong> cap iterations - or a confused agent loops forever.</p></div>
       </section>
 
       <section>
@@ -242,26 +245,29 @@ print(response.choices[0].message.content)
       </section>
 
       <section data-background-color="#0b0d12">
-        <div class="code-h"><span class="pid">02</span><h3>The idea, in code</h3><span class="file">routing a request</span></div>
+        <div class="code-h"><span class="pid">02</span><h3>The idea, in code</h3><span class="file">the agent loop</span></div>
         <pre><code data-trim data-noescape class="language-python">
-def handle_customer_request(user_message):
-    # 1. Figure out what the user actually wants
-    intent = classify_intent(user_message)
+MAX_ITERATIONS = 5                    # cap so a confused agent can't spin forever
 
-    # 2. Route to the handler that matches the intent
-    if intent == "order_status":
-        response = check_order_status(user_message)
-    elif intent == "faq":
-        response = answer_faq(user_message)
-    elif intent == "human_handoff":
-        response = escalate_to_human(user_message)   # knows its limits
-    else:
-        response = "I'm not sure how to help with that."
+def run_agent(query):
+    history = []
+    for _ in range(MAX_ITERATIONS):
+        # REASON: planner picks which tool(s) to call, or signals "done"
+        step = planner(query, history)
+        if step.done or not step.tool_calls:
+            break
 
-    # 3. Hand the response back to the user
-    return response
+        # ACT + OBSERVE: run each tool, feed the real result back into history
+        for call in step.tool_calls:
+            step.results.append(execute_tool(call))   # lookupOrder / searchFAQ / ...
+        history.append(step)
+
+    return generate_answer(query, history)   # final reply from what we gathered
         </code></pre>
-        <p class="code-cap">A real agent <b>routes</b> each request to the right action based on detected intent — then acts and responds, instead of just generating text.</p>
+        <p class="code-cap">The agent <b>loops</b>: reason → act → observe, until the planner says "done" or it hits the <b>iteration cap</b> - not a one-shot if/else router.</p>
+        <aside class="notes">
+          This mirrors project 02's real <code>runAgent</code> in <code>agent.ts</code>: a <code>for</code> loop over <code>MAX_ITERATIONS = 5</code>, the planner returns tool calls, the executor runs them and appends results to history, and it stops when the planner sets <code>shouldContinue = false</code>. Honest caveat if you run it offline: the keyword mock planner returns "done" after the first pass (it early-returns once <code>previousIterations.length &gt; 0</code>), so mock mode only ever runs one iteration - it shows the loop's <em>shape</em>, not real multi-step reasoning. The genuine reason → act → observe loop only fires in live mode.
+        </aside>
       </section>
     </section>
 
@@ -279,13 +285,13 @@ def handle_customer_request(user_message):
 
       <section>
         <div class="concept-h"><span class="pid">03</span><h3>An embedding is meaning as a list of numbers</h3></div>
-        <p class="lede">Text becomes a <strong>vector</strong> (e.g. 384 numbers) positioned so that similar meanings sit close together. The model <em>learns</em> these positions from billions of examples — nobody hand-codes them.</p>
+        <p class="lede">Text becomes a <strong>vector</strong> (e.g. 384 numbers) positioned so that similar meanings sit close together. The model <em>learns</em> these positions from billions of examples - nobody hand-codes them.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>GPS coordinates for meaning. Just as lat/long places cities, embeddings place "dog" near "puppy" and far from "skyscraper".</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Meaning is inferred from <em>context</em> — "a word is known by the company it keeps." Similar contexts → nearby vectors.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Meaning is inferred from <em>context</em> - "a word is known by the company it keeps." Similar contexts → nearby vectors.</p></div>
       </section>
 
       <section>
-        <div class="concept-h"><span class="pid">03</span><h3>Directions carry meaning — you can do algebra</h3></div>
+        <div class="concept-h"><span class="pid">03</span><h3>Directions carry meaning - you can do algebra</h3></div>
         <p class="lede">In vector space, consistent relationships become consistent <strong>directions</strong>. The classic: <em>king − man + woman ≈ queen</em>. "Gender" and "capital-of" are repeatable vector moves.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>A map where "north" always means more formal, "east" more positive. Moving northeast takes "okay" → "excellent".</p></div>
         <div class="box aha"><span class="label">Aha</span><p>You can literally do arithmetic on meaning: <em>France − Paris + London ≈ England</em>.</p></div>
@@ -294,14 +300,14 @@ def handle_customer_request(user_message):
       <section>
         <div class="concept-h"><span class="pid">03</span><h3>Cosine similarity: angle, not length</h3></div>
         <p class="lede"><strong>Cosine similarity</strong> measures the <em>angle</em> between two vectors (−1 to +1), ignoring their length. That's why it's the go-to for text.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>Two arrows pointing the same way are "similar" even if one's twice as long — like a 10-page essay and a 1-line summary on the same topic.</p></div>
+        <div class="box analogy"><span class="label">Analogy</span><p>Two arrows pointing the same way are "similar" even if one's twice as long - like a 10-page essay and a 1-line summary on the same topic.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>Euclidean distance would unfairly punish long documents. Cosine ignores size and focuses on <em>topic direction</em>.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">03</span><h3>Semantic search beats keyword search</h3></div>
-        <p class="lede">Keyword search needs the exact words. <strong>Semantic search</strong> embeds the query and finds the nearest vectors — so "dog obedience classes" matches "puppy training" with zero shared words.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>A cookbook index that knows "crimson apple pie" answers "red fruit dessert" — no thesaurus required.</p></div>
+        <p class="lede">Keyword search needs the exact words. <strong>Semantic search</strong> embeds the query and finds the nearest vectors - so "dog obedience classes" matches "puppy training" with zero shared words.</p>
+        <div class="box analogy"><span class="label">Analogy</span><p>A cookbook index that knows "crimson apple pie" answers "red fruit dessert" - no thesaurus required.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>Synonyms, paraphrases, and intent are handled <em>automatically</em>. This is the engine under "related items" and modern search.</p></div>
       </section>
 
@@ -309,7 +315,7 @@ def handle_customer_request(user_message):
         <div class="concept-h"><span class="pid">03</span><h3>Local vs. API embeddings</h3></div>
         <p class="lede">A <strong>local model</strong> (downloaded once, ~25MB) runs offline, free, private, instant. An <strong>API model</strong> is often larger/sharper but needs network, costs per call, and sends your data out.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Owning a calculator (local) vs. calling a math hotline (API). One works on a plane; the other always has the latest tricks.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>The trade-off isn't only cost vs. quality — it's also <strong>privacy and latency</strong>, which often decide it.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>The trade-off isn't only cost vs. quality - it's also <strong>privacy and latency</strong>, which often decide it.</p></div>
       </section>
 
       <section data-background-color="#0b0d12">
@@ -325,9 +331,12 @@ def cosine_similarity(a, b):
 
 # Similar meanings land near each other in vector space
 print(cosine_similarity(vectors["dog"], vectors["puppy"]))       # ~0.99  close!
-print(cosine_similarity(vectors["dog"], vectors["skyscraper"]))  # ~0.45  far
+print(cosine_similarity(vectors["dog"], vectors["skyscraper"]))  # ~0.31  far
         </code></pre>
-        <p class="code-cap">Text becomes numbers (an <b>embedding</b>), so "meaning" turns into <b>distance</b> — close vectors mean similar ideas, with zero shared keywords.</p>
+        <p class="code-cap">Text becomes numbers (an <b>embedding</b>), so "meaning" turns into <b>distance</b> - close vectors mean similar ideas, with zero shared keywords.</p>
+        <aside class="notes">
+          Project 03 runs a real local model (Xenova all-MiniLM-L6-v2, 384-dim) offline, so the semantics are genuine - the query "coding in a language named after a snake" ranks the Python line first. The one word it shares with the corpus - "language" - is a trap: keyword matching latches onto "natural language processing" and ranks Python near the bottom, while the embedder reads the whole meaning and still gets Python right. Two gotchas: the hash-fallback mode has no semantic meaning (identical strings score 1.0, everything else ~0), and vectors from different embedders (384-dim vs OpenAI's 1536-dim) can't be compared - <code>cosineSimilarity</code> throws on a dimension mismatch, so swapping models means re-embedding the corpus.
+        </aside>
       </section>
     </section>
 
@@ -346,8 +355,8 @@ print(cosine_similarity(vectors["dog"], vectors["skyscraper"]))  # ~0.45  far
       <section>
         <div class="concept-h"><span class="pid">04</span><h3>Why RAG exists</h3></div>
         <p class="lede">LLMs have a <strong>knowledge cutoff</strong>, can't see your private data, and hallucinate when unsure. <strong>RAG</strong> (Retrieval-Augmented Generation) fixes this by retrieving real documents <em>before</em> answering.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>A closed-book exam (plain LLM) vs. an open-book exam (RAG). The student still thinks — but is anchored to real sources.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>RAG doesn't make the model <em>smarter</em> — it makes it more <em>honest</em>: "I found this in document X." <span class="muted">(Lewis et al., 2020)</span></p></div>
+        <div class="box analogy"><span class="label">Analogy</span><p>A closed-book exam (plain LLM) vs. an open-book exam (RAG). The student still thinks - but is anchored to real sources.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>RAG doesn't make the model <em>smarter</em> - it makes it more <em>honest</em>: "I found this in document X." <span class="muted">(Lewis et al., 2020)</span></p></div>
       </section>
 
       <section>
@@ -361,12 +370,12 @@ print(cosine_similarity(vectors["dog"], vectors["skyscraper"]))  # ~0.45  far
         <div class="concept-h"><span class="pid">04</span><h3>Chunking: size <em>and</em> overlap</h3></div>
         <p class="lede">Split text into focused 200–500 token pieces so retrieval can pinpoint the right paragraph. Add a small <strong>overlap</strong> so ideas spanning a boundary aren't cut in half.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Indexing each recipe separately instead of searching one giant 500-recipe PDF for "caramelize onions".</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Overlap matters as much as size — without it, a sentence stranded at a boundary never matches the query.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Overlap matters as much as size - without it, a sentence stranded at a boundary never matches the query.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">04</span><h3>Grounding, citations &amp; why we don't stuff everything</h3></div>
-        <p class="lede">Tell the model to answer <strong>only from retrieved context</strong> and cite sources (e.g. <em>[Video @ 01:23]</em>). We retrieve a few best chunks instead of pasting the whole corpus — for cost <em>and</em> focus.</p>
+        <p class="lede">Tell the model to answer <strong>only from retrieved context</strong> and cite sources (e.g. <em>[Video @ 01:23]</em>). We retrieve a few best chunks instead of pasting the whole corpus - for cost <em>and</em> focus.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>A lawyer citing exhibits, not saying "trust me." And smart packing: bring the hammer you need, not the whole hardware store.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>LLMs get "lost in the middle" of long contexts. Fewer, better chunks often beat a giant context window.</p></div>
       </section>
@@ -396,7 +405,10 @@ prompt = f"""Answer using ONLY this context:
 Question: {question}"""
 answer = llm(prompt)                  # answers from docs, not memory
         </code></pre>
-        <p class="code-cap"><b>Retrieval-Augmented Generation</b> fetches real chunks first, then asks the model to answer <em>only</em> from them — grounding it in sources instead of memory.</p>
+        <p class="code-cap"><b>Retrieval-Augmented Generation</b> fetches real chunks first, then asks the model to answer <em>only</em> from them - grounding it in sources instead of memory.</p>
+        <aside class="notes">
+          Key takeaway to stress: retrieval quality is the ceiling on answer quality - a perfect LLM can't fix bad chunks. Note for anyone running project 04: its demo hard-codes the 128-dim hash embedder and defaults to a MOCK generator that just stitches the first two sentences of each retrieved chunk plus a citation, so out of the box it demonstrates the pipeline <em>shape</em> with the weakest fallback at both ends. Real semantic RAG needs a one-line edit to drop the hash embedder and a live key.
+        </aside>
       </section>
     </section>
 
@@ -421,36 +433,36 @@ answer = llm(prompt)                  # answers from docs, not memory
 
       <section>
         <div class="concept-h"><span class="pid">05</span><h3>BM25: the keyword workhorse</h3></div>
-        <p class="lede"><strong>BM25</strong> scores documents by rare-word importance, term frequency (with diminishing returns), and length normalization. It's "bag of words" — order and meaning don't matter.</p>
+        <p class="lede"><strong>BM25</strong> scores documents by rare-word importance, term frequency (with diminishing returns), and length normalization. It's "bag of words" - order and meaning don't matter.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Scoring reviews for "wood-fired pizza": rare terms count more, the 5th mention adds little, long reviews don't auto-win.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>"PTO policy" and "policy for PTO" score identically — BM25 catches exact terms an embedding might gloss over.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>"PTO policy" and "policy for PTO" score identically - BM25 catches exact terms an embedding might gloss over.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">05</span><h3>Hybrid retrieval + Reciprocal Rank Fusion</h3></div>
-        <p class="lede">Run <strong>keyword (BM25)</strong> and <strong>dense (embedding)</strong> search together. <strong>RRF</strong> merges their ranked lists using only <em>positions</em> (1/(k+rank)) — no fragile score-scaling needed.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>Two detectives — one reads faces (dense), one matches fingerprints (keyword). RRF is the panel that rewards their agreement.</p></div>
+        <p class="lede">Run <strong>keyword (BM25)</strong> and <strong>dense (embedding)</strong> search together. <strong>RRF</strong> merges their ranked lists using only <em>positions</em> (1/(k+rank)) - no fragile score-scaling needed.</p>
+        <div class="box analogy"><span class="label">Analogy</span><p>Two detectives - one reads faces (dense), one matches fingerprints (keyword). RRF is the panel that rewards their agreement.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>RRF rewards <em>consensus</em>: docs both methods rank highly float to the top, even on totally different score scales.</p></div>
       </section>
 
       <section>
-        <div class="concept-h"><span class="pid">05</span><h3>Reranking with a cross-encoder</h3></div>
-        <p class="lede">A <strong>cross-encoder</strong> reads the query and a candidate <em>together</em> for a precise relevance score — far more accurate than the bi-encoder used to retrieve, but too slow to run on everything.</p>
+        <div class="concept-h"><span class="pid">05</span><h3>Reranking: precise second pass</h3></div>
+        <p class="lede">After retrieval returns a shortlist, a <strong>reranker</strong> rescores it for precision. In production that's a <strong>cross-encoder</strong> reading query and candidate <em>together</em> - far more accurate than the bi-encoder used to retrieve, but too slow to run on everything. <em>This</em> project keeps it simple: <code>reranking.ts</code> is a heuristic (query-term overlap + title match + recency bonus), a stand-in for the real learned cross-encoder.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Bi-encoder = speed dating (2 min each, compare later). Cross-encoder = a full dinner date. Speed-date 100, dine with the top 10.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Hence the two-stage pipeline: <em>fast retrieve → slow rerank</em>. You get scale <strong>and</strong> precision.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Two stages either way: <em>fast retrieve → slow rerank</em>. The heuristic teaches the <em>shape</em> of a rerank pass; a cross-encoder is the production upgrade that fills the same slot.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">05</span><h3>Query expansion &amp; metadata filtering</h3></div>
-        <p class="lede"><strong>Query expansion</strong> rewrites/enriches the question (add synonyms, or HyDE: generate a fake ideal answer and search for docs like it). <strong>Metadata filtering</strong> restricts by department, date, or type first.</p>
+        <p class="lede"><strong>Query expansion</strong> rewrites/enriches the question (add synonyms, or HyDE: generate a fake ideal answer and search for docs like it). <strong>Metadata filtering</strong> restricts by department, date, or type first. <em>This</em> project keeps expansion simple: <code>query-processing.ts</code> is a hand-built 13-term synonym map (no LLM, no HyDE), so "time off" picks up "PTO, vacation, leave."</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Netflix search with filters: "space adventure" + Sci-Fi + PG-13 + year≥2020 cuts the noise instantly.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>HyDE works even if the fake answer hallucinates — the embedding still lands in the right neighborhood of <em>real</em> docs.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>HyDE works even if the fake answer hallucinates - the embedding still lands in the right neighborhood of <em>real</em> docs. The synonym map teaches the <em>shape</em>; HyDE is the production upgrade that fills the same slot.</p></div>
       </section>
 
       <section data-background-color="#0b0d12">
         <div class="code-h"><span class="pid">05</span><h3>The idea, in code</h3><span class="file">fusing two searches</span></div>
         <pre><code data-trim data-noescape class="language-python">
-# Run BOTH searches — they're good at different things
+# Run BOTH searches - they're good at different things
 keyword_results  = bm25_search(query)     # ["doc3", "doc1", "doc5"]
 semantic_results = vector_search(query)    # ["doc1", "doc2", "doc3"]
 
@@ -465,7 +477,10 @@ for ranked_list in (keyword_results, semantic_results):
 final = sorted(scores, key=scores.get, reverse=True)
 # → ["doc1", "doc3", ...]   doc1 was near the top of both lists
         </code></pre>
-        <p class="code-cap"><b>Reciprocal Rank Fusion</b> adds <code>1/(k+rank)</code> from each list — rewarding consensus, with no fragile mixing of mismatched score scales.</p>
+        <p class="code-cap"><b>Reciprocal Rank Fusion</b> adds <code>1/(k+rank)</code> from each list - rewarding consensus, with no fragile mixing of mismatched score scales.</p>
+        <aside class="notes">
+          The <code>k=60</code> here matches the project's real value (hybrid-retrieval.ts, "typically 60"). Honest framing for the demo: on project 05's small, well-separated 10-doc corpus the naive retriever already ranks the right doc first, so the advanced stack shows no dramatic win - these techniques earn their keep on harder corpora. Also note the reranker's recency bonus only fires for docs under 365 days old, but every corpus doc is dated 2024 or earlier, so as of today that branch is dead code - a real lesson about wall-clock-tied scoring silently decaying as data ages.
+        </aside>
       </section>
     </section>
 
@@ -484,36 +499,36 @@ final = sorted(scores, key=scores.get, reverse=True)
       <section>
         <div class="concept-h"><span class="pid">06</span><h3>A neuron is a weighted vote</h3></div>
         <p class="lede">Each <strong>neuron</strong> multiplies its inputs by learned <strong>weights</strong>, sums them, adds a <strong>bias</strong>, and passes the result through an activation. The weights are what training tunes.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>A committee member weighing evidence — some clues matter more — then voting yes/no once the total crosses a threshold.</p></div>
+        <div class="box analogy"><span class="label">Analogy</span><p>A committee member weighing evidence - some clues matter more - then voting yes/no once the total crosses a threshold.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>A neuron fires on a <em>weighted combination</em>, not raw inputs. Change the weights, change the behavior.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">06</span><h3>Layers + non-linear activations = power</h3></div>
-        <p class="lede">Stacked <strong>layers</strong> transform data step by step. <strong>Activation functions</strong> (ReLU, sigmoid) add non-linearity — without them, 10 layers collapse into 1 straight line.</p>
+        <p class="lede">Stacked <strong>layers</strong> transform data step by step. <strong>Activation functions</strong> (ReLU, sigmoid) add non-linearity - without them, 10 layers collapse into 1 straight line.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>An assembly line: edges → shapes → objects. ReLU is a bouncer ("must be this tall"); sigmoid is a dimmer switch.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>The non-linear "two-moons" dataset <em>needs</em> hidden layers — a straight line can never separate two interlocking crescents.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>The non-linear "two-moons" dataset <em>needs</em> hidden layers - a straight line can never separate two interlocking crescents.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">06</span><h3>Loss: a number for "how wrong"</h3></div>
         <p class="lede">The <strong>loss function</strong> measures the gap between predictions and truth. Training = making this number as small as possible. Confident-and-wrong is punished hardest.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Distance from the bullseye in darts. Outer ring = high loss; near the center = low loss.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Loss captures <em>how</em> wrong, not just <em>if</em> wrong — predicting 90% on the wrong answer hurts more than 51%.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Loss captures <em>how</em> wrong, not just <em>if</em> wrong - predicting 90% on the wrong answer hurts more than 51%.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">06</span><h3>Gradient descent + backprop: learning by going downhill</h3></div>
         <p class="lede"><strong>Gradient descent</strong> treats loss as a landscape and steps downhill. <strong>Backpropagation</strong> works backwards to assign each weight its share of the blame, so the right knobs get adjusted.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>A blindfolded hiker feeling the slope and shuffling downhill. Backprop = reviewing a relay race in reverse to see who slowed the team.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>The network doesn't <em>solve</em> for the answer like algebra — it <em>searches</em>, step by step. That's why training takes many iterations.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>The network doesn't <em>solve</em> for the answer like algebra - it <em>searches</em>, step by step. That's why training takes many iterations.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">06</span><h3>Epochs, batches, learning rate</h3></div>
-        <p class="lede">An <strong>epoch</strong> is one full pass over the data, processed in <strong>batches</strong>. The <strong>learning rate</strong> is step size — too small is slow, too big overshoots.</p>
+        <p class="lede">An <strong>epoch</strong> is one full pass over the data, processed in <strong>batches</strong>. The <strong>learning rate</strong> is step size - too small is slow, too big overshoots.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Flashcards: an epoch is one run through the deck; batches are 10 cards at a time; learning rate is how hard you change tactics.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>More epochs aren't always better — past a point the model <em>overfits</em>. Stop when loss converges.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>More epochs aren't always better - past a point the model <em>overfits</em>. Stop when loss converges.</p></div>
       </section>
 
       <section data-background-color="#0b0d12">
@@ -534,7 +549,10 @@ for epoch in range(1000):
     w -= lr * grad * x                             # step toward less loss
     b -= lr * grad
         </code></pre>
-        <p class="code-cap">Learning isn't solved like algebra — the network <b>searches</b>: predict, measure loss, nudge every weight a little downhill, repeat.</p>
+        <p class="code-cap">Learning isn't solved like algebra - the network <b>searches</b>: predict, measure loss, nudge every weight a little downhill, repeat.</p>
+        <aside class="notes">
+          Live-demo warning worth internalizing: "seeded" is not the same as "reproducible." Project 06 seeds both the dataset and the weight initialization, yet tfjs's per-epoch mini-batch shuffle is a separate unseeded randomness source, so final loss still lands in two clusters (~0.05 at 100% accuracy, or ~0.22 at ~90%) across runs. That's why the project quotes ranges rather than one hard-coded number - any pasted exact loss curve that never reproduces is a slop tell.
+        </aside>
       </section>
     </section>
 
@@ -546,7 +564,7 @@ for epoch in range(1000):
         <div class="divider">
           <div class="num">07</div>
           <h2>A Claude-Code-like Coding Agent</h2>
-          <div class="tag">An agent with hands — safely</div>
+          <div class="tag">An agent with hands - safely</div>
         </div>
       </section>
 
@@ -554,20 +572,20 @@ for epoch in range(1000):
         <div class="concept-h"><span class="pid">07</span><h3>A coding agent is a planner with a feedback loop</h3></div>
         <p class="lede">Give an LLM a folder, tools (<em>read/write file</em>, <em>run command</em>), and a goal in plain English. It plans, edits, runs, reads results, and iterates until done.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>An intern who only touches your codebase through a keyboard: explores, writes, tests, fixes, reports back.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>It's not "autocomplete on steroids." The power is <em>observing what breaks and adjusting</em> — not generating code blindly.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>It's not "autocomplete on steroids." The power is <em>observing what breaks and adjusting</em> - not generating code blindly.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">07</span><h3>Tools are hands; feedback is sight</h3></div>
         <p class="lede">The agent lives in text (tokens in/out); tools execute in the real world and report back. Running tests and reading errors is how it grounds itself in <em>this</em> codebase.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>A remote surgeon driving a robot arm by command and watching the feed — and IKEA furniture: you only learn the holes don't line up by <em>trying</em>.</p></div>
+        <div class="box analogy"><span class="label">Analogy</span><p>A remote surgeon driving a robot arm by command and watching the feed - and IKEA furniture: you only learn the holes don't line up by <em>trying</em>.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>Agents get smarter by <em>trying things and reading failures</em>, not by reading more docs.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">07</span><h3>Sandboxing &amp; path jailing</h3></div>
         <p class="lede">Constrain the agent to one workspace folder. Beware <strong>path traversal</strong>: <code>../../etc/passwd</code> escapes the jail. The fix: resolve the path to absolute, <em>then</em> verify it's still inside the sandbox.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>A child in a fenced backyard sandbox — free to build, but the fence keeps them out of traffic.</p></div>
+        <div class="box analogy"><span class="label">Analogy</span><p>A child in a fenced backyard sandbox - free to build, but the fence keeps them out of traffic.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>Banning the literal "<code>..</code>" isn't enough (attackers URL-encode it). Trust the <em>resolved destination</em>, not the input string. <span class="muted">(OWASP)</span></p></div>
       </section>
 
@@ -575,7 +593,7 @@ for epoch in range(1000):
         <div class="concept-h"><span class="pid">07</span><h3>Human-in-the-loop &amp; context management</h3></div>
         <p class="lede">Risky actions (delete, push) pause for <strong>human approval</strong>. And since context windows are finite, long tasks need pruning: summarize done work, offload progress to files.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>A self-driving car that asks you to take the wheel in tricky spots. And taking notes instead of holding everything in your head.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>The best agents don't fight the context limit — they "think on paper," using files as external memory.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>The best agents don't fight the context limit - they "think on paper," using files as external memory.</p></div>
       </section>
 
       <section data-background-color="#0b0d12">
@@ -594,10 +612,15 @@ while not task_done:
         context["last_result"] = run_sandboxed(action.command)  # feed back
 
 def is_safe_path(path, workspace):
-    resolved = os.path.realpath(path)      # trust the RESOLVED path,
-    return resolved.startswith(os.path.realpath(workspace))  # not the raw string
+    root     = os.path.realpath(workspace)
+    resolved = os.path.realpath(path)      # trust the RESOLVED path, not the raw string
+    # Bare prefix isn't enough: "/project-evil".startswith("/project") is True.
+    return resolved == root or resolved.startswith(root + os.sep)  # sibling can't escape
         </code></pre>
-        <p class="code-cap">The agent grounds itself by <b>reading real failures</b> and looping — while a sandbox check on the <em>resolved</em> path keeps it from escaping the workspace.</p>
+        <p class="code-cap">The agent grounds itself by <b>reading real failures</b> and looping - while a sandbox check on the <em>resolved</em> path keeps it from escaping the workspace.</p>
+        <aside class="notes">
+          This <code>is_safe_path</code> is the corrected version. The real project 07 originally shipped two exploitable bugs in its advertised "safety features": a <code>startsWith</code> path jail with no trailing separator let a sibling dir like <code>/tmp/sandbox-evil</code> escape a <code>/tmp/sandbox</code> jail, and a first-token command whitelist was bypassed because the full string was later handed to a shell (<code>node x.js; whoami</code>). Both are fixed now with regression tests. The deeper lesson: even after fixing those, <code>node -e</code> runs arbitrary JS, so a string whitelist is a speed bump, not OS-level isolation.
+        </aside>
       </section>
     </section>
 
@@ -616,35 +639,35 @@ def is_safe_path(path, workspace):
       <section>
         <div class="concept-h"><span class="pid">08</span><h3>The diff: a universal language for change</h3></div>
         <p class="lede">A <strong>unified diff</strong> shows what changed: <code>+</code> added, <code>−</code> removed, plain = context. <code>@@</code> marks a <strong>hunk</strong> with line numbers, so any tool applies the change to the right spot.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>Track-changes in a doc — but encoded as machine instructions, not visual strikethrough.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>A hunk includes a few unchanged context lines on purpose — so the patch still lands even if nearby lines shifted.</p></div>
+        <div class="box analogy"><span class="label">Analogy</span><p>Track-changes in a doc - but encoded as machine instructions, not visual strikethrough.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>A hunk includes a few unchanged context lines on purpose - so the patch still lands even if nearby lines shifted.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">08</span><h3>Deterministic linting vs. LLM judgment</h3></div>
-        <p class="lede">A <strong>linter</strong> applies fixed rules — same input, same output, instant, free. An <strong>LLM</strong> reasons about <em>intent</em>: unclear names, missing edge cases, risky logic.</p>
+        <p class="lede">A <strong>linter</strong> applies fixed rules - same input, same output, instant, free. Production linters (ESLint) parse code into a syntax tree first; <em>this</em> project keeps it simple and matches <strong>regex</strong> against the raw diff lines. An <strong>LLM</strong>, by contrast, reasons about <em>intent</em>: unclear names, missing edge cases, risky logic.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Spellcheck (linter) catches "teh" every time. An editor (LLM) tells you the argument doesn't make sense.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Detecting <em>all</em> bugs statically is provably impossible (Rice's theorem) — so deterministic tools trade completeness for reliability.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Regex has no lexer, so it can't tell code from a string or comment: this project's <code>==</code> rule fires inside <code>"a == b"</code> and even on valid Python. That blindness is exactly why real linters build an AST.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">08</span><h3>Why combine them + structured output</h3></div>
-        <p class="lede">Layer them like a <strong>test pyramid</strong>: cheap linter rules catch clear violations; the LLM catches subtle ones. Force the LLM to return a <strong>schema</strong> (file, line, severity, suggestion) so results feed dashboards and CI.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>Car safety: airbags + lane-departure warnings. Each catches what the other can't. Structured output = a filled-in form, not prose.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>If the LLM flags something a regex <em>could</em> have caught — write the regex. Push checks as low (fast/cheap) as possible.</p></div>
+        <p class="lede">Layer them like a <strong>test pyramid</strong>: cheap linter rules catch clear violations; the LLM catches subtle ones. Ask the LLM for <strong>JSON</strong> (file, line, severity, suggestion) so results feed dashboards and CI.</p>
+        <div class="box analogy"><span class="label">Analogy</span><p>Car safety: airbags + lane-departure warnings. Each catches what the other can't. JSON output = a filled-in form, not prose.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>If the LLM flags something a regex <em>could</em> have caught - write the regex. Push checks as low (fast/cheap) as possible.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">08</span><h3>Limits: false positives &amp; humans in the loop</h3></div>
-        <p class="lede">Both linters and LLMs produce <strong>false positives</strong> (and miss real bugs). There's no setting that minimizes both — it's a sensitivity/specificity trade-off. Humans dismiss noise and make judgment calls.</p>
+        <p class="lede">Both linters and LLMs produce <strong>false positives</strong> (and miss real bugs). There's no setting that minimizes both - it's a sensitivity/specificity trade-off. Humans dismiss noise and make judgment calls.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Airport metal detectors: too sensitive flags every belt buckle; too lax misses real threats. Layers + a human screener handle it.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Too many false positives cause <em>alert fatigue</em> — people ignore <em>all</em> warnings, including the real ones. Trust is the metric.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Too many false positives cause <em>alert fatigue</em> - people ignore <em>all</em> warnings, including the real ones. Trust is the metric.</p></div>
       </section>
 
       <section data-background-color="#0b0d12">
         <div class="code-h"><span class="pid">08</span><h3>The idea, in code</h3><span class="file">lint + LLM, structured</span></div>
         <pre><code data-trim data-noescape class="language-python">
-# Layer 1 — deterministic linter: fast, fixed rules, same result every time
+# Layer 1 - deterministic linter: fast, fixed rules, same result every time
 def lint(code):
     findings = []
     if re.search(r"console\.log", code):
@@ -652,15 +675,18 @@ def lint(code):
                          "message": "Remove console.log"})
     return findings
 
-# Layer 2 — LLM: judges intent, naming, risky logic a regex can't see.
-# Forced to return the SAME schema {line, severity, message}.
+# Layer 2 - LLM: judges intent, naming, risky logic a regex can't see.
+# Asked (in the prompt) to reply as JSON findings {line, severity, message}.
 def llm_review(code):
     return ask_llm(f"Review this code. Reply as JSON findings:\n{code}")
 
 # Merge both into one structured list → feeds CI & dashboards
 findings = lint(code) + llm_review(code)
         </code></pre>
-        <p class="code-cap">Cheap <b>rules</b> catch the obvious; the <b>LLM</b> catches the subtle. Forcing both into one schema (not prose) lets the results gate CI together.</p>
+        <p class="code-cap">Cheap <b>rules</b> catch the obvious; the <b>LLM</b> catches the subtle. Both emit JSON (not prose), so the results gate CI together.</p>
+        <aside class="notes">
+          Point out the two opposite failure modes honestly. Project 08's regex linter has no lexer, so it false-positives on <code>==</code> inside strings/comments and flags JS-only patterns on valid Python - the inherent ceiling of regex vs AST linting. And its offline "LLM review" is filename-pattern-matched canned text keyed to the two sample diffs (auth.ts / user-handler.js); any other diff yields zero Source:llm comments, so the mock shows the pipeline, not analysis. The <code>source</code> tag on each comment is the honest signal of which trust it deserves. One more precision: <code>llm-reviewer.ts</code> uses OpenAI <em>JSON mode</em> (<code>response_format: {type:'json_object'}</code>), which guarantees the reply parses as JSON but not that it matches the fields - that's why the code still defaults every missing key (<code>finding.file || ''</code>). Enforcing the shape at the API layer is a separate feature, Structured Outputs.
+        </aside>
       </section>
     </section>
 
@@ -679,8 +705,8 @@ findings = lint(code) + llm_review(code)
       <section>
         <div class="concept-h"><span class="pid">09</span><h3>Three stages: STT → LLM → TTS</h3></div>
         <p class="lede">Voice agents split a hard task into three swappable parts: <strong>Speech-to-Text</strong> (ears), the <strong>LLM</strong> (brain), and <strong>Text-to-Speech</strong> (mouth). Each does one job and snaps together.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>A kitchen with three stations — take orders, cook, plate. Back one up and you add staff there without touching the others.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Modularity isn't future-proofing — it makes the whole pipeline <em>testable offline</em> with mock stages, no API keys.</p></div>
+        <div class="box analogy"><span class="label">Analogy</span><p>A kitchen with three stations - take orders, cook, plate. Back one up and you add staff there without touching the others.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Modularity isn't future-proofing - it makes the whole pipeline <em>testable offline</em> with mock stages, no API keys.</p></div>
       </section>
 
       <section>
@@ -694,7 +720,7 @@ findings = lint(code) + llm_review(code)
         <div class="concept-h"><span class="pid">09</span><h3>Latency &amp; turn-taking: why voice is hard</h3></div>
         <p class="lede">Humans expect a reply within ~1 second. Three stages stacked easily hit 3–5s. <strong>VAD</strong> (voice activity detection) must also decide when you've actually <em>stopped</em> talking vs. just paused.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>A phone call with a 5-second gap before every reply feels like the line dropped. Silence reads as failure.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>The fix is <strong>streaming/overlap</strong>, not faster servers — start each stage before the previous fully finishes.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>The fix is <strong>streaming/overlap</strong>, not faster servers - start each stage before the previous fully finishes.</p></div>
       </section>
 
       <section data-background-color="#0b0d12">
@@ -702,20 +728,23 @@ findings = lint(code) + llm_review(code)
         <pre><code data-trim data-noescape class="language-python">
 class VoiceAgent:
     def __init__(self, stt, llm, tts):
-        self.stt = stt   # ears   — swap Whisper, a mock, ...
-        self.llm = llm   # brain  — swap Claude, GPT, local ...
-        self.tts = tts   # mouth  — swap ElevenLabs, a mock ...
+        self.stt = stt   # ears   - swap Whisper, a mock, ...
+        self.llm = llm   # brain  - swap Claude, GPT, local ...
+        self.tts = tts   # mouth  - swap ElevenLabs, a mock ...
 
     def respond(self, audio_in):
-        text      = self.stt.transcribe(audio_in)   # audio → text
-        reply     = self.llm.respond(text)          # text  → text
-        audio_out = self.tts.speak(reply)           # text  → audio
+        text      = self.stt.transcribe(audio_in)    # audio → text
+        reply     = self.llm.generate(text)          # text  → text
+        audio_out = self.tts.synthesize(reply)       # text  → audio
         return audio_out
         # latency stacks across stages → stream/overlap in production
 
 agent = VoiceAgent(stt=Whisper(), llm=Claude(), tts=ElevenLabs())
         </code></pre>
         <p class="code-cap">Voice = <b>three swappable stages</b>: ears → brain → mouth. Each is just an interface, so you can mock one to test offline with no API keys.</p>
+        <aside class="notes">
+          The swappable-interface seam is the real lesson: an implementation-blind VoiceAgent chains three one-method interfaces. In project 09's mock, STT is just <code>readFile</code>, the LLM is four keyword rules (with an echo fallback), and TTS is a 440Hz sine tone - so the mock verifies the <em>wiring</em> and live verifies the <em>intelligence</em>. Worth flagging that a file's extension is a contract about its bytes: OpenAI TTS defaults to MP3, so naming the output <code>.wav</code> without setting the wav format produces a subtly broken file - a bug that was fixed in this project.
+        </aside>
       </section>
     </section>
 
@@ -741,21 +770,21 @@ agent = VoiceAgent(stt=Whisper(), llm=Claude(), tts=ElevenLabs())
         <div class="concept-h"><span class="pid">10</span><h3>Indicators: SMA, EMA, RSI</h3></div>
         <p class="lede"><strong>Indicators</strong> turn price history into signals. <strong>SMA</strong> averages the last N prices (smooths noise). <strong>EMA</strong> weights recent prices more (reacts faster). <strong>RSI</strong> (0–100) flags overbought (&gt;70) / oversold (&lt;30) momentum.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>A car dashboard. SMA = your weekly step average; EMA = trusting today's forecast over last week's; RSI = a tachometer's RPM.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Every moving average <em>lags</em> — it's backward-looking by design. Smoothness and responsiveness are a trade-off.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Every moving average <em>lags</em> - it's backward-looking by design. Smoothness and responsiveness are a trade-off.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">10</span><h3>Strategies are reactive, not predictive</h3></div>
         <p class="lede">A <strong>strategy</strong> is fixed rules turning signals into buy/sell/hold (e.g. a "golden cross" when a fast average crosses above a slow one). It removes emotion and guesswork.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>A recipe — consistent steps, no guarantee of a great meal. Two runners: the signal fires when the fast one overtakes the slow one.</p></div>
+        <div class="box analogy"><span class="label">Analogy</span><p>A recipe - consistent steps, no guarantee of a great meal. Two runners: the signal fires when the fast one overtakes the slow one.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>Crossovers are <em>lagging</em>: the trend already started when the signal appears. You buy confirmation, not a head start.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">10</span><h3>Backtesting &amp; its traps</h3></div>
         <p class="lede"><strong>Backtesting</strong> simulates a strategy on historical data. Beware <strong>overfitting</strong> (fitting noise), <strong>look-ahead bias</strong> (using future data), and <strong>survivorship bias</strong> (only testing winners).</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>Memorizing last year's exam answers — perfect retest, fail on new questions. Or interviewing only lottery winners about "strategy."</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Backtesting is "predicting the past." A flawless backtest is often answering the <em>wrong question</em> — past performance ≠ future returns.</p></div>
+        <div class="box analogy"><span class="label">Analogy</span><p>Memorizing last year's exam answers - perfect retest, fail on new questions. Or interviewing only lottery winners about "strategy."</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Backtesting is "predicting the past." A flawless backtest is often answering the <em>wrong question</em> - past performance ≠ future returns.</p></div>
       </section>
 
       <section data-background-color="#0b0d12">
@@ -765,17 +794,20 @@ def sma(prices, n):
     return sum(prices[-n:]) / n          # average of the last n prices
 
 def signal(prices):
-    # Compare a FAST (10-day) vs SLOW (50-day) average, now vs the prior bar
-    fast,      slow      = sma(prices, 10),     sma(prices, 50)
-    prev_fast, prev_slow = sma(prices[:-1], 10), sma(prices[:-1], 50)
+    # Compare a FAST (10-day) vs SLOW (30-day) average, now vs the prior bar
+    fast,      slow      = sma(prices, 10),     sma(prices, 30)
+    prev_fast, prev_slow = sma(prices[:-1], 10), sma(prices[:-1], 30)
 
     if prev_fast <= prev_slow and fast > slow:
         return "BUY"     # golden cross: fast just crossed ABOVE slow
     elif prev_fast >= prev_slow and fast < slow:
         return "SELL"    # death cross:  fast just crossed BELOW slow
-    return "HOLD"        # no crossover — moving averages LAG the trend
+    return "HOLD"        # no crossover - moving averages LAG the trend
         </code></pre>
-        <p class="code-cap">A strategy is just <b>fixed reactive rules</b> on smoothed prices. The crossover <em>confirms</em> a trend already underway — it doesn't predict. <span class="muted">(Educational only.)</span></p>
+        <p class="code-cap">A strategy is just <b>fixed reactive rules</b> on smoothed prices. The crossover <em>confirms</em> a trend already underway - it doesn't predict. <span class="muted">(Educational only.)</span></p>
+        <aside class="notes">
+          These 10/30 periods match what project 10's demo actually runs (FAST_PERIOD=10, SLOW_PERIOD=30) - the original code once fed the LLM prompt mislabeled 20/50 periods, a bug now fixed. Foreground the headline result honestly: the strategy underperforms buy-and-hold (+20.95% vs +42.91%), and that's the intended lesson, not a defect - a trend-follower sits in cash during the early flat stretch and loses to passive holding in a steady uptrend. The whole point of separation: the LLM commentary is a passenger that never touches the deterministic trading path.
+        </aside>
       </section>
     </section>
 
@@ -793,52 +825,55 @@ def signal(prices):
 
       <section>
         <div class="concept-h"><span class="pid">11</span><h3>OCR &amp; why images are special</h3></div>
-        <p class="lede"><strong>OCR</strong> turns images of text into editable text. Images carry <em>spatial</em> meaning — a pixel only matters relative to its neighbors — so you can't shuffle them like spreadsheet columns.</p>
+        <p class="lede"><strong>OCR</strong> turns images of text into editable text. Images carry <em>spatial</em> meaning - a pixel only matters relative to its neighbors - so you can't shuffle them like spreadsheet columns.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>A book with every letter randomly scattered: all the ink is there, but the structure that makes words is gone.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Flattening an image into a flat list throws away "who's next to whom" — the very thing that makes it readable.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Flattening an image into a flat list throws away "who's next to whom" - the very thing that makes it readable.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">11</span><h3>CNNs: sliding pattern detectors</h3></div>
         <p class="lede">A <strong>CNN</strong> slides small filters (tiny "magnifying glasses") across the image, reusing the same filter everywhere. Early layers find edges; deeper layers combine them into shapes and objects.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>A detective with an "edge" stencil sliding over a photo, marking every match — while colleagues use other stencils.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p><em>Parameter sharing</em> (same filter everywhere) is why CNNs learn efficiently — a useful edge detector helps at every location.</p></div>
+        <div class="box analogy"><span class="label">Analogy</span><p>A detective with an "edge" stencil sliding over a photo, marking every match - while colleagues use other stencils.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p><em>Parameter sharing</em> (same filter everywhere) is why CNNs learn efficiently - a useful edge detector helps at every location.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">11</span><h3>Two branches, one head: feature fusion</h3></div>
-        <p class="lede">A <strong>multi-input model</strong> runs each input through its own branch (CNN for the image, dense layers for auxiliary features), then <strong>concatenates</strong> them into a shared head for the final decision.</p>
+        <p class="lede">A <strong>multi-input model</strong> runs each input through its own branch, then <strong>concatenates</strong> them into a shared head for the final decision. Real OCR would put a CNN in the image branch; <em>this</em> project flattens the tiny 14×14 digit into a dense branch (<code>model.ts</code>: <code>Input → Flatten → Dense(64)</code>, no <code>Conv2D</code>) to keep the focus on the fusion, not the CNN.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Picking a restaurant: one friend reads reviews (text), another studies food photos (images). You merge both to decide.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>You let each input speak its own "language" <em>before</em> merging — not just stapling raw pixels and numbers together upfront.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>You let each input speak its own "language" <em>before</em> merging - not just stapling raw pixels and numbers together upfront.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">11</span><h3>Why functional, not sequential</h3></div>
-        <p class="lede">A <strong>Sequential</strong> model is one straight stack — single input, single output. Branching needs the <strong>Functional API</strong>, which treats the model as a graph with multiple input nodes.</p>
+        <p class="lede">A <strong>Sequential</strong> model is one straight stack - single input, single output. Branching needs the <strong>Functional API</strong>, which treats the model as a graph with multiple input nodes.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>A single-file trail (Sequential) vs. a trail network that splits and merges (Functional).</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Multi-input isn't exotic — it's everywhere: medical AI (scan + history + labs), self-driving (camera + LiDAR + GPS).</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Multi-input isn't exotic - it's everywhere: medical AI (scan + history + labs), self-driving (camera + LiDAR + GPS).</p></div>
       </section>
 
       <section data-background-color="#0b0d12">
         <div class="code-h"><span class="pid">11</span><h3>The idea, in code</h3><span class="file">two branches, one head</span></div>
         <pre><code data-trim data-noescape class="language-python">
-# Branch 1 — the IMAGE speaks "pixels" (a CNN reads it)
+# Branch 1 - the IMAGE speaks "pixels" (a CNN reads it)
 image_input  = Input(shape=(64, 64, 3))
 x            = Conv2D(32, (3, 3), activation="relu")(image_input)
 image_branch = Dense(64, activation="relu")(Flatten()(x))
 
-# Branch 2 — the EXTRA features speak "numbers"
+# Branch 2 - the EXTRA features speak "numbers"
 aux_input  = Input(shape=(5,))
 aux_branch = Dense(32, activation="relu")(aux_input)
 
 # Let each branch learn first, THEN fuse the representations
 merged = concatenate([image_branch, aux_branch])
-output = Dense(10, activation="softmax")(merged)
+output = Dense(5, activation="softmax")(merged)   # this project has 5 classes (digits 0-4)
 
-# Functional API: a model with TWO inputs — Sequential can't do this
+# Functional API: a model with TWO inputs - Sequential can't do this
 model = Model(inputs=[image_input, aux_input], outputs=output)
         </code></pre>
-        <p class="code-cap"><b>Two branches, one head.</b> Each input is processed in its own "language" before being <b>concatenated</b> — which needs the functional API, not a single stack.</p>
+        <p class="code-cap"><b>Two branches, one head.</b> Each input is processed in its own "language" before being <b>concatenated</b> - which needs the functional API, not a single stack.</p>
+        <aside class="notes">
+          Two honesty notes. First, the <code>Conv2D</code> line above is the <em>general</em> multi-input pattern - the actual project skips it: <code>model.ts</code> is <code>Input(14×14×1) → Flatten → Dense(64)</code> with no convolution, because on a tiny 14×14 digit the CNN waste is small and the teaching budget is spent on the fusion step. Second, be honest about the demo's headline 100% accuracy: a per-branch ablation shows image-only also hits 100% and aux-only ~99%, so each input already solves this toy task alone and the second branch buys nothing here. That's the actual teachable point - a headline accuracy is meaningless without baselines. On real data (medical scan + labs, camera + LiDAR) the fusion genuinely matters; this toy dataset just makes the pattern visible.
+        </aside>
       </section>
     </section>
 
@@ -856,30 +891,33 @@ model = Model(inputs=[image_input, aux_input], outputs=output)
 
       <section>
         <div class="concept-h"><span class="pid">12</span><h3>MNIST &amp; the idea of an autoencoder</h3></div>
-        <p class="lede"><strong>MNIST</strong> = 70,000 handwritten digits, the "hello world" of vision. An <strong>autoencoder</strong> learns to compress its input and reconstruct it — its job is simply to copy itself through a narrow squeeze.</p>
+        <p class="lede">Real <strong>MNIST</strong> = 70,000 handwritten digits (0–9), the "hello world" of vision. To stay fully offline <em>this</em> project fakes it: <code>data.ts</code> draws 400 synthetic 28×28 digits of just three classes (0, 1, 2). An <strong>autoencoder</strong> then learns to compress its input and reconstruct it - its job is simply to copy itself through a narrow squeeze.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>Summarize a 10-page story into one paragraph, then rewrite the full story from just that summary.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>It's not really "unsupervised" — it's <strong>self-supervised</strong>: the input <em>is</em> its own label.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>It's not really "unsupervised" - it's <strong>self-supervised</strong>: the input <em>is</em> its own label. And a synthetic stand-in is a fair swap here - the squeeze lesson is identical whether the digits are real or drawn.</p></div>
+        <aside class="notes">
+          Honesty note on the data: to run fully offline this project does <em>not</em> download real MNIST. Its data.ts draws 400 synthetic 28×28 digits of only three classes (0, 1, 2) with seeded randomness - a same-shaped stand-in, not the real 70,000-image 0–9 set. Say "MNIST-like" when demoing it. The autoencoder lesson (the bottleneck squeeze) is identical either way, which is why the swap is fair rather than a shortcut worth hiding.
+        </aside>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">12</span><h3>Encoder → bottleneck → decoder</h3></div>
         <p class="lede">The <strong>encoder</strong> shrinks the image (784 → 32), the <strong>bottleneck</strong> holds the compressed code, and the <strong>decoder</strong> expands it back. The squeeze forces the network to keep only what matters.</p>
-        <div class="box analogy"><span class="label">Analogy</span><p>Packing for a trip with a tiny suitcase — you bring versatile essentials (edges, curves), not every detail.</p></div>
+        <div class="box analogy"><span class="label">Analogy</span><p>Packing for a trip with a tiny suitcase - you bring versatile essentials (edges, curves), not every detail.</p></div>
         <div class="box aha"><span class="label">Aha</span><p>Too-wide a bottleneck lets it cheat by memorizing; too narrow and it can't reconstruct. The squeeze <em>is</em> the lesson.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">12</span><h3>Latent space &amp; reconstruction loss</h3></div>
-        <p class="lede">The <strong>latent space</strong> is those bottleneck numbers — abstract features, not pixels. <strong>Reconstruction loss</strong> (output vs. input) is the training signal pulling encoder and decoder to improve together.</p>
+        <p class="lede">The <strong>latent space</strong> is those bottleneck numbers - abstract features, not pixels. <strong>Reconstruction loss</strong> (output vs. input) is the training signal pulling encoder and decoder to improve together.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>A recipe captures how to recreate a dish, not every molecule. Similar digits cluster nearby in latent space.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>Encoder and decoder are <em>partners</em>, not competitors — one loss number improves both at once.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>Encoder and decoder are <em>partners</em>, not competitors - one loss number improves both at once.</p></div>
       </section>
 
       <section>
         <div class="concept-h"><span class="pid">12</span><h3>vs. PCA, and what it's good for</h3></div>
-        <p class="lede">Unlike linear <strong>PCA</strong>, autoencoders learn <em>non-linear</em> compression — better for curvy data like images. Real uses: <strong>denoising</strong>, <strong>anomaly detection</strong>, and data-specific compression.</p>
+        <p class="lede">Unlike linear <strong>PCA</strong>, autoencoders learn <em>non-linear</em> compression - better for curvy data like images. Real uses: <strong>denoising</strong>, <strong>anomaly detection</strong>, and data-specific compression.</p>
         <div class="box analogy"><span class="label">Analogy</span><p>PCA folds a map along straight creases; an autoencoder crumples it smartly to follow the terrain's curves.</p></div>
-        <div class="box aha"><span class="label">Aha</span><p>They're <em>specialists</em>: a digit autoencoder fails on cat photos — and that failure is exactly what powers anomaly detection.</p></div>
+        <div class="box aha"><span class="label">Aha</span><p>They're <em>specialists</em>: a digit autoencoder fails on cat photos - and that failure is exactly what powers anomaly detection.</p></div>
       </section>
 
       <section data-background-color="#0b0d12">
@@ -888,17 +926,22 @@ model = Model(inputs=[image_input, aux_input], outputs=output)
 # ENCODER: squeeze 784 pixels → 32 numbers (the bottleneck)
 input_img = Input(shape=(784,))
 encoded   = Dense(128, activation="relu")(input_img)
+encoded   = Dense(64,  activation="relu")(encoded)   # gradual compression
 encoded   = Dense(32,  activation="relu")(encoded)   # keep only what matters
 
-# DECODER: expand 32 numbers back → 784 pixels
-decoded = Dense(128, activation="relu")(encoded)
+# DECODER: mirror the encoder back up 32 → 64 → 128 → 784
+decoded = Dense(64,  activation="relu")(encoded)
+decoded = Dense(128, activation="relu")(decoded)
 decoded = Dense(784, activation="sigmoid")(decoded)
 
 autoencoder = Model(input_img, decoded)
-autoencoder.compile(optimizer="adam", loss="mse")
-autoencoder.fit(X_train, X_train, epochs=50)   # the target IS the input!
+autoencoder.compile(optimizer="adam", loss="binary_crossentropy")  # fits the [0,1] sigmoid output
+autoencoder.fit(X_train, X_train, epochs=15)   # the target IS the input!
         </code></pre>
-        <p class="code-cap"><b>784 → 32 → 784.</b> Trained to copy its input through a narrow squeeze — too wide and it memorizes, too narrow and it can't rebuild. Input is its own label (<b>self-supervised</b>).</p>
+        <p class="code-cap"><b>784 → 32 → 784.</b> Trained to copy its input through a narrow squeeze - too wide and it memorizes, too narrow and it can't rebuild. Input is its own label (<b>self-supervised</b>).</p>
+        <aside class="notes">
+          A subtle wiring bug worth mentioning: project 12 originally displayed the latent vector from a <em>standalone untrained</em> encoder while training a separate autoencoder with independent weights - so its "what the model learned" visualization was actually random noise. The fix shares the encoder/decoder layer instances at construction and keeps a handle on the sub-model. Lesson: green tests and a running demo can still hide a wiring error - the demo was measuring a different network than the one it trained. Two details that match the real model.ts: it trains for 15 epochs (not 50), and it uses binary cross-entropy loss rather than MSE because the sigmoid output lives in the [0,1] probability space - MSE is kept only as a tracked metric. Loss is given as a range because weight init here is unseeded.
+        </aside>
       </section>
     </section>
 

@@ -17,7 +17,7 @@ import { evaluateModel, runSamplePredictions, visualizeImage } from './evaluate.
 
 async function main() {
   console.log('╔═══════════════════════════════════════════════╗');
-  console.log('║  Multi-Input Neural Network for OCR Demo     ║');
+  console.log('║  Multi-Input Neural Network for OCR Demo      ║');
   console.log('║  Learning Project: Two-Input Architecture     ║');
   console.log('╚═══════════════════════════════════════════════╝\n');
 
@@ -106,12 +106,19 @@ async function main() {
   console.log('║              Demo Complete!                   ║');
   console.log('╚═══════════════════════════════════════════════╝\n');
 
-  console.log('Key Takeaways:');
+  console.log('Key Takeaways (the wiring - what this demo actually shows):');
   console.log('  ✓ Multi-input model accepts TWO inputs (image + auxiliary)');
   console.log('  ✓ Each input processed through separate branch');
   console.log('  ✓ Branches merged via concatenation');
-  console.log('  ✓ Shared classification head makes final prediction');
-  console.log(`  ✓ Test accuracy: ${(evaluation.accuracy * 100).toFixed(2)}% (baseline: 20%)\n`);
+  console.log('  ✓ Shared classification head makes final prediction\n');
+
+  console.log(`Test accuracy: ${(evaluation.accuracy * 100).toFixed(2)}% - but read that number skeptically:`);
+  console.log('  This dataset is trivially easy (fixed image templates, plus an aux feature');
+  console.log('  that nearly leaks the label), so each input alone already scores ~100%');
+  console.log('  (image-only 100%, aux-only 99%). The high accuracy is NOT evidence the model');
+  console.log('  used both inputs - it means the task is too easy to tell the architectures');
+  console.log('  apart. To prove a second input helps, run an ablation (train with vs. without');
+  console.log('  it) and show the gap. See the README\'s "does the second input help?" section.\n');
 
   // Cleanup
   trainData.images.dispose();
