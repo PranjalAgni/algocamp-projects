@@ -33,7 +33,7 @@ npm test         # vitest suite (offline)
 
 | # | Project | Concept | Stack | Tests |
 |---|---------|---------|-------|-------|
-| 01 | [Working with the OpenAI API](01-openai-api) | Chat, streaming, system prompts, tool calling, JSON output behind one `LLMClient` interface | TS | 11 ✓ |
+| 01 | [Working with the OpenAI API](01-openai-api) | Chat, streaming, system prompts, tool calling, JSON output behind one `LLMClient` interface | TS | 12 ✓ |
 | 02 | [Customer Support Agent](02-customer-support-agent) | Tool-calling agent loop over FAQ + order lookup + ticket creation | TS | 15 ✓ |
 | 03 | [Exploring Embeddings](03-exploring-embeddings) | Embeddings, cosine similarity, semantic search, similarity matrix | TS + xenova | 18 ✓ |
 | 04 | [RAG over YouTube Transcripts](04-rag-youtube-transcripts) | Full RAG: chunk → embed → retrieve → grounded answer w/ citations | TS + xenova | 30 ✓ |
@@ -46,7 +46,7 @@ npm test         # vitest suite (offline)
 | 11 | [Multi-Input OCR Model](11-multi-input-ocr) | Multi-input NN: image branch + aux-feature branch concatenated into a head | TS + tfjs | 22 ✓ |
 | 12 | [MNIST Autoencoder](12-mnist-autoencoder) | Encoder → bottleneck → decoder; reconstruction loss; latent space; ASCII viz | TS + tfjs | 22 ✓ |
 
-**Total: 250 tests passing, all offline.**
+**Total: 251 tests passing, all offline.**
 
 ## The slide decks
 
