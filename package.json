@@ -2,6 +2,7 @@
   "name": "algocamp-projects",
   "version": "1.0.0",
   "private": true,
+  "license": "MIT",
   "description": "12 hands-on AI/ML learning builds + two RevealJS concept decks.",
   "scripts": {
     "slides": "python3 -m http.server 8000 --directory slides",
