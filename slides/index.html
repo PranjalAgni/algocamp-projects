@@ -190,8 +190,8 @@ response = client.chat.completions.create(
         {"role": "system", "content": "You are a helpful tutor."},
         {"role": "user",   "content": "Explain photosynthesis simply."}
     ],
-    temperature=0.7,            # 0 = focused, 1+ = creative
-    max_tokens=150,             # cap the reply length
+    temperature=0.7,            # project 01's default (0 = focused, 1+ = creative)
+    max_tokens=500,             # cap the reply length (project 01's default)
     stream=False                # True = tokens arrive one-by-one (feels faster)
 )
 
