@@ -2,7 +2,7 @@
   "name": "coding-agent",
   "version": "1.0.0",
   "type": "module",
-  "description": "A minimal coding agent that uses tools to complete programming tasks",
+  "description": "Learning project: minimal coding agent with a sandboxed (path-jailed) file/command toolset",
   "scripts": {
     "demo": "tsx src/index.ts",
     "test": "vitest run",

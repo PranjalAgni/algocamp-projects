@@ -1,7 +1,7 @@
 {
   "name": "enterprise-advanced-rag",
   "version": "1.0.0",
-  "description": "Learning project demonstrating advanced RAG techniques vs naive baseline",
+  "description": "Learning project: advanced RAG techniques (query expansion, hybrid retrieval, reranking, filtering) vs a naive baseline",
   "type": "module",
   "scripts": {
     "demo": "tsx src/demo.ts",

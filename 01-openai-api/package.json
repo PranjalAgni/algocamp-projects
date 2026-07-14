@@ -1,7 +1,7 @@
 {
   "name": "openai-api",
   "version": "1.0.0",
-  "description": "Learning project for OpenAI API patterns",
+  "description": "Learning project: OpenAI API patterns (chat, streaming, tool calling, JSON output) behind one client interface",
   "type": "module",
   "scripts": {
     "demo": "tsx src/demo.ts",

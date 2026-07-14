@@ -2,7 +2,7 @@
   "name": "rag-youtube-transcripts",
   "version": "1.0.0",
   "type": "module",
-  "description": "RAG chatbot over YouTube transcripts - learning project",
+  "description": "Learning project: RAG chatbot over YouTube transcripts (chunk, embed, retrieve, grounded answer)",
   "scripts": {
     "demo": "tsx src/demo.ts",
     "test": "vitest run",
