@@ -9,13 +9,14 @@ in its own folder.
 No API keys are required. Each project that would normally call an LLM/API ships a deterministic
 **MOCK / offline mode** that runs the full pipeline end-to-end, and prints a `[MODE: MOCK]` or
 `[MODE: LIVE]` banner at startup. Add a real key (see each project's `.env.example`) to flip to
-the live provider. The two pure-ML projects need no keys at all.
+the live provider. The three pure-ML projects (06, 11, 12) need no keys at all.
 
 ## Stack
 
-- **TypeScript** (ESM, run with `tsx`, tested with `vitest`) for 10 of 12 projects.
-- **TensorFlow.js** (`@tensorflow/tfjs-node`) for the deep-learning projects (verified working on
-  this Apple-Silicon machine - avoids Python 3.9/arm64 TensorFlow install pain).
+- **TypeScript** (ESM, run with `tsx`, tested with `vitest`) for all 12 projects.
+- **TensorFlow.js** (`@tensorflow/tfjs-node`) additionally for the three deep-learning projects
+  (06, 11, 12) - verified working on this Apple-Silicon machine, which avoids Python 3.9/arm64
+  TensorFlow install pain.
 - Local/offline embeddings via `@xenova/transformers`, with a deterministic hash-embedder
   fallback so tests pass with no network.
 
