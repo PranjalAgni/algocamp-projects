@@ -134,9 +134,14 @@ tests/
 
 ## Where to go next
 
-- **Make the strategy earn its keep.** It loses to buy-and-hold on this rising series. Try it on a
-  choppier or falling series (change `drift`/`volatility`/`seed` in `demo.ts`) and watch the
-  trend-follower's behavior flip - that's when crossovers start beating passive holding.
+- **Make the strategy earn its keep.** It loses to buy-and-hold on this rising series. Give it a
+  *falling* series instead (set a negative `drift`, e.g. `-0.005`, in `demo.ts`) and the result
+  flips: the trend-follower sits in cash through the decline and finishes roughly flat while a
+  fully-invested buy-and-hold sinks well into the red, so it wins by *not losing*. Note what does
+  **not** help: just cranking up
+  `volatility` on a flat/sideways series makes it worse, not better - the extra false crossovers
+  whipsaw it into buying high and selling low. Crossovers earn their keep by dodging sustained
+  downtrends, not by trading a choppy market more.
 - **Add a risk-adjusted metric.** Total return ignores volatility; add a Sharpe ratio to
   `metrics.ts` and see whether the "worse" strategy was actually less risky per unit of return.
 - **Swap the signal source.** Build an RSI-based strategy (buy oversold, sell overbought) behind
