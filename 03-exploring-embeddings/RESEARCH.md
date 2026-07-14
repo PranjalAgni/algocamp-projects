@@ -58,7 +58,7 @@ At the sentence level, this can demonstrate semantic composition.
 
 1. **Learning goal**: Build intuition, not production system. Small corpus (~12 sentences) is sufficient.
 2. **Offline-first**: Hash fallback ensures tests/demo work even on a plane.
-3. **Quality hierarchy**: Xenova > OpenAI (if key present) > Hash fallback.
+3. **Selection order (offline-first)**: Xenova (local, no key) > OpenAI (if key present) > Hash fallback. This is a preference for what runs with no key/network, not a quality ranking: OpenAI's `text-embedding-3-small` (1536-dim) is generally the higher-quality embedder, but the local 384-dim model is tried first because it needs neither a key nor a network round-trip. Only the hash fallback carries no semantic meaning.
 4. **Auto-detect mode**: Print banner `[MODE: LOCAL-MODEL]` / `[MODE: LIVE]` / `[MODE: HASH-FALLBACK]`.
 
 ## References
