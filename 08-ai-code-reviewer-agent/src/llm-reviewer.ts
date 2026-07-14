@@ -218,7 +218,7 @@ function reviewWithMock(parsedDiff: ParsedDiff): ReviewComment[] {
     }
 
     // Sample 2: user-handler.js - Unused variable
-    if (file.path.includes('user-handler.js') || file.path.includes('user.')) {
+    if (file.path.includes('user-handler.js')) {
       const timestampLine = addedLines.find(l => l.content.includes('timestamp') && l.content.includes('Date.now'));
       if (timestampLine) {
         // Check if timestamp is used elsewhere
