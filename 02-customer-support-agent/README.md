@@ -69,9 +69,11 @@ tests/
   agent.test.ts           # the loop over a full query
 ```
 
-Note that `agent.ts` colocates each tool's *definition* (the schema handed to the model)
-with its *implementation*. Keeping the description the model reads next to the code that
-runs is the small habit that keeps tool calling from silently drifting out of sync.
+Note that each file in `tools/` colocates the tool's *definition* (the schema handed to the
+model) with its *implementation* - e.g. `lookupOrderTool` sits right above `lookupOrder()`.
+`agent.ts` just imports the pairs and wires them into one `TOOLS` list. Keeping the
+description the model reads next to the code that runs is the small habit that keeps tool
+calling from silently drifting out of sync.
 
 ## Where to go next
 
