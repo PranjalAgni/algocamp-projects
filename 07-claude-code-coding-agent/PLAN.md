@@ -14,7 +14,7 @@ Build a tiny Claude Code: an agent that uses tools to complete coding tasks in a
 │   ├── brain.ts              # LLM brain (Anthropic) + Mock brain
 │   ├── agent.ts              # Main agent loop (ReAct)
 │   └── index.ts              # CLI entry point for demo
-├── test/
+├── tests/
 │   ├── sandbox.test.ts       # Path jailing tests
 │   ├── tools.test.ts         # Tool execution tests
 │   └── agent.test.ts         # End-to-end agent tests with mock
@@ -129,7 +129,7 @@ Common interface: `Brain.respond(messages, tools) → AssistantMessage`
 - Print final result
 - Clean up sandbox
 
-### 8. Tests (`test/*.test.ts`)
+### 8. Tests (`tests/*.test.ts`)
 
 **sandbox.test.ts**:
 - Path jailing: reject `../etc/passwd`, `/etc/passwd`

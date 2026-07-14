@@ -99,7 +99,7 @@ src/
   brain.ts     LLMBrain (real Claude) and MockBrain (scripted, offline)
   agent.ts     the ReAct loop
   index.ts     CLI demo: makes a temp sandbox, runs one task, cleans up
-test/
+tests/
   sandbox.test.ts   safety checks, including the two escape regressions above
   tools.test.ts     each tool's behaviour
   agent.test.ts     the full loop end to end with MockBrain
