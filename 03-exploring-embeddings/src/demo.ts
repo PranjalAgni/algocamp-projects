@@ -42,6 +42,17 @@ function formatScore(score: number): string {
 }
 
 /**
+ * Formats a similarity score into a fixed-width cell for the matrix.
+ * Cosine similarity ranges over [-1, 1], so a negative value ("-0.02") is
+ * one character wider than a positive one ("0.02"). Right-padding every cell
+ * to a common width keeps the columns aligned regardless of sign.
+ */
+const MATRIX_CELL_WIDTH = 5; // fits "-1.00"
+function formatMatrixCell(score: number): string {
+  return score.toFixed(2).padStart(MATRIX_CELL_WIDTH);
+}
+
+/**
  * Displays semantic search results for a query.
  */
 async function runSemanticSearchDemo(): Promise<void> {
@@ -95,16 +106,25 @@ async function runSimilarityMatrixDemo(): Promise<void> {
     console.log(`S${i + 1}: ${text.slice(0, 60)}${text.length > 60 ? '...' : ''}`);
   });
 
-  console.log('\nSimilarity Matrix (range: 0.00 to 1.00):');
+  console.log('\nSimilarity Matrix (cosine similarity, range: -1.00 to 1.00):');
   console.log('─────────────────────────────────────────────────────────────');
 
-  // Header row
-  console.log('      ' + subset.map((_, i) => `  S${i + 1} `).join(''));
+  // Each cell is right-aligned to a fixed width and separated by two spaces,
+  // so header labels sit directly over their columns and negative values
+  // (one char wider than positives) do not shift the grid.
+  const rowLabelWidth = 4; // "S1" plus padding, matches the data-row prefix
+  const gap = '  ';
+
+  // Header row: blank row-label cell, then a right-aligned "Sn" per column.
+  const header =
+    ' '.repeat(rowLabelWidth) +
+    subset.map((_, i) => `S${i + 1}`.padStart(MATRIX_CELL_WIDTH)).join(gap);
+  console.log(header);
 
   // Data rows
   matrix.forEach((row, i) => {
-    const rowStr = row.map(val => formatScore(val)).join('  ');
-    console.log(`S${i + 1}    ${rowStr}`);
+    const rowStr = row.map(val => formatMatrixCell(val)).join(gap);
+    console.log(`S${i + 1}`.padEnd(rowLabelWidth) + rowStr);
   });
 
   console.log();
@@ -113,6 +133,7 @@ async function runSimilarityMatrixDemo(): Promise<void> {
   console.log('  • 0.70-0.99 = very similar');
   console.log('  • 0.40-0.69 = somewhat similar');
   console.log('  • 0.00-0.39 = dissimilar');
+  console.log('  • below 0.00 = pointing apart (unrelated)');
   console.log();
 }
 
