@@ -865,7 +865,7 @@ aux_branch = Dense(32, activation="relu")(aux_input)
 
 # Let each branch learn first, THEN fuse the representations
 merged = concatenate([image_branch, aux_branch])
-output = Dense(10, activation="softmax")(merged)
+output = Dense(5, activation="softmax")(merged)   # this project has 5 classes (digits 0-4)
 
 # Functional API: a model with TWO inputs — Sequential can't do this
 model = Model(inputs=[image_input, aux_input], outputs=output)
