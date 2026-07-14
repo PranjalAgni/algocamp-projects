@@ -101,6 +101,18 @@ all-in sizing · one asset · daily bars · synthetic data. Real systems need fe
 position sizing, diversification, and risk management - every one of these would add realism at
 the cost of obscuring the core loop, so they're left as the extensions below.
 
+## Live commentary
+
+```bash
+cp .env.example .env
+# set OPENAI_API_KEY=sk-...
+npm run demo    # banner flips to [MODE: LIVE — OpenAI API enabled]
+```
+
+The strategy, trades, and every metric are byte-for-byte identical to mock mode - only the
+commentary paragraph changes. That invariance is the design working: the model is decoration on a
+deterministic core.
+
 ## Files
 
 ```
@@ -119,18 +131,6 @@ tests/
 ```
 
 `RESEARCH.md` and `PLAN.md` record the background concepts and stretch goals.
-
-## Live commentary
-
-```bash
-cp .env.example .env
-# set OPENAI_API_KEY=sk-...
-npm run demo    # banner flips to [MODE: LIVE — OpenAI API enabled]
-```
-
-The strategy, trades, and every metric are byte-for-byte identical to mock mode - only the
-commentary paragraph changes. That invariance is the design working: the model is decoration on a
-deterministic core.
 
 ## Where to go next
 
