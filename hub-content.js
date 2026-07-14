@@ -316,7 +316,7 @@ const HUB = [
      explain:"Analog sound is continuous; to store it you <b>sample</b> its amplitude thousands of times/sec (CD = 44,100 Hz). Each sample is a number (PCM). A WAV is just a small header + that raw list of numbers.",
      analogy:"Filming a spinning fan at 60fps: each frame samples its position; play them fast enough and motion looks smooth. Audio is the same.",
      aha:"A WAV isn't compressed magic - it's literally the waveform's height at each instant. That's why WAVs are huge but lossless.",
-     src:"developer.mozilla.org/en-US/docs/Web/Media/Formats/Audio_concepts"},
+     src:"developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Audio_concepts"},
     {eyebrow:"Stage 3", title:"Text-to-Speech: text → waveform",
      explain:"TTS normalises text ('Dr.'→'Doctor'), assigns pronunciations, then generates the waveform. Neural TTS predicts audio directly from text, shaping pitch, emotion, and pacing.",
      analogy:"An actor reading a script: see the words, decide how to say them, add rhythm and feeling, then perform.",
