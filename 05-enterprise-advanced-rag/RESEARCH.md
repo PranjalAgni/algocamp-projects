@@ -35,7 +35,7 @@ Combine multiple retrieval methods:
 After retrieving candidates (10-20 docs), rerank with a more powerful model:
 - **Cross-encoders**: Jointly encode query+doc, produce relevance score (more accurate than bi-encoders)
 - **Heuristic rerankers**: Metadata-based (recency, source authority)
-- **Implementation choice**: Try @xenova/transformers cross-encoder (e.g., ms-marco-MiniLM-L-6), fallback to heuristic
+- **Implementation choice**: Heuristic reranker (query-term overlap + title match + recency bonus), no LLM. A cross-encoder is the production upgrade but adds complexity for this learning project
 
 ### 4. Metadata Filtering
 Pre-filter or post-filter by:
