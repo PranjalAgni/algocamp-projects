@@ -12,7 +12,7 @@ of the model guessing from memory.
 ```bash
 npm install
 npm run demo     # index 2 sample transcripts, ask 3 questions, show chunks + answers
-npm test         # vitest suite (30 tests, deterministic, offline)
+npm test         # vitest suite (33 tests, deterministic, offline)
 ```
 
 The demo is fully offline and needs no key. See the honesty note below for what that means for

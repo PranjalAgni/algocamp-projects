@@ -36,7 +36,7 @@ npm test         # vitest suite (offline)
 | 01 | [Working with the OpenAI API](01-openai-api) | Chat, streaming, system prompts, tool calling, JSON output behind one `LLMClient` interface | TS | 12 ✓ |
 | 02 | [Customer Support Agent](02-customer-support-agent) | Tool-calling agent loop over FAQ + order lookup + ticket creation | TS | 15 ✓ |
 | 03 | [Exploring Embeddings](03-exploring-embeddings) | Embeddings, cosine similarity, semantic search, similarity matrix | TS + xenova | 18 ✓ |
-| 04 | [RAG over YouTube Transcripts](04-rag-youtube-transcripts) | Full RAG: chunk → embed → retrieve → grounded answer w/ citations | TS + xenova | 30 ✓ |
+| 04 | [RAG over YouTube Transcripts](04-rag-youtube-transcripts) | Full RAG: chunk → embed → retrieve → grounded answer w/ citations | TS + xenova | 33 ✓ |
 | 05 | [Enterprise Advanced RAG](05-enterprise-advanced-rag) | Query expansion, hybrid retrieval (BM25 + dense + RRF), reranking, metadata filtering | TS + xenova | 29 ✓ |
 | 06 | [Simple Neural Network](06-simple-neural-network-tensorflow) | Feed-forward NN: layers, loss, optimizer, training loop (two-moons) | TS + tfjs | 14 ✓ |
 | 07 | [Claude Code-like Coding Agent](07-claude-code-coding-agent) | Agentic tool-use loop with a sandboxed (path-jailed) file/command toolset | TS | 25 ✓ |
@@ -46,7 +46,7 @@ npm test         # vitest suite (offline)
 | 11 | [Multi-Input OCR Model](11-multi-input-ocr) | Multi-input NN: image branch + aux-feature branch concatenated into a head | TS + tfjs | 22 ✓ |
 | 12 | [MNIST Autoencoder](12-mnist-autoencoder) | Encoder → bottleneck → decoder; reconstruction loss; latent space; ASCII viz | TS + tfjs | 22 ✓ |
 
-**Total: 253 tests passing, all offline.**
+**Total: 256 tests passing, all offline.**
 
 ## The slide decks
 

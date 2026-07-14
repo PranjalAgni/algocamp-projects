@@ -63,6 +63,24 @@ If the context doesn't contain enough information to answer the question, say so
 }
 
 /**
+ * Take the first `count` sentences from a chunk of text, keeping each
+ * sentence's original terminator.
+ *
+ * Splits on whitespace that FOLLOWS a .!? terminator, so a decimal like
+ * "1.5 billion" is never broken at the period (no space follows the point)
+ * and a "?"/"!" is not silently rewritten to a "." on rejoin - both of which
+ * a naive `.split(/[.!?]+/).join('.')` does, mangling the extractive answer.
+ */
+export function firstSentences(text: string, count: number): string {
+  const sentences = text
+    .split(/(?<=[.!?])\s+/)
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
+
+  return sentences.slice(0, count).join(' ');
+}
+
+/**
  * Generate extractive answer from retrieved chunks (MOCK mode)
  * Quotes relevant sentences and adds citations
  */
@@ -78,9 +96,8 @@ function generateMock(query: string, results: SearchResult[]): string {
     const timestamp = formatTimestamp(result.chunk.timestamp);
     const citation = `[${result.chunk.title} @ ${timestamp}]`;
 
-    // Take first 1-2 sentences from the chunk
-    const chunkSentences = result.chunk.text.split(/[.!?]+/).filter(s => s.trim().length > 0);
-    const excerpt = chunkSentences.slice(0, 2).join('.') + '.';
+    // Take the first 1-2 sentences from the chunk (verbatim, terminators kept)
+    const excerpt = firstSentences(result.chunk.text, 2);
 
     sentences.push(`${excerpt} ${citation}`);
   }
