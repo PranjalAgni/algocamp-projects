@@ -40,7 +40,7 @@ async function main() {
   // =========================================================
   // STEP 1: Generate Synthetic Data
   // =========================================================
-  console.log('=== Step 1: Generating Synthetic Digit Data ===\n');
+  console.log('=== Generating Synthetic Digit Data ===\n');
 
   const dataset = generateDataset(
     300, // 300 training images
@@ -57,7 +57,7 @@ async function main() {
   // =========================================================
   // STEP 2: Build Autoencoder Model
   // =========================================================
-  console.log('\n=== Step 2: Building Autoencoder ===\n');
+  console.log('\n=== Building Autoencoder ===\n');
 
   // Build the autoencoder and keep a handle on the encoder that is part of it.
   // They share the same layer instances, so training the autoencoder below also
@@ -107,7 +107,7 @@ async function main() {
   // =========================================================
   // STEP 5: Reconstruct Test Images
   // =========================================================
-  console.log('\n=== Step 4: Reconstructing Test Images ===');
+  console.log('\n=== Reconstructing Test Images ===');
 
   // Reconstruct first 3 test images
   const numExamples = 3;
@@ -141,8 +141,6 @@ async function main() {
   // =========================================================
   // STEP 6: Show Latent Space Encoding
   // =========================================================
-  console.log('\n=== Step 5: Latent Space Encoding ===');
-
   // Encode a test image with the trained encoder (shares weights with the
   // autoencoder, so this reflects what training learned - not random init).
   const testIdx = 0;
