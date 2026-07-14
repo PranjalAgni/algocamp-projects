@@ -20,8 +20,8 @@ Instead of waiting for the complete response, the API can stream partial results
 ### 4. Function/Tool Calling
 The model can decide to call functions/tools you define. It returns structured data indicating which function to call with what parameters. Your code executes the function and sends results back.
 
-### 5. Structured Output (JSON Mode)
-Force the model to respond with valid JSON matching a schema, useful for data extraction and structured interactions.
+### 5. JSON Mode
+`response_format: { type: 'json_object' }` guarantees the reply is syntactically valid JSON - not that it matches any particular schema. This project uses JSON mode (see `chatJSON` in openai-client.ts); the `schema` argument is passed in for you to validate against yourself, but is never sent to the API. OpenAI's stronger Structured Outputs feature (`type: 'json_schema'`, strict mode) is what actually enforces required keys and types.
 
 ## Libraries Considered
 
