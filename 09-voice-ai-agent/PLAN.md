@@ -128,7 +128,6 @@ export class VoiceAgent {
 
 ```typescript
 const openaiKey = process.env.OPENAI_API_KEY;
-const elevenlabsKey = process.env.ELEVENLABS_API_KEY;
 
 const stt: STT = openaiKey 
   ? new WhisperSTT(openaiKey) 
