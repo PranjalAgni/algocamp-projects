@@ -17,7 +17,7 @@ import { evaluateModel, runSamplePredictions, visualizeImage } from './evaluate.
 
 async function main() {
   console.log('╔═══════════════════════════════════════════════╗');
-  console.log('║  Multi-Input Neural Network for OCR Demo     ║');
+  console.log('║  Multi-Input Neural Network for OCR Demo      ║');
   console.log('║  Learning Project: Two-Input Architecture     ║');
   console.log('╚═══════════════════════════════════════════════╝\n');
 
