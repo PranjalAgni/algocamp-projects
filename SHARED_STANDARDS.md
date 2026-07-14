@@ -45,7 +45,7 @@ It must succeed **without any API key**. Therefore:
    how to switch from MOCK to LIVE (which env var). Include example output.
 5. `.env.example` - every env var the project reads.
 6. Tests that pass offline (`vitest` or `pytest`), plus a one-command demo/smoke script.
-7. A `.gitignore` (node_modules, .env, venv, __pycache__, data caches, model artifacts).
+7. A `.gitignore` (node_modules, .env, data caches, model artifacts).
 
 ## Feedback loop (mandatory)
 Implement → install deps → run demo → run tests → if anything fails, debug and fix →
