@@ -17,7 +17,7 @@
  * - Training minimizes this error, forcing the network to learn good features
  *
  * KEY INSIGHT: The bottleneck (32 dims) forces compression, so the network
- * can't just memorize inputs—it must learn meaningful representations.
+ * can't just memorize inputs - it must learn meaningful representations.
  */
 
 import * as tf from '@tensorflow/tfjs-node';

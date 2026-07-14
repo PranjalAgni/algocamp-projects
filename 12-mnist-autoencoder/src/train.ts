@@ -27,7 +27,7 @@ export interface TrainingHistory {
  * - The model learns to reconstruct its input by minimizing the difference
  *   between input and output (reconstruction loss)
  * - The bottleneck forces the network to learn compressed, meaningful features
- * - No labels needed—this is unsupervised learning
+ * - No labels needed - this is unsupervised learning
  *
  * @param model Compiled autoencoder model
  * @param trainImages Training images [numSamples, 784]

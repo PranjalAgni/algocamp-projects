@@ -1,10 +1,10 @@
 /**
- * Embedder factory — auto-selects the best available embedder.
+ * Embedder factory - auto-selects the best available embedder.
  *
  * Priority order:
- * 1. Xenova (local model) — if model can be loaded
- * 2. OpenAI — if OPENAI_API_KEY is set
- * 3. Hash fallback — deterministic, works offline, no semantic meaning
+ * 1. Xenova (local model) - if model can be loaded
+ * 2. OpenAI - if OPENAI_API_KEY is set
+ * 3. Hash fallback - deterministic, works offline, no semantic meaning
  *
  * The factory tries each option in order and falls back gracefully.
  * A banner is printed showing which mode is active.
