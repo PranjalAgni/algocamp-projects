@@ -1,5 +1,5 @@
 /**
- * LLM Reviewer - AI-powered code review
+ * LLM Reviewer - the contextual half of the review (the linter is the other half)
  *
  * Supports multiple providers with automatic fallback:
  * 1. OpenAI (gpt-4o-mini) if OPENAI_API_KEY is set

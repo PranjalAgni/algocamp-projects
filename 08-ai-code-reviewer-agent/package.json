@@ -1,7 +1,7 @@
 {
   "name": "ai-code-reviewer-agent",
   "version": "1.0.0",
-  "description": "AI-powered code review agent that analyzes diffs and provides structured feedback",
+  "description": "Learning project: code review agent stacking a deterministic linter and an LLM reviewer over a diff",
   "type": "module",
   "scripts": {
     "demo": "tsx src/index.ts",
