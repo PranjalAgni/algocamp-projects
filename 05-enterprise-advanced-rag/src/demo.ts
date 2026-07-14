@@ -15,7 +15,7 @@ import { filterByMetadata } from './metadata-filter.js';
 // Print mode banner
 const mode = process.env.OPENAI_API_KEY ? 'LIVE' : 'MOCK — no OPENAI_API_KEY';
 console.log(`\n${'='.repeat(60)}`);
-console.log(`MODE: ${mode}`);
+console.log(`[MODE: ${mode}]`);
 console.log(`${'='.repeat(60)}\n`);
 
 async function main() {
