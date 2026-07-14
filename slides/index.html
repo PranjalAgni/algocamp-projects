@@ -933,12 +933,12 @@ decoded = Dense(128, activation="relu")(encoded)
 decoded = Dense(784, activation="sigmoid")(decoded)
 
 autoencoder = Model(input_img, decoded)
-autoencoder.compile(optimizer="adam", loss="mse")
-autoencoder.fit(X_train, X_train, epochs=50)   # the target IS the input!
+autoencoder.compile(optimizer="adam", loss="binary_crossentropy")  # fits the [0,1] sigmoid output
+autoencoder.fit(X_train, X_train, epochs=15)   # the target IS the input!
         </code></pre>
         <p class="code-cap"><b>784 → 32 → 784.</b> Trained to copy its input through a narrow squeeze - too wide and it memorizes, too narrow and it can't rebuild. Input is its own label (<b>self-supervised</b>).</p>
         <aside class="notes">
-          A subtle wiring bug worth mentioning: project 12 originally displayed the latent vector from a <em>standalone untrained</em> encoder while training a separate autoencoder with independent weights - so its "what the model learned" visualization was actually random noise. The fix shares the encoder/decoder layer instances at construction and keeps a handle on the sub-model. Lesson: green tests and a running demo can still hide a wiring error - the demo was measuring a different network than the one it trained. Loss is given as a range because weight init here is unseeded.
+          A subtle wiring bug worth mentioning: project 12 originally displayed the latent vector from a <em>standalone untrained</em> encoder while training a separate autoencoder with independent weights - so its "what the model learned" visualization was actually random noise. The fix shares the encoder/decoder layer instances at construction and keeps a handle on the sub-model. Lesson: green tests and a running demo can still hide a wiring error - the demo was measuring a different network than the one it trained. Two details that match the real model.ts: it trains for 15 epochs (not 50), and it uses binary cross-entropy loss rather than MSE because the sigmoid output lives in the [0,1] probability space - MSE is kept only as a tracked metric. Loss is given as a range because weight init here is unseeded.
         </aside>
       </section>
     </section>
